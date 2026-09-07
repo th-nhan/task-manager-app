@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../config/db.js";
+import { OAuth2Client } from 'google-auth-library'
 
 export const register = async (req, res) => {
     try{
@@ -72,5 +73,58 @@ export const login = async (req, res) => {
     } catch (error){
         console.error('Lỗi server khi đăng nhập:', error);
         return res.status(500).json({message: 'Lỗi server'});
+    }
+}
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleLogin = async (req, res) => {
+    try {
+        const {credential} = req.body;
+        if (!credential) {
+            return res.status(400).json({message: 'Không tìm thấy google token!'});
+        }
+
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+
+        const {email, name, picture} = payload;
+
+        let user = await prisma.user.findUnique({where: {email}});
+
+        if (!user) {
+            user = await prisma.user.create({
+                data: {
+                    name,
+                    email,
+                    avatarUrl: picture,
+                },
+                select: { id: true, name: true, email: true, avatarUrl: true, createdAt: true },
+            });
+        }
+
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+
+        res.json({
+            message: 'Đăng nhập thành công!',
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatarUrl: user.avatarUrl,
+            },
+        });
+    } catch (error) {
+        console.error('Lỗi server khi đăng nhập google:', error);
+        return res.status(500).json({message: 'Xác thực Google thất bại!'});
     }
 }
