@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
+import categoryRoutes from "./routes/category.route.js";
 
 dotenv.config();
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/categories', categoryRoutes);
 
 app.get('/api/health',(req,res) =>{
     res.json({message: 'Server đang chạy bình thường'});

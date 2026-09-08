@@ -64,10 +64,14 @@ export const getTaskById = async (req, res) =>{
 export const createTask = async(req, res)=>{
     try {
         const userId = req.user.userId;
-        const {title, description, dueDate, status, priority, categoryId, reminder} = req.body;
+        const {title, description, startDate, dueDate, status, priority, categoryId, reminder} = req.body;
 
         if (!title){
             return res.status(400).json({message: 'Vui lòng nhập tiêu đề công việc!'});
+        }
+
+        if (startDate && dueDate && new Date(dueDate) < new Date(startDate)) {
+            return res.status(400).json({message: 'Hạn chót không được trước ngày bắt đầu!'});
         }
 
         const newTask = await prisma.task.create({
@@ -75,7 +79,9 @@ export const createTask = async(req, res)=>{
               userId,
               title,
               description,
+              status: status || 'TODO',
               priority: priority || 'LOW',
+              startDate: startDate ? new Date(startDate) : null,
               dueDate: dueDate ? new Date(dueDate) : null,
               categoryId: categoryId || null,
             },
@@ -97,7 +103,7 @@ export const updateTask = async(req, res) => {
     try {
         const userId = req.user.userId;
         const {id} = req.params;
-        const {title, description, dueDate, status, priority, categoryId} = req.body;
+        const {title, description, startDate, dueDate, status, priority, categoryId} = req.body;
 
         const existingTask = await prisma.task.findUnique({
             where: {id, userId},
@@ -107,6 +113,13 @@ export const updateTask = async(req, res) => {
             return res.status(404).json({message: 'Không tìm thấy công việc'});
         }
 
+        const finalStartDate = startDate !== undefined ? (startDate ? new Date(startDate) : null) : existingTask.startDate;
+        const finalDueDate = dueDate !== undefined ? (dueDate ? new Date(dueDate) : null) : existingTask.dueDate;
+
+        if (finalStartDate && finalDueDate && new Date(finalDueDate) < new Date(finalStartDate)) {
+            return res.status(400).json({message: 'Hạn chót không được trước ngày bắt đầu!'});
+        }
+
         const updateTask = await prisma.task.update({
             where: {id},
             data: {
@@ -114,6 +127,7 @@ export const updateTask = async(req, res) => {
               ...(description !== undefined && { description }),
               ...(status && { status }),
               ...(priority && { priority }),
+              ...(startDate !== undefined && { startDate: startDate ? new Date(startDate) : null }),
               ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
               ...(categoryId !== undefined && { categoryId }),
             },

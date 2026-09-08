@@ -1,5 +1,5 @@
 import express from 'express';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
     getCategories,
     createCategory,
@@ -7,7 +7,7 @@ import {
 } from '../controllers/category.controller.js';
 
 const router = express.Router();
-router.use(authMiddleware);
+router.use(verifyToken);
 
 router.get('/', getCategories);
 router.post('/', createCategory);
