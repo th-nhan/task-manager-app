@@ -71,6 +71,8 @@ export const KanbanBoardView = ({
     ], []);
 
     const getColumnTasks = useCallback((columnKey) => {
+        const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
         return tasks
             .filter(task => {
                 if (filterPriority !== 'ALL' && task.priority !== filterPriority) {
@@ -84,7 +86,10 @@ export const KanbanBoardView = ({
                     return isMissing;
                 }
                 if (columnKey === 'DONE') {
-                    return isDone;
+                    if (!isDone) return false;
+                    // Chỉ hiển thị các task DONE trong vòng 1 tuần (7 ngày) gần nhất
+                    const doneDate = new Date(task.updatedAt || task.dueDate || task.createdAt);
+                    return doneDate >= oneWeekAgo;
                 }
                 if (columnKey === 'IN_PROGRESS') {
                     return !isMissing && task.status === 'IN_PROGRESS';
@@ -176,6 +181,11 @@ export const KanbanBoardView = ({
                                         } transition-transform`}
                                     />
                                     <span>{col.title}</span>
+                                    {col.key === 'DONE' && (
+                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60" title="Chỉ hiển thị task hoàn thành trong 7 ngày gần nhất">
+                                            ≤ 7 ngày
+                                        </span>
+                                    )}
                                 </div>
                                 <span
                                     className={`text-xs px-2 py-0.5 rounded-full font-bold border transition-all ${
@@ -204,7 +214,11 @@ export const KanbanBoardView = ({
                                             }`}
                                         />
                                         <span className="text-xs font-semibold">
-                                            {isDragOver ? `Thả vào ${col.title}` : 'Chưa có công việc'}
+                                            {isDragOver
+                                                ? `Thả vào ${col.title}`
+                                                : col.key === 'DONE'
+                                                    ? 'Chưa có task hoàn thành trong 7 ngày'
+                                                    : 'Chưa có công việc'}
                                         </span>
                                         <span className="text-[10px] text-gray-400 mt-0.5">
                                             {isDragOver ? 'Nhả chuột để chuyển trạng thái' : 'Kéo thả task vào đây'}
@@ -356,7 +370,7 @@ export const KanbanBoardView = ({
                                                                     ? 'text-red-600 hover:text-red-700'
                                                                     : 'text-gray-500 hover:text-pink-600'
                                                             }`}
-                                                            title="Bấm để đổi trạng thái"
+                                                            title="Click to change status"
                                                         >
                                                             {isDone ? (
                                                                 <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />

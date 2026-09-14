@@ -85,7 +85,7 @@ const Dashboard = () => {
 
         try {
             await taskApi.updateTask(task.id, { status: nextStatus });
-            setTasks(prev => prev.map(t => (t.id === task.id ? { ...t, status: nextStatus } : t)));
+            setTasks(prev => prev.map(t => (t.id === task.id ? { ...t, status: nextStatus, updatedAt: new Date().toISOString() } : t)));
             toast.info(
                 `Trạng thái: ${
                     nextStatus === 'DONE'
@@ -189,7 +189,7 @@ const Dashboard = () => {
         }
 
         try {
-            setTasks(prev => prev.map(t => (t.id === sourceTaskId ? { ...t, ...updateData } : t)));
+            setTasks(prev => prev.map(t => (t.id === sourceTaskId ? { ...t, ...updateData, updatedAt: new Date().toISOString() } : t)));
             await taskApi.updateTask(sourceTaskId, updateData);
             toast.success(
                 `Chuyển sang "${

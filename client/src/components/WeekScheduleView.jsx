@@ -242,7 +242,7 @@ export const WeekScheduleView = ({
                                                     }}
                                                     className={`flex items-center gap-1 text-[11px] font-medium transition-colors cursor-pointer ${isMissing ? 'text-red-600 hover:text-red-700' : 'text-gray-500 hover:text-pink-600'
                                                         }`}
-                                                    title="Bấm để đổi trạng thái"
+                                                    title="Click to change status"
                                                 >
                                                     {isDone ? (
                                                         <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />

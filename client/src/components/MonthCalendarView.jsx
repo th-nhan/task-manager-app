@@ -31,7 +31,7 @@ const WEEK_DAYS_HEADER = [
 export const CALENDAR_STICKERS = [
     {
         id: 'zap',
-        label: 'Have Sex',
+        label: 'Energetic',
         icon: Zap,
         bg: 'bg-amber-100 text-amber-600 border-amber-300 hover:bg-amber-200',
     },
@@ -398,7 +398,7 @@ export const MonthCalendarView = ({
                                                                 e.stopPropagation();
                                                                 handleRemoveSticker(item.dateKey, sIdx);
                                                             }}
-                                                            title={`${stkDef.label} (Bấm để gỡ)`}
+                                                            title={`${stkDef.label} (Click to remove)`}
                                                             className={`group/stk relative flex items-center justify-center w-5 h-5 rounded-full border text-[10px] cursor-pointer hover:scale-115 hover:opacity-85 transition-all shrink-0 ${stkDef.bg}`}
                                                         >
                                                             <StkIcon className="w-2.5 h-2.5 pointer-events-none" />
