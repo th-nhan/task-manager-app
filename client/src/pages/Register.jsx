@@ -28,15 +28,15 @@ const Register = () => {
 
         try {
             await authApi.register(formData);
-            toast.success('Đăng ký tài khoản thành công! Vui lòng đăng nhập.', {
-                title: 'Đăng ký thành công',
+            toast.success('Account registered successfully! Please log in.', {
+                title: 'Registration Successful',
             });
             navigate('/login');
         } catch (err) {
-            const errorMsg = err?.message || err?.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại!';
+            const errorMsg = err?.message || err?.response?.data?.message || 'Registration failed. Please try again!';
             setError(errorMsg);
             toast.error(errorMsg, {
-                title: 'Đăng ký thất bại',
+                title: 'Registration Failed',
             });
         } finally {
             setLoading(false);
@@ -47,24 +47,24 @@ const Register = () => {
         try {
             const response = await authApi.googleLogin(credentialResponse.credential);
             login(response.user, response.token);
-            toast.success(`Chào mừng ${response.user?.name || 'bạn'}!`, {
-                title: 'Đăng nhập Google thành công',
+            toast.success(`Welcome, ${response.user?.name || 'user'}!`, {
+                title: 'Google Login Successful',
             });
             navigate('/dashboard');
         } catch (err) {
-            const errorMsg = err?.message || "Đăng nhập Google thất bại. Vui lòng thử lại!";
+            const errorMsg = err?.message || "Google login failed. Please try again!";
             setError(errorMsg);
             toast.error(errorMsg, {
-                title: 'Đăng nhập Google thất bại',
+                title: 'Google Login Failed',
             });
         }
     };
 
     const handleGoogleError = () => {
-        const errorMsg = "Đăng nhập Google thất bại. Vui lòng thử lại!";
+        const errorMsg = "Google login failed. Please try again!";
         setError(errorMsg);
         toast.error(errorMsg, {
-            title: 'Lỗi xác thực',
+            title: 'Authentication Error',
         });
     };
 
@@ -75,7 +75,7 @@ const Register = () => {
                     <span className="text-2xl font-bold text-gray-800">Task</span>
                     <span className="text-2xl font-bold text-pink-500">Note</span>
                 </div>
-                <h1 className='text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider'>Đăng ký tài khoản</h1>
+                <h1 className='text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider'>Create Account</h1>
 
                 {error && (
                     <Alert
@@ -88,14 +88,14 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-sm font-medium text-gray-700'>Họ và tên</label>
+                        <label className='text-sm font-medium text-gray-700'>Full Name</label>
                         <input
                             type="text"
                             name='name'
                             required
                             value={formData.name}
                             onChange={handleChange}
-                            placeholder='VD: Nguyen Van A'
+                            placeholder='e.g. John Doe'
                             className='px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200' />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -106,11 +106,11 @@ const Register = () => {
                             required
                             value={formData.email}
                             onChange={handleChange}
-                            placeholder='VD: nguyenvana@gmail.com'
+                            placeholder='e.g. john@example.com'
                             className='px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200' />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-sm font-medium text-gray-700'>Mật khẩu</label>
+                        <label className='text-sm font-medium text-gray-700'>Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -118,13 +118,13 @@ const Register = () => {
                                 required
                                 value={formData.password}
                                 onChange={handleChange}
-                                placeholder='Tối thiểu 6 ký tự'
+                                placeholder='At least 6 characters'
                                 className='w-full px-3.5 py-2.5 pr-10 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200' />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 focus:outline-none cursor-pointer p-1"
-                                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
@@ -135,13 +135,13 @@ const Register = () => {
                         disabled={loading}
                         className="mt-2 rounded-xl bg-pink-400 hover:bg-pink-500 py-3 font-semibold text-white transition cursor-pointer shadow-md shadow-pink-200/50 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        {loading ? 'Đang xử lý...' : 'Đăng Ký'}
+                        {loading ? 'Processing...' : 'Sign Up'}
                     </button>
                 </form>
                 <p className="mt-5 text-center text-sm text-gray-500">
-                    Đã có tài khoản?{' '}
+                    Already have an account?{' '}
                     <Link to="/login" className="font-semibold text-pink-500 hover:text-pink-600 hover:underline">
-                        Đăng nhập ngay
+                        Log in now
                     </Link>
                 </p>
                 <div className="relative mt-5">
@@ -149,7 +149,7 @@ const Register = () => {
                         <div className="w-full border-t border-gray-200"></div>
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-gray-400">Hoặc</span>
+                        <span className="bg-white px-2 text-gray-400">Or</span>
                     </div>
                 </div>
                 <div className="mt-4 flex justify-center">
@@ -158,7 +158,7 @@ const Register = () => {
                         onError={handleGoogleError}
                         useProminentStyles
                         size="large"
-                        text="Đăng nhập với Google"
+                        text="signup_with"
                         theme="outline"
                         shape="rectangular"
                         logo_alignment="center"

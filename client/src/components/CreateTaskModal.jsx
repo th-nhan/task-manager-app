@@ -98,7 +98,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
     const handleDueDateChange = (e) => {
         const newDueDate = e.target.value;
         if (formData.startDate && newDueDate && new Date(newDueDate) < new Date(formData.startDate)) {
-            setError('Hạn chót không được trước ngày & giờ bắt đầu!');
+            setError('Due date cannot be earlier than start date & time!');
         } else {
             setError('');
         }
@@ -110,7 +110,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
         if (!formData.title.trim()) return;
 
         if (formData.startDate && formData.dueDate && new Date(formData.dueDate) < new Date(formData.startDate)) {
-            setError('Hạn chót không được trước ngày & giờ bắt đầu!');
+            setError('Due date cannot be earlier than start date & time!');
             return;
         }
 
@@ -124,8 +124,8 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
             });
             onClose();
         } catch (e) {
-            console.error('Lỗi khi lưu task:', e);
-            setError(e?.response?.data?.message || (task ? 'Không thể cập nhật công việc. Vui lòng thử lại.' : 'Không thể tạo công việc. Vui lòng thử lại.'));
+            console.error('Error saving task:', e);
+            setError(e?.response?.data?.message || (task ? 'Failed to update task. Please try again.' : 'Failed to create task. Please try again.'));
         } finally {
             setLoading(false);
         }
@@ -167,14 +167,14 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                 id="title"
                                 name="title"
                                 required
-                                placeholder="Nhập tên công việc..."
+                                placeholder="Enter task title..."
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-700"
                             />
                         </div>
 
-                        {/* Ngày & Giờ Bắt Đầu + Hạn Chót */}
+                        {/* Start Date & Time + Due Date */}
                         <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div className="w-full">
                                 <label htmlFor="startDate" className="block text-sm font-medium mb-2">Start Date & Time</label>
@@ -192,7 +192,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         type="button"
                                         onClick={() => startDateInputRef.current?.showPicker()}
                                         className="absolute right-3 text-pink-400 hover:text-pink-500 cursor-pointer"
-                                        title="Chọn thời gian bắt đầu"
+                                        title="Select start date & time"
                                     >
                                         <Clock className="w-5 h-5" />
                                     </button>
@@ -216,7 +216,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         type="button"
                                         onClick={() => dueDateInputRef.current?.showPicker()}
                                         className="absolute right-3 text-pink-400 hover:text-pink-500 cursor-pointer"
-                                        title="Chọn hạn chót"
+                                        title="Select due date & time"
                                     >
                                         <Calendar className="w-5 h-5" />
                                     </button>
@@ -253,7 +253,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                             <textarea
                                 id="description"
                                 name="description"
-                                placeholder="Mô tả chi tiết công việc..."
+                                placeholder="Enter task description..."
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 resize-none h-24 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-700 text-sm"
@@ -267,7 +267,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         type="button"
                                         onClick={() => onDelete(task.id)}
                                         className="px-3.5 py-2 text-red-500 hover:bg-red-50 border border-red-200 rounded-lg cursor-pointer transition-colors flex items-center gap-1.5 text-sm font-medium"
-                                        title="Xóa công việc này"
+                                        title="Delete this task"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                         Delete

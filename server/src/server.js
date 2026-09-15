@@ -17,9 +17,9 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/categories', categoryRoutes);
 
 app.get('/api/health',(req,res) =>{
-    res.json({message: 'Server đang chạy bình thường'});
+    res.json({message: 'Server is running normally'});
 });
 
 app.listen(PORT, () => {
-    console.log(`Server đang chạy tại port http://localhost:${PORT}`);
+    console.log(`Server is running at http://localhost:${PORT}`);
 })

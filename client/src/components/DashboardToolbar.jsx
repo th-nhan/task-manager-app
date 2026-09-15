@@ -30,13 +30,13 @@ export const DashboardToolbar = ({
                 <div className="flex items-center gap-2">
                     <div className="p-2 font-semibold text-pink-400 text-sm italic">{dateRangeTitle}</div>
                     <div className="flex items-center gap-3 bg-pink-50 text-pink-400 hover:bg-pink-100 rounded-full px-3 py-1.5 transition-colors">
-                        <button onClick={onPrev} title="Trước" className="hover:text-pink-600 transition-colors cursor-pointer">
+                        <button onClick={onPrev} title="Previous" className="hover:text-pink-600 transition-colors cursor-pointer">
                             <CircleArrowLeft className="w-5 h-5" />
                         </button>
                         <button onClick={onToday} className="font-bold text-pink-400 text-sm hover:text-pink-600 transition-colors cursor-pointer">
                             Today
                         </button>
-                        <button onClick={onNext} title="Tiếp theo" className="hover:text-pink-600 transition-colors cursor-pointer">
+                        <button onClick={onNext} title="Next" className="hover:text-pink-600 transition-colors cursor-pointer">
                             <CircleArrowRight className="w-5 h-5" />
                         </button>
                     </div>

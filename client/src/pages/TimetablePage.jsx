@@ -101,12 +101,12 @@ export const TimetablePage = () => {
 
     const handleUpdateTimetableFromExcel = (newItems) => {
         persistTimetable(newItems);
-        toast.success(`Đã cập nhật ${newItems.length} ca học từ file Excel!`);
+        toast.success(`Updated ${newItems.length} class sessions from Excel file!`);
     };
 
     const handleResetDefault = () => {
         persistTimetable(DEFAULT_TIMETABLE_ITEMS);
-        toast.info('Đã khôi phục dữ liệu thời khóa biểu gốc mặc định.');
+        toast.info('Reset timetable to default data.');
     };
 
     // Open Add Modal
@@ -129,12 +129,12 @@ export const TimetablePage = () => {
                 item.id === editingClassItem.id ? { ...item, ...classData } : item
             );
             persistTimetable(updated);
-            toast.success(`Đã cập nhật ca học "${classData.className}" thành công!`);
+            toast.success(`Updated class session "${classData.className}" successfully!`);
         } else {
             // Add new
             const updated = [...timetableItems, classData];
             persistTimetable(updated);
-            toast.success(`Đã thêm ca học "${classData.className}" vào Thời Khóa Biểu!`);
+            toast.success(`Added class session "${classData.className}" to Timetable!`);
         }
     };
 
@@ -143,7 +143,7 @@ export const TimetablePage = () => {
         const itemToDelete = timetableItems.find(i => i.id === classId);
         const updated = timetableItems.filter(item => item.id !== classId);
         persistTimetable(updated);
-        toast.success(`Đã xóa ca học "${itemToDelete?.className || ''}" thành công!`);
+        toast.success(`Deleted class session "${itemToDelete?.className || ''}" successfully!`);
         if (selectedClass && selectedClass.id === classId) {
             setIsDetailModalOpen(false);
             setSelectedClass(null);
@@ -177,8 +177,8 @@ export const TimetablePage = () => {
         dueDate.setHours(endH, endM, 0, 0);
 
         setTaskPrefillData({
-            title: `Dạy lớp: ${classItem.className} (${classItem.originalCode})`,
-            description: `Khung giờ: ${classItem.timeRange}\nCơ sở: ${classItem.location}\nKhối: ${classItem.grade} - Trình độ: ${classItem.level}`,
+            title: `Teaching Class: ${classItem.className} (${classItem.originalCode})`,
+            description: `Time: ${classItem.timeRange}\nLocation: ${classItem.location}\nGrade: ${classItem.grade} - Level: ${classItem.level}`,
             priority: 'HIGH',
             status: 'TODO',
             startDate: startDate.toISOString(),
@@ -190,22 +190,22 @@ export const TimetablePage = () => {
     const handleSaveTaskFromModal = async (taskData) => {
         try {
             await taskApi.createTask(taskData);
-            toast.success('Đã tạo công việc thành công trong Lịch/Dashboard!');
+            toast.success('Task created successfully in Schedule/Dashboard!');
             setIsCreateTaskModalOpen(false);
             setTaskPrefillData(null);
         } catch (err) {
             console.error('Error creating task:', err);
-            toast.error('Không thể tạo công việc từ TKB!');
+            toast.error('Failed to create task from timetable!');
         }
     };
 
     const handleExport = () => {
         if (timetableItems.length === 0) {
-            toast.warning('Thời khóa biểu hiện đang trống, không có dữ liệu để xuất!');
+            toast.warning('Timetable is currently empty, no data to export!');
             return;
         }
         exportTimetableToExcel(timetableItems);
-        toast.success('Đã tải xuống file Excel Thời Khóa Biểu!');
+        toast.success('Timetable Excel file downloaded!');
     };
 
     const handlePrint = () => {
@@ -233,15 +233,15 @@ export const TimetablePage = () => {
                             <div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-xs font-bold uppercase tracking-wider text-pink-600">
-                                        {liveStatus.activeClass ? '🔴 Đang trong giờ dạy' : '⏰ Ca học tiếp theo'}
+                                        {liveStatus.activeClass ? '🔴 Class in Progress' : '⏰ Next Class'}
                                     </span>
                                     {liveStatus.activeClass ? (
                                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                                            Còn ~{liveStatus.activeClass.minutesRemaining} phút
+                                            ~{liveStatus.activeClass.minutesRemaining} mins left
                                         </span>
                                     ) : liveStatus.nextClass?.isToday ? (
                                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-                                            Sau {Math.floor(liveStatus.nextClass.minutesUntil / 60)}h{liveStatus.nextClass.minutesUntil % 60}p
+                                            In {Math.floor(liveStatus.nextClass.minutesUntil / 60)}h {liveStatus.nextClass.minutesUntil % 60}m
                                         </span>
                                     ) : (
                                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
@@ -262,7 +262,7 @@ export const TimetablePage = () => {
                                 onClick={() => handleOpenClassDetail(liveStatus.activeClass || liveStatus.nextClass)}
                                 className="px-3.5 py-1.5 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold text-xs transition-colors cursor-pointer"
                             >
-                                Xem chi tiết
+                                View Details
                             </button>
                         </div>
                     </div>
@@ -284,7 +284,7 @@ export const TimetablePage = () => {
                             }`}
                         >
                             <LayoutGrid className="w-4 h-4" />
-                            <span>Lưới TKB Tuần</span>
+                            <span>Weekly Grid</span>
                         </button>
 
                         <button
@@ -296,7 +296,7 @@ export const TimetablePage = () => {
                             }`}
                         >
                             <Flame className="w-4 h-4 text-amber-300" />
-                            <span>Trọng Tâm T7 & CN</span>
+                            <span>Weekend Focus (Sat & Sun)</span>
                         </button>
 
                         <button
@@ -308,7 +308,7 @@ export const TimetablePage = () => {
                             }`}
                         >
                             <ListFilter className="w-4 h-4" />
-                            <span>Danh Sách ({timetableItems.length} Ca)</span>
+                            <span>List View ({timetableItems.length} Slots)</span>
                         </button>
 
                         <button
@@ -320,7 +320,7 @@ export const TimetablePage = () => {
                             }`}
                         >
                             <GraduationCap className="w-4 h-4" />
-                            <span>Theo Khối Lớp</span>
+                            <span>By Grade</span>
                         </button>
                     </div>
 
@@ -329,11 +329,11 @@ export const TimetablePage = () => {
                         {/* Add Class Button */}
                         <button
                             onClick={handleOpenAddModal}
-                            title="Thêm ca học mới"
+                            title="Add new class session"
                             className="flex items-center gap-1.5 px-4 py-2 text-xs md:text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer"
                         >
                             <PlusCircle className="w-4 h-4" />
-                            <span>Thêm Ca Học</span>
+                            <span>Add Class Slot</span>
                         </button>
 
                         {viewMode === 'grid' && (
@@ -343,10 +343,10 @@ export const TimetablePage = () => {
                                     onChange={e => setSelectedGrade(e.target.value)}
                                     className="text-xs px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer"
                                 >
-                                    <option value="ALL">Tất cả Khối</option>
-                                    <option value="10">Khối 10</option>
-                                    <option value="11">Khối 11</option>
-                                    <option value="12">Khối 12</option>
+                                    <option value="ALL">All Grades</option>
+                                    <option value="10">Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
                                 </select>
 
                                 <select
@@ -354,7 +354,7 @@ export const TimetablePage = () => {
                                     onChange={e => setSelectedLocation(e.target.value)}
                                     className="text-xs px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer"
                                 >
-                                    <option value="ALL">Tất cả Cơ sở</option>
+                                    <option value="ALL">All Locations</option>
                                     <option value="Long Thượng">Long Thượng</option>
                                     <option value="Mỹ Lộc">Mỹ Lộc</option>
                                 </select>
@@ -364,27 +364,27 @@ export const TimetablePage = () => {
                         {/* Import Button */}
                         <button
                             onClick={() => setIsUploadModalOpen(true)}
-                            title="Tải lên file Excel mới"
+                            title="Upload new Excel file"
                             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer"
                         >
                             <Upload className="w-3.5 h-3.5 text-pink-500" />
-                            <span>Nhập Excel</span>
+                            <span>Import Excel</span>
                         </button>
 
                         {/* Export Button */}
                         <button
                             onClick={handleExport}
-                            title="Xuất file Excel"
+                            title="Export Excel file"
                             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer"
                         >
                             <Download className="w-3.5 h-3.5" />
-                            <span>Xuất Excel</span>
+                            <span>Export Excel</span>
                         </button>
 
                         {/* Print Button */}
                         <button
                             onClick={handlePrint}
-                            title="In thời khóa biểu"
+                            title="Print timetable"
                             className="p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors cursor-pointer"
                         >
                             <Printer className="w-4 h-4" />

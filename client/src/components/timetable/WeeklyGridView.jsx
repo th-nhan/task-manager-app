@@ -36,24 +36,24 @@ export const WeeklyGridView = ({
             <div className="p-4 md:p-6 bg-gradient-to-r from-pink-50/70 via-white to-pink-50/50 border-b border-pink-100 flex flex-wrap items-center justify-between gap-2">
                 <div>
                     <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                        <span>📅 Bảng Ma Trận Thời Khóa Biểu Tuần</span>
+                        <span>📅 Weekly Timetable Matrix</span>
                         <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-600 border border-pink-200">
-                            Cập nhật T7 & CN
+                            Updated Sat & Sun
                         </span>
                     </h2>
                     <p className="text-xs text-gray-500 mt-0.5">
-                        Tổng hợp lịch dạy Thứ 2 đến Chủ nhật theo từng khung giờ
+                        Teaching schedule from Monday to Sunday by time slots
                     </p>
                 </div>
                 <div className="flex items-center gap-3 text-xs">
                     <span className="flex items-center gap-1 font-medium text-emerald-700">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Khối 10
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Grade 10
                     </span>
                     <span className="flex items-center gap-1 font-medium text-indigo-700">
-                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span> Khối 11
+                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span> Grade 11
                     </span>
                     <span className="flex items-center gap-1 font-medium text-rose-700">
-                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Khối 12
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Grade 12
                     </span>
                 </div>
             </div>
@@ -64,7 +64,7 @@ export const WeeklyGridView = ({
                     <thead>
                         <tr className="bg-pink-50/60 border-b border-pink-100">
                             <th className="p-3.5 text-xs font-bold text-gray-600 uppercase tracking-wider w-36 text-center">
-                                Khung Giờ
+                                Time Slot
                             </th>
                             {DAYS_OF_WEEK.map(day => {
                                 const isToday = day.index === todayIndex;
@@ -80,10 +80,10 @@ export const WeeklyGridView = ({
                                         }`}
                                     >
                                         <div className="flex items-center justify-center gap-1.5">
-                                            <span>{day.label}</span>
+                                            <span>{day.labelEn || day.label}</span>
                                             {isToday && (
                                                 <span className="flex items-center text-[10px] px-1.5 py-0.2 rounded-full bg-pink-500 text-white font-normal">
-                                                    Hôm nay
+                                                    Today
                                                 </span>
                                             )}
                                         </div>
@@ -104,7 +104,7 @@ export const WeeklyGridView = ({
                                     {/* Time Column */}
                                     <td className="p-3 text-center border-r border-pink-100/60 bg-gray-50/50">
                                         <div className="font-bold text-xs text-gray-800">{slotItem.label}</div>
-                                        <div className="text-[10px] text-pink-500 font-medium mt-0.5">{slotItem.period}</div>
+                                        <div className="text-[10px] text-pink-500 font-medium mt-0.5">{slotItem.periodEn || slotItem.period}</div>
                                     </td>
 
                                     {/* Days Columns */}
@@ -141,7 +141,7 @@ export const WeeklyGridView = ({
                                                                     <div className="pl-1 flex flex-col gap-1">
                                                                         <div className="flex items-center justify-between gap-1">
                                                                             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
-                                                                                K{cls.grade}
+                                                                                G{cls.grade}
                                                                             </span>
                                                                             <span className="text-[10px] font-bold text-gray-600 bg-white/80 px-1 rounded">
                                                                                 {cls.location === 'Long Thượng' ? 'LT' : 'ML'}
@@ -175,17 +175,17 @@ export const WeeklyGridView = ({
             {/* Footer convention notes */}
             <div className="p-4 bg-gray-50/80 border-t border-pink-100 flex flex-wrap items-center justify-between text-xs text-gray-500 gap-2">
                 <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Quy ước viết tắt:</span>
-                    <span>CB: Cơ bản</span>
+                    <span className="font-semibold text-gray-700">Abbreviations:</span>
+                    <span>CB: Basic</span>
                     <span>•</span>
-                    <span>NC: Nâng cao</span>
+                    <span>NC: Advanced</span>
                     <span>•</span>
                     <span>LT: Long Thượng</span>
                     <span>•</span>
                     <span>ML / NL: Mỹ Lộc</span>
                 </div>
                 <div className="text-gray-400">
-                    Nhấp vào ô ca học để xem chi tiết hoặc tạo task
+                    Click a class slot to view details or create a task
                 </div>
             </div>
         </div>

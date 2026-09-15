@@ -7,28 +7,28 @@ const typeConfig = {
         iconBg: 'bg-pink-100 text-pink-500',
         borderColor: 'border-pink-200',
         progressBarBg: 'bg-gradient-to-r from-pink-400 to-pink-500',
-        defaultTitle: 'Thành công',
+        defaultTitle: 'Success',
     },
     error: {
         icon: AlertCircle,
         iconBg: 'bg-red-100 text-red-500',
         borderColor: 'border-red-200',
         progressBarBg: 'bg-gradient-to-r from-red-400 to-pink-500',
-        defaultTitle: 'Đã có lỗi xảy ra',
+        defaultTitle: 'Error',
     },
     warning: {
         icon: AlertTriangle,
         iconBg: 'bg-amber-100 text-amber-500',
         borderColor: 'border-amber-200',
         progressBarBg: 'bg-gradient-to-r from-amber-400 to-pink-400',
-        defaultTitle: 'Cảnh báo',
+        defaultTitle: 'Warning',
     },
     info: {
         icon: Info,
         iconBg: 'bg-pink-50 text-pink-500',
         borderColor: 'border-pink-200',
         progressBarBg: 'bg-gradient-to-r from-pink-300 to-pink-500',
-        defaultTitle: 'Thông báo',
+        defaultTitle: 'Notification',
     },
 };
 
@@ -116,7 +116,7 @@ export const NotificationItem = ({ notification, onRemove }) => {
                 type="button"
                 onClick={handleClose}
                 className="text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-lg p-1 transition-colors cursor-pointer shrink-0"
-                aria-label="Đóng thông báo"
+                aria-label="Close notification"
             >
                 <X className="w-4 h-4" />
             </button>

@@ -31,7 +31,7 @@ export const ClassDetailModal = ({
     };
 
     const handleDelete = () => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa ca học "${classItem.className}" (${classItem.dayOfWeek})?`)) {
+        if (window.confirm(`Are you sure you want to delete class session "${classItem.className}" (${classItem.dayOfWeek})?`)) {
             onDelete(classItem.id);
             onClose();
         }
@@ -57,7 +57,7 @@ export const ClassDetailModal = ({
                                 {classItem.className}
                             </h3>
                             <span className="inline-block mt-1 font-mono text-xs font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md border border-pink-200">
-                                Mã gốc: {classItem.originalCode}
+                                Original Code: {classItem.originalCode}
                             </span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ export const ClassDetailModal = ({
                                     onEdit(classItem);
                                     onClose();
                                 }}
-                                title="Chỉnh sửa ca học"
+                                title="Edit class slot"
                                 className="text-gray-400 hover:text-pink-600 p-2 rounded-full hover:bg-white/80 transition-colors cursor-pointer"
                             >
                                 <Edit className="w-4 h-4" />
@@ -77,7 +77,7 @@ export const ClassDetailModal = ({
                         {onDelete && (
                             <button
                                 onClick={handleDelete}
-                                title="Xóa ca học"
+                                title="Delete class slot"
                                 className="text-gray-400 hover:text-rose-600 p-2 rounded-full hover:bg-white/80 transition-colors cursor-pointer"
                             >
                                 <Trash2 className="w-4 h-4" />
@@ -101,7 +101,7 @@ export const ClassDetailModal = ({
                                 <Clock className="w-4 h-4" />
                             </div>
                             <div>
-                                <div className="text-[11px] text-gray-400 font-medium">Khung giờ</div>
+                                <div className="text-[11px] text-gray-400 font-medium">Time Slot</div>
                                 <div className="text-sm font-bold text-gray-800">{classItem.timeRange}</div>
                             </div>
                         </div>
@@ -111,7 +111,7 @@ export const ClassDetailModal = ({
                                 <MapPin className="w-4 h-4" />
                             </div>
                             <div>
-                                <div className="text-[11px] text-gray-400 font-medium">Cơ sở / Địa điểm</div>
+                                <div className="text-[11px] text-gray-400 font-medium">Branch / Location</div>
                                 <div className="text-sm font-bold text-gray-800">{classItem.location}</div>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ export const ClassDetailModal = ({
                                 <BookOpen className="w-4 h-4" />
                             </div>
                             <div>
-                                <div className="text-[11px] text-gray-400 font-medium">Phân loại trình độ</div>
+                                <div className="text-[11px] text-gray-400 font-medium">Academic Level</div>
                                 <div className="text-sm font-bold text-gray-800">{classItem.level}</div>
                             </div>
                         </div>
@@ -131,8 +131,8 @@ export const ClassDetailModal = ({
                                 <GraduationCap className="w-4 h-4" />
                             </div>
                             <div>
-                                <div className="text-[11px] text-gray-400 font-medium">Khối lớp</div>
-                                <div className="text-sm font-bold text-gray-800">Khối {classItem.grade} ({classItem.group || 'Chính'})</div>
+                                <div className="text-[11px] text-gray-400 font-medium">Grade Level</div>
+                                <div className="text-sm font-bold text-gray-800">Grade {classItem.grade} ({classItem.group || 'Main'})</div>
                             </div>
                         </div>
                     </div>
@@ -142,18 +142,18 @@ export const ClassDetailModal = ({
                         <div className="flex items-center justify-between">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                 <FileText className="w-3.5 h-3.5 text-pink-500" />
-                                Ghi chú buổi dạy / Phòng học
+                                Session Notes / Classroom
                             </label>
                             {savedNotice && (
                                 <span className="text-xs text-emerald-600 font-medium flex items-center gap-1">
-                                    <Check className="w-3.5 h-3.5" /> Đã lưu
+                                    <Check className="w-3.5 h-3.5" /> Saved
                                 </span>
                             )}
                         </div>
                         <textarea
                             value={note}
                             onChange={e => setNote(e.target.value)}
-                            placeholder="Ví dụ: Phòng A102, bài tập chương 3, cần chuẩn bị đề kiểm tra..."
+                            placeholder="E.g., Room A102, chapter 3 exercises, prepare quiz paper..."
                             className="w-full text-sm p-3 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent min-h-[80px] bg-pink-50/30 resize-none"
                         />
                         <div className="flex justify-end">
@@ -161,7 +161,7 @@ export const ClassDetailModal = ({
                                 onClick={handleSaveNote}
                                 className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors cursor-pointer"
                             >
-                                Lưu ghi chú cá nhân
+                                Save Personal Note
                             </button>
                         </div>
                     </div>
@@ -179,7 +179,7 @@ export const ClassDetailModal = ({
                                 className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-200/60 rounded-xl transition-colors cursor-pointer"
                             >
                                 <Edit className="w-3.5 h-3.5 text-pink-500" />
-                                Sửa
+                                Edit
                             </button>
                         )}
                         {onDelete && (
@@ -188,7 +188,7 @@ export const ClassDetailModal = ({
                                 className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
-                                Xóa
+                                Delete
                             </button>
                         )}
                     </div>
@@ -201,7 +201,7 @@ export const ClassDetailModal = ({
                             className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer"
                         >
                             <PlusCircle className="w-4 h-4" />
-                            Tạo Task từ ca học này
+                            Create Task from this Slot
                         </button>
                     )}
                 </div>

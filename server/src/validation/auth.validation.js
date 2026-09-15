@@ -2,15 +2,15 @@ import { z } from 'zod';
 
 export const registerSchema = z.object({
   body: z.object({
-    name: z.string({ required_error: 'Họ tên là bắt buộc' }).min(2, 'Họ tên phải có ít nhất 2 ký tự'),
-    email: z.string({ required_error: 'Email là bắt buộc' }).email('Email không đúng định dạng'),
-    password: z.string({ required_error: 'Mật khẩu là bắt buộc' }).min(6, 'Mật khẩu phải từ 6 ký tự trở lên'),
+    name: z.string({ required_error: 'Name is required' }).min(2, 'Name must be at least 2 characters'),
+    email: z.string({ required_error: 'Email is required' }).email('Invalid email address format'),
+    password: z.string({ required_error: 'Password is required' }).min(6, 'Password must be at least 6 characters'),
   }),
 });
 
 export const loginSchema = z.object({
   body: z.object({
-    email: z.string().email('Email không đúng định dạng'),
-    password: z.string().min(1, 'Mật khẩu không được để trống'),
+    email: z.string().email('Invalid email address format'),
+    password: z.string().min(1, 'Password cannot be empty'),
   }),
 });

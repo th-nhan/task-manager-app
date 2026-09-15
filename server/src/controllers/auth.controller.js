@@ -8,13 +8,13 @@ export const register = async (req, res) => {
         const {name, email, password} = req.body;
 
         if ( !name || !email || !password) {
-            return res.status(400).json({message: 'Vui lòng điền họ tên, email và mật khẩu!'});
+            return res.status(400).json({message: 'Please provide name, email, and password!'});
         }
 
         const existingUser = await prisma.user.findUnique({where: {email}});
 
         if (existingUser){
-            return res.status(400).json({message: 'Email đã được sử dụng!'});
+            return res.status(400).json({message: 'Email is already in use!'});
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -29,13 +29,13 @@ export const register = async (req, res) => {
             select: {id: true, name: true, email: true, createdAt: true},
         });
 
-        res.status(201).json({message: 'Đăng ký thành công!', user: newUser});
+        res.status(201).json({message: 'Registration successful!', user: newUser});
         
 
 
     } catch (err){
-        console.log('Lỗi server khi đăng ký:', err);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.log('Server error during registration:', err);
+        return res.status(500).json({message: 'Server error'});
     }
 }
 
@@ -44,19 +44,19 @@ export const login = async (req, res) => {
         const {email, password} = req.body;
 
         if(!email || !password){
-            return res.status(400).json({message: 'Vui lòng nhập email và mật khẩu!'});
+            return res.status(400).json({message: 'Please provide email and password!'});
         }
 
         const user = await prisma.user.findUnique({where: {email}});
 
         if(!user){
-            return res.status(401).json({message: 'Email hoặc mật khẩu không đúng!'});
+            return res.status(401).json({message: 'Invalid email or password!'});
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if(!isMatch){
-            return res.status(401).json({message: 'Email hoặc mật khẩu không đúng!'});
+            return res.status(401).json({message: 'Invalid email or password!'});
         }
 
         const token = jwt.sign(
@@ -66,13 +66,13 @@ export const login = async (req, res) => {
         )
 
         res.json({
-            message: 'Đăng nhập thành công',
+            message: 'Login successful!',
             token,
             user: {id: user.id, name: user.name, email: user.email},
         });
     } catch (error){
-        console.error('Lỗi server khi đăng nhập:', error);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.error('Server error during login:', error);
+        return res.status(500).json({message: 'Server error'});
     }
 }
 
@@ -82,7 +82,7 @@ export const googleLogin = async (req, res) => {
     try {
         const {credential} = req.body;
         if (!credential) {
-            return res.status(400).json({message: 'Không tìm thấy google token!'});
+            return res.status(400).json({message: 'Google token not found!'});
         }
 
         const ticket = await client.verifyIdToken({
@@ -114,7 +114,7 @@ export const googleLogin = async (req, res) => {
         );
 
         res.json({
-            message: 'Đăng nhập thành công!',
+            message: 'Login successful!',
             token,
             user: {
                 id: user.id,
@@ -124,7 +124,7 @@ export const googleLogin = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Lỗi server khi đăng nhập google:', error);
-        return res.status(500).json({message: 'Xác thực Google thất bại!'});
+        console.error('Server error during Google login:', error);
+        return res.status(500).json({message: 'Google authentication failed!'});
     }
 }

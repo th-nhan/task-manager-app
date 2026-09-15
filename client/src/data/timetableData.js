@@ -275,13 +275,13 @@ export const DEFAULT_TIMETABLE_ITEMS = [
 ];
 
 export const DAYS_OF_WEEK = [
-    { key: 'Thứ 2', label: 'Thứ Hai', shortLabel: 'T2', index: 1 },
-    { key: 'Thứ 3', label: 'Thứ Ba', shortLabel: 'T3', index: 2 },
-    { key: 'Thứ 4', label: 'Thứ Tư', shortLabel: 'T4', index: 3 },
-    { key: 'Thứ 5', label: 'Thứ Năm', shortLabel: 'T5', index: 4 },
-    { key: 'Thứ 6', label: 'Thứ Sáu', shortLabel: 'T6', index: 5 },
-    { key: 'Thứ 7', label: 'Thứ Bảy', shortLabel: 'T7', index: 6, isWeekend: true },
-    { key: 'Chủ nhật', label: 'Chủ Nhật', shortLabel: 'CN', index: 0, isWeekend: true }
+    { key: 'Thứ 2', label: 'Monday', labelEn: 'Monday', shortLabel: 'Mon', shortLabelEn: 'Mon', index: 1 },
+    { key: 'Thứ 3', label: 'Tuesday', labelEn: 'Tuesday', shortLabel: 'Tue', shortLabelEn: 'Tue', index: 2 },
+    { key: 'Thứ 4', label: 'Wednesday', labelEn: 'Wednesday', shortLabel: 'Wed', shortLabelEn: 'Wed', index: 3 },
+    { key: 'Thứ 5', label: 'Thursday', labelEn: 'Thursday', shortLabel: 'Thu', shortLabelEn: 'Thu', index: 4 },
+    { key: 'Thứ 6', label: 'Friday', labelEn: 'Friday', shortLabel: 'Fri', shortLabelEn: 'Fri', index: 5 },
+    { key: 'Thứ 7', label: 'Saturday', labelEn: 'Saturday', shortLabel: 'Sat', shortLabelEn: 'Sat', index: 6, isWeekend: true },
+    { key: 'Chủ nhật', label: 'Sunday', labelEn: 'Sunday', shortLabel: 'Sun', shortLabelEn: 'Sun', index: 0, isWeekend: true }
 ];
 
 export const TIME_SLOTS_MATRIX = [
@@ -291,6 +291,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '07:00 – 08:30', 
         shift: 'Sáng', 
         period: 'Ca 1 (Sáng)',
+        periodEn: 'Slot 1 (Morning)',
         startTimes: ['07:00']
     },
     { 
@@ -299,6 +300,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '08:30 – 10:00', 
         shift: 'Sáng', 
         period: 'Ca 2 (Sáng)',
+        periodEn: 'Slot 2 (Morning)',
         startTimes: ['08:30']
     },
     { 
@@ -307,6 +309,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '10:00 – 11:30', 
         shift: 'Sáng', 
         period: 'Ca 3 (Sáng)',
+        periodEn: 'Slot 3 (Morning)',
         startTimes: ['10:00']
     },
     { 
@@ -315,6 +318,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '14:00 – 15:30', 
         shift: 'Chiều', 
         period: 'Ca Chiều 1 (2h - 3h30)',
+        periodEn: 'Afternoon 1 (2:00 - 3:30 PM)',
         startTimes: ['14:00']
     },
     { 
@@ -323,6 +327,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '15:30 – 17:00', 
         shift: 'Chiều', 
         period: 'Ca Chiều 2 (3h30 - 5h)',
+        periodEn: 'Afternoon 2 (3:30 - 5:00 PM)',
         startTimes: ['15:30']
     },
     { 
@@ -331,6 +336,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '17:00 – 18:30', 
         shift: 'Chiều', 
         period: 'Ca Chiều (5h - 6h30)',
+        periodEn: 'Afternoon (5:00 - 6:30 PM)',
         startTimes: ['16:45', '17:00']
     },
     { 
@@ -339,6 +345,7 @@ export const TIME_SLOTS_MATRIX = [
         label: '18:45 – 20:15 / 18:30 – 20:00', 
         shift: 'Tối', 
         period: 'Ca Tối (6h45 - 8h15)',
+        periodEn: 'Evening (6:45 - 8:15 PM)',
         startTimes: ['18:30', '18:45']
     },
     { 
@@ -347,13 +354,14 @@ export const TIME_SLOTS_MATRIX = [
         label: '19:30 – 21:00', 
         shift: 'Tối', 
         period: 'Ca Tối muộn (7h30 - 9h)',
+        periodEn: 'Late Evening (7:30 - 9:00 PM)',
         startTimes: ['19:30']
     }
 ];
 
 export const GRADE_CONFIG = {
     10: {
-        label: 'Khối 10',
+        label: 'Grade 10',
         badgeBg: 'bg-emerald-500/15',
         badgeText: 'text-emerald-700',
         badgeBorder: 'border-emerald-200',
@@ -364,7 +372,7 @@ export const GRADE_CONFIG = {
         ringColor: 'ring-emerald-400'
     },
     11: {
-        label: 'Khối 11',
+        label: 'Grade 11',
         badgeBg: 'bg-indigo-500/15',
         badgeText: 'text-indigo-700',
         badgeBorder: 'border-indigo-200',
@@ -375,7 +383,7 @@ export const GRADE_CONFIG = {
         ringColor: 'ring-indigo-400'
     },
     12: {
-        label: 'Khối 12',
+        label: 'Grade 12',
         badgeBg: 'bg-rose-500/15',
         badgeText: 'text-rose-700',
         badgeBorder: 'border-rose-200',
@@ -404,15 +412,15 @@ export const LOCATION_CONFIG = {
 
 export const LEVEL_CONFIG = {
     'Cơ bản': {
-        label: 'Cơ bản',
+        label: 'Basic',
         color: 'bg-teal-50 text-teal-700 border-teal-200'
     },
     'Nâng cao': {
-        label: 'Nâng cao',
+        label: 'Advanced',
         color: 'bg-purple-50 text-purple-700 border-purple-200'
     },
     'Nâng cao & Cơ bản': {
-        label: 'Nâng cao & Cơ bản',
+        label: 'Advanced & Basic',
         color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200'
     }
 };
@@ -479,15 +487,15 @@ export function getLiveScheduleStatus(timetableItems, now = new Date()) {
 }
 
 // Xuất file Excel từ danh sách TKB
-export function exportTimetableToExcel(timetableItems, filename = 'Thoi_Khoa_Bieu_Giang_Day.xlsx') {
+export function exportTimetableToExcel(timetableItems, filename = 'Teaching_Timetable_Schedule.xlsx') {
     const wb = XLSX.utils.book_new();
 
-    // Sheet 1: Danh sách chi tiết
+    // Sheet 1: Detailed List
     const detailRows = [
-        ['THỜI KHÓA BIỂU GIẢNG DẠY (CẬP NHẬT T7 & CN)'],
-        ['Quy ước: CB: Cơ bản | NC: Nâng cao | LT: Long Thượng | ML / NL: Mỹ Lộc'],
+        ['TEACHING TIMETABLE SCHEDULE (UPDATED SAT & SUN)'],
+        ['Conventions: CB: Basic | NC: Advanced | LT: Long Thuong | ML / NL: My Loc'],
         [],
-        ['STT', 'Thứ', 'Khung giờ', 'Lớp học (Đầy đủ)', 'Ký hiệu gốc', 'Khối', 'Trình độ', 'Cơ sở', 'Ca học']
+        ['No.', 'Day', 'Time Slot', 'Class (Full Name)', 'Original Code', 'Grade', 'Level', 'Location', 'Shift']
     ];
 
     timetableItems.forEach((item, index) => {
@@ -497,7 +505,7 @@ export function exportTimetableToExcel(timetableItems, filename = 'Thoi_Khoa_Bie
             item.timeRange,
             item.className,
             item.originalCode,
-            `Khối ${item.grade}`,
+            `Grade ${item.grade}`,
             item.level,
             item.location,
             item.shift
@@ -505,13 +513,13 @@ export function exportTimetableToExcel(timetableItems, filename = 'Thoi_Khoa_Bie
     });
 
     const wsDetail = XLSX.utils.aoa_to_sheet(detailRows);
-    XLSX.utils.book_append_sheet(wb, wsDetail, 'Lịch dạy chi tiết');
+    XLSX.utils.book_append_sheet(wb, wsDetail, 'Detailed Schedule');
 
-    // Sheet 2: Lịch Thứ 7 & CN
+    // Sheet 2: Saturday & Sunday Focus
     const weekendRows = [
-        ['LỊCH DẠY THỨ 7 VÀ CHỦ NHẬT (ĐÃ SẮP XẾP LẠI)'],
+        ['WEEKEND SCHEDULE (SATURDAY & SUNDAY)'],
         [],
-        ['STT', 'Ngày', 'Khung giờ', 'Lớp giảng dạy', 'Ký hiệu', 'Cơ sở']
+        ['No.', 'Day', 'Time Slot', 'Class Name', 'Original Code', 'Location']
     ];
 
     const weekendItems = timetableItems
@@ -533,7 +541,7 @@ export function exportTimetableToExcel(timetableItems, filename = 'Thoi_Khoa_Bie
     });
 
     const wsWeekend = XLSX.utils.aoa_to_sheet(weekendRows);
-    XLSX.utils.book_append_sheet(wb, wsWeekend, 'Lịch Thứ 7 & CN');
+    XLSX.utils.book_append_sheet(wb, wsWeekend, 'Sat & Sun Schedule');
 
     // Save File
     XLSX.writeFile(wb, filename);

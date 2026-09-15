@@ -29,15 +29,15 @@ const Login = () => {
         try {
             const response = await authApi.login(formData);
             login(response.user, response.token);
-            toast.success(`Chào mừng ${response.user?.name || 'bạn'} quay trở lại!`, {
-                title: 'Đăng nhập thành công',
+            toast.success(`Welcome back, ${response.user?.name || 'user'}!`, {
+                title: 'Login Successful',
             });
             navigate('/dashboard');
         } catch (err) {
-            const errorMsg = err?.message || err?.response?.data?.message || "Email hoặc mật khẩu không chính xác. Vui lòng thử lại!";
+            const errorMsg = err?.message || err?.response?.data?.message || "Invalid email or password. Please try again!";
             setError(errorMsg);
             toast.error(errorMsg, {
-                title: 'Đăng nhập thất bại',
+                title: 'Login Failed',
             });
         } finally {
             setLoading(false);
@@ -48,24 +48,24 @@ const Login = () => {
         try {
             const response = await authApi.googleLogin(credentialResponse.credential);
             login(response.user, response.token);
-            toast.success(`Chào mừng ${response.user?.name || 'bạn'}!`, {
-                title: 'Đăng nhập Google thành công',
+            toast.success(`Welcome, ${response.user?.name || 'user'}!`, {
+                title: 'Google Login Successful',
             });
             navigate('/dashboard');
         } catch (err) {
-            const errorMsg = err?.message || "Đăng nhập Google thất bại. Vui lòng thử lại!";
+            const errorMsg = err?.message || "Google login failed. Please try again!";
             setError(errorMsg);
             toast.error(errorMsg, {
-                title: 'Đăng nhập Google thất bại',
+                title: 'Google Login Failed',
             });
         }
     };
 
     const handleGoogleError = () => {
-        const errorMsg = "Đăng nhập Google thất bại. Vui lòng thử lại!";
+        const errorMsg = "Google login failed. Please try again!";
         setError(errorMsg);
         toast.error(errorMsg, {
-            title: 'Lỗi xác thực',
+            title: 'Authentication Error',
         });
     };
 
@@ -76,7 +76,7 @@ const Login = () => {
                     <span className="text-2xl font-bold text-gray-800">Task</span>
                     <span className="text-2xl font-bold text-pink-500">Note</span>
                 </div>
-                <h1 className="text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider">Đăng nhập</h1>
+                <h1 className="text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider">Log In</h1>
 
                 {error && (
                     <Alert
@@ -96,11 +96,11 @@ const Login = () => {
                             required
                             value={formData.email}
                             onChange={handleChange}
-                            placeholder="VD: nguyenvana@gmail.com"
+                            placeholder="e.g. john@example.com"
                             className="text-sm border rounded-xl px-3.5 py-2.5 border-gray-200 outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200" />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-gray-700">Mật khẩu</label>
+                        <label className="text-sm font-medium text-gray-700">Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -108,13 +108,13 @@ const Login = () => {
                                 required
                                 value={formData.password}
                                 onChange={handleChange}
-                                placeholder="Nhập mật khẩu..."
+                                placeholder="Enter your password..."
                                 className="w-full pr-10 text-sm border rounded-xl px-3.5 py-2.5 border-gray-200 outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200" />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 focus:outline-none cursor-pointer p-1"
-                                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
@@ -124,20 +124,20 @@ const Login = () => {
                         type="submit"
                         disabled={loading}
                         className="mt-2 text-white text-sm bg-pink-400 hover:bg-pink-500 w-full rounded-xl py-3 font-semibold transition cursor-pointer shadow-md shadow-pink-200/50 disabled:cursor-not-allowed disabled:opacity-60">
-                       {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+                       {loading ? 'Processing...' : 'Log In'}
                     </button>
                 </form>
                 <div className="flex justify-end mt-3">
                     <Link
                         className="text-xs text-gray-400 hover:text-pink-500 transition-colors"
                         to="/register">
-                        Quên mật khẩu?
+                        Forgot password?
                     </Link>
                 </div>
                 <p className="mt-5 text-center text-sm text-gray-500">
-                    Chưa có tài khoản?{' '}
+                    Don't have an account?{' '}
                     <Link to={'/register'} className="font-semibold text-pink-500 hover:text-pink-600 hover:underline">
-                        Đăng ký ngay
+                        Sign up now
                     </Link>
                 </p>
                 <div className="relative mt-5">
@@ -145,7 +145,7 @@ const Login = () => {
                         <div className="w-full border-t border-gray-200"></div>
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-gray-400">Hoặc</span>
+                        <span className="bg-white px-2 text-gray-400">Or</span>
                     </div>
                 </div>
                 <div className="mt-4 flex justify-center">
@@ -154,7 +154,7 @@ const Login = () => {
                         onError={handleGoogleError}
                         useProminentStyles
                         size="large"
-                        text="Đăng nhập với Google"
+                        text="signin_with"
                         theme="outline"
                         shape="rectangular"
                         logo_alignment="center"

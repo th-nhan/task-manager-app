@@ -13,7 +13,7 @@ export const validate = (schema) => (req, res, next) => {
     }));
     return res.status(400).json({
       success: false,
-      message: 'Dữ liệu đầu vào không hợp lệ!',
+      message: 'Invalid input data!',
       errors: formattedErrors,
     });
   }

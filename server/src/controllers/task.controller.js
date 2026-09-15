@@ -37,8 +37,8 @@ export const getTask = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Lỗi server khi lấy danh sách công việc:', error);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.error('Server error fetching tasks:', error);
+        return res.status(500).json({message: 'Server error'});
     }
 }
 
@@ -51,13 +51,13 @@ export const getTaskById = async (req, res) =>{
         });
 
         if (!task || task.userId !== req.user.userId){
-            return res.status(404).json({message: 'Không tìm thấy công việc'});
+            return res.status(404).json({message: 'Task not found'});
         }
 
         res.json({success: true, data: task});
     } catch (error) {
-        console.error('Lỗi server khi lấy công việc:', error);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.error('Server error fetching task:', error);
+        return res.status(500).json({message: 'Server error'});
     }
 }
 
@@ -67,11 +67,11 @@ export const createTask = async(req, res)=>{
         const {title, description, startDate, dueDate, status, priority, categoryId, reminder} = req.body;
 
         if (!title){
-            return res.status(400).json({message: 'Vui lòng nhập tiêu đề công việc!'});
+            return res.status(400).json({message: 'Please enter task title!'});
         }
 
         if (startDate && dueDate && new Date(dueDate) < new Date(startDate)) {
-            return res.status(400).json({message: 'Hạn chót không được trước ngày bắt đầu!'});
+            return res.status(400).json({message: 'Due date cannot be earlier than start date!'});
         }
 
         const newTask = await prisma.task.create({
@@ -89,13 +89,13 @@ export const createTask = async(req, res)=>{
 
         res.status(201).json({
             success: true,
-            message: 'Tạo công việc thành công',
+            message: 'Task created successfully',
             data: newTask,
         });
         
     } catch (error) {
-        console.error('Lỗi server khi tạo công việc:', error);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.error('Server error creating task:', error);
+        return res.status(500).json({message: 'Server error'});
     }
 }
 
@@ -110,14 +110,14 @@ export const updateTask = async(req, res) => {
         });
 
         if (!existingTask || existingTask.userId !== userId){
-            return res.status(404).json({message: 'Không tìm thấy công việc'});
+            return res.status(404).json({message: 'Task not found'});
         }
 
         const finalStartDate = startDate !== undefined ? (startDate ? new Date(startDate) : null) : existingTask.startDate;
         const finalDueDate = dueDate !== undefined ? (dueDate ? new Date(dueDate) : null) : existingTask.dueDate;
 
         if (finalStartDate && finalDueDate && new Date(finalDueDate) < new Date(finalStartDate)) {
-            return res.status(400).json({message: 'Hạn chót không được trước ngày bắt đầu!'});
+            return res.status(400).json({message: 'Due date cannot be earlier than start date!'});
         }
 
         const updateTask = await prisma.task.update({
@@ -135,12 +135,12 @@ export const updateTask = async(req, res) => {
 
         res.json({
             success: true,
-            message: 'Cập nhật công việc thành công!',
+            message: 'Task updated successfully!',
             data: updateTask,
         })
     } catch (error) {
-        console.error('Lỗi server khi cập nhật công việc:', error);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.error('Server error updating task:', error);
+        return res.status(500).json({message: 'Server error'});
     }
 }
 
@@ -154,7 +154,7 @@ export const deleteTask = async(req, res) => {
         });
 
         if (!existingTask || existingTask.userId !== userId){
-            return res.status(404).json({message: 'Không tìm thấy công việc'});
+            return res.status(404).json({message: 'Task not found'});
         }
 
         await prisma.task.delete({
@@ -163,10 +163,10 @@ export const deleteTask = async(req, res) => {
 
         res.json({
             success: true,
-            message: 'Xóa công việc thành công!',
+            message: 'Task deleted successfully!',
         });
     } catch (error) {
-        console.error('Lỗi server khi xóa công việc:',error);
-        return res.status(500).json({message: 'Lỗi server'});
+        console.error('Server error deleting task:', error);
+        return res.status(500).json({message: 'Server error'});
     }
 }

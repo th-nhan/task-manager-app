@@ -47,7 +47,7 @@ export const TimetableListView = ({
     }, [timetableItems, searchQuery, filterGrade, filterLocation, filterDay, sortBy]);
 
     const handleDelete = (item) => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa ca học "${item.className}" (${item.dayOfWeek})?`)) {
+        if (window.confirm(`Are you sure you want to delete class session "${item.className}" (${item.dayOfWeek})?`)) {
             onDelete(item.id);
         }
     };
@@ -59,10 +59,10 @@ export const TimetableListView = ({
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h2 className="text-lg font-bold text-gray-800">
-                            📋 Danh Sách Lịch Dạy Chi Tiết ({timetableItems.length} Ca)
+                            📋 Detailed Schedule List ({timetableItems.length} Slots)
                         </h2>
                         <p className="text-xs text-gray-500">
-                            Tìm kiếm, chỉnh sửa, xóa và quản lý lịch dạy linh hoạt
+                            Search, edit, delete, and manage schedule flexibly
                         </p>
                     </div>
 
@@ -73,7 +73,7 @@ export const TimetableListView = ({
                             type="text"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            placeholder="Tìm lớp, mã (vd: 12NC, Mỹ Lộc)..."
+                            placeholder="Search class, code (e.g. 12NC, My Loc)..."
                             className="w-full pl-9 pr-4 py-2 text-xs md:text-sm rounded-2xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
                         />
                     </div>
@@ -82,7 +82,7 @@ export const TimetableListView = ({
                 {/* Filter Pills */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
                     <span className="font-semibold text-gray-600 flex items-center gap-1 mr-1">
-                        <Filter className="w-3.5 h-3.5 text-pink-500" /> Lọc:
+                        <Filter className="w-3.5 h-3.5 text-pink-500" /> Filter:
                     </span>
 
                     {/* Grade Filter */}
@@ -91,10 +91,10 @@ export const TimetableListView = ({
                         onChange={e => setFilterGrade(e.target.value)}
                         className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
                     >
-                        <option value="ALL">Tất cả Khối</option>
-                        <option value="10">Khối 10</option>
-                        <option value="11">Khối 11</option>
-                        <option value="12">Khối 12</option>
+                        <option value="ALL">All Grades</option>
+                        <option value="10">Grade 10</option>
+                        <option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
                     </select>
 
                     {/* Location Filter */}
@@ -103,7 +103,7 @@ export const TimetableListView = ({
                         onChange={e => setFilterLocation(e.target.value)}
                         className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
                     >
-                        <option value="ALL">Tất cả Cơ sở</option>
+                        <option value="ALL">All Locations</option>
                         <option value="Long Thượng">Long Thượng</option>
                         <option value="Mỹ Lộc">Mỹ Lộc</option>
                     </select>
@@ -114,28 +114,28 @@ export const TimetableListView = ({
                         onChange={e => setFilterDay(e.target.value)}
                         className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
                     >
-                        <option value="ALL">Tất cả các Thứ</option>
-                        <option value="Thứ 2">Thứ 2</option>
-                        <option value="Thứ 3">Thứ 3</option>
-                        <option value="Thứ 4">Thứ 4</option>
-                        <option value="Thứ 5">Thứ 5</option>
-                        <option value="Thứ 6">Thứ 6</option>
-                        <option value="Thứ 7">Thứ 7</option>
-                        <option value="Chủ nhật">Chủ nhật</option>
+                        <option value="ALL">All Days</option>
+                        <option value="Thứ 2">Monday</option>
+                        <option value="Thứ 3">Tuesday</option>
+                        <option value="Thứ 4">Wednesday</option>
+                        <option value="Thứ 5">Thursday</option>
+                        <option value="Thứ 6">Friday</option>
+                        <option value="Thứ 7">Saturday</option>
+                        <option value="Chủ nhật">Sunday</option>
                     </select>
 
                     {/* Sort Filter */}
                     <div className="ml-auto flex items-center gap-1">
-                        <span className="text-gray-400">Sắp xếp:</span>
+                        <span className="text-gray-400">Sort by:</span>
                         <select
                             value={sortBy}
                             onChange={e => setSortBy(e.target.value)}
                             className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
                         >
-                            <option value="id">Theo STT</option>
-                            <option value="day">Theo Ngày trong tuần</option>
-                            <option value="time">Theo Giờ học</option>
-                            <option value="grade">Theo Khối lớp</option>
+                            <option value="id">By Index</option>
+                            <option value="day">By Day of Week</option>
+                            <option value="time">By Time</option>
+                            <option value="grade">By Grade</option>
                         </select>
                     </div>
                 </div>
@@ -146,21 +146,21 @@ export const TimetableListView = ({
                 <table className="w-full border-collapse text-left min-w-[760px]">
                     <thead>
                         <tr className="border-b border-pink-100 text-[11px] font-bold text-gray-400 uppercase tracking-wider bg-gray-50/50">
-                            <th className="py-3 px-3 w-12 text-center">STT</th>
-                            <th className="py-3 px-4">Thứ & Ca</th>
-                            <th className="py-3 px-4">Khung Giờ</th>
-                            <th className="py-3 px-4">Lớp Học (Đầy đủ)</th>
-                            <th className="py-3 px-3">Mã Gốc</th>
-                            <th className="py-3 px-3">Khối</th>
-                            <th className="py-3 px-3">Cơ Sở</th>
-                            <th className="py-3 px-3 text-right">Thao Tác</th>
+                            <th className="py-3 px-3 w-12 text-center">No.</th>
+                            <th className="py-3 px-4">Day & Shift</th>
+                            <th className="py-3 px-4">Time Slot</th>
+                            <th className="py-3 px-4">Class (Full Name)</th>
+                            <th className="py-3 px-3">Original Code</th>
+                            <th className="py-3 px-3">Grade</th>
+                            <th className="py-3 px-3">Location</th>
+                            <th className="py-3 px-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-pink-100/60 text-xs">
                         {filteredAndSortedItems.length === 0 ? (
                             <tr>
                                 <td colSpan="8" className="py-12 text-center text-gray-400">
-                                    Không tìm thấy ca học nào phù hợp với bộ lọc.
+                                    No classes match the filter criteria.
                                 </td>
                             </tr>
                         ) : (
@@ -200,12 +200,12 @@ export const TimetableListView = ({
                                         </td>
                                         <td className="py-3.5 px-3">
                                             <span className={`inline-flex items-center px-2 py-0.5 rounded-md font-bold text-[11px] ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
-                                                Khối {item.grade}
+                                                Grade {item.grade}
                                             </span>
                                         </td>
                                         <td className="py-3.5 px-3">
                                             <span className="inline-flex items-center gap-1 text-gray-600 font-medium">
-                                                <MapPin className="w-3 h-3 text-blue-400" />
+                                                <MapPin className="w-3.5 h-3.5 text-blue-400" />
                                                 {item.location}
                                             </span>
                                         </td>
@@ -214,7 +214,7 @@ export const TimetableListView = ({
                                                 {onEdit && (
                                                     <button
                                                         onClick={() => onEdit(item)}
-                                                        title="Sửa ca học"
+                                                        title="Edit class slot"
                                                         className="p-1.5 rounded-lg hover:bg-pink-100 text-gray-500 hover:text-pink-600 transition-colors cursor-pointer"
                                                     >
                                                         <Edit className="w-4 h-4" />
@@ -223,7 +223,7 @@ export const TimetableListView = ({
                                                 {onDelete && (
                                                     <button
                                                         onClick={() => handleDelete(item)}
-                                                        title="Xóa ca học"
+                                                        title="Delete class slot"
                                                         className="p-1.5 rounded-lg hover:bg-rose-100 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -232,7 +232,7 @@ export const TimetableListView = ({
                                                 {onConvertToTask && (
                                                     <button
                                                         onClick={() => onConvertToTask(item)}
-                                                        title="Tạo công việc từ ca này"
+                                                        title="Create task from this slot"
                                                         className="p-1.5 rounded-lg hover:bg-pink-100 text-pink-500 hover:text-pink-700 transition-colors cursor-pointer"
                                                     >
                                                         <PlusCircle className="w-4 h-4" />

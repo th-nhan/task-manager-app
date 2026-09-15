@@ -182,8 +182,8 @@ export const KanbanBoardView = ({
                                     />
                                     <span>{col.title}</span>
                                     {col.key === 'DONE' && (
-                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60" title="Chỉ hiển thị task hoàn thành trong 7 ngày gần nhất">
-                                            ≤ 7 ngày
+                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60" title="Only shows tasks completed in the last 7 days">
+                                            ≤ 7 days
                                         </span>
                                     )}
                                 </div>
@@ -199,7 +199,7 @@ export const KanbanBoardView = ({
                             {/* Tasks Container */}
                             <div className="flex flex-col gap-2.5 flex-1">
                                 {loading ? (
-                                    <div className="text-xs text-gray-400 text-center py-8">Đang tải...</div>
+                                    <div className="text-xs text-gray-400 text-center py-8">Loading...</div>
                                 ) : colTasks.length === 0 ? (
                                     <div
                                         className={`flex flex-col items-center justify-center py-14 px-4 rounded-xl border-2 border-dashed transition-all duration-200 ${
@@ -215,13 +215,13 @@ export const KanbanBoardView = ({
                                         />
                                         <span className="text-xs font-semibold">
                                             {isDragOver
-                                                ? `Thả vào ${col.title}`
+                                                ? `Drop into ${col.title}`
                                                 : col.key === 'DONE'
-                                                    ? 'Chưa có task hoàn thành trong 7 ngày'
-                                                    : 'Chưa có công việc'}
+                                                    ? 'No tasks completed in 7 days'
+                                                    : 'No tasks'}
                                         </span>
                                         <span className="text-[10px] text-gray-400 mt-0.5">
-                                            {isDragOver ? 'Nhả chuột để chuyển trạng thái' : 'Kéo thả task vào đây'}
+                                            {isDragOver ? 'Release to update status' : 'Drag and drop tasks here'}
                                         </span>
                                     </div>
                                 ) : (
@@ -314,7 +314,7 @@ export const KanbanBoardView = ({
                                                                 onDeleteTask(task.id);
                                                             }}
                                                             className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer"
-                                                            title="Xóa task"
+                                                            title="Delete task"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />
                                                         </button>
@@ -401,15 +401,15 @@ export const KanbanBoardView = ({
                                                                 className={`text-[9px] ${
                                                                     isMissing ? 'text-red-500 font-semibold' : 'text-gray-400'
                                                                 }`}
-                                                                title={`Deadline: ${new Date(task.dueDate).toLocaleString('vi-VN')}`}
+                                                                title={`Deadline: ${new Date(task.dueDate).toLocaleString('en-US')}`}
                                                             >
-                                                                {isMissing ? 'Quá hạn: ' : 'Deadline '}
+                                                                {isMissing ? 'Overdue: ' : 'Deadline '}
                                                                 {new Date(task.dueDate).getDate()}/{new Date(task.dueDate).getMonth() + 1}
                                                             </span>
                                                         ) : task.startDate ? (
                                                             <span
                                                                 className="text-[9px] text-gray-400"
-                                                                title={`Start: ${new Date(task.startDate).toLocaleString('vi-VN')}`}
+                                                                title={`Start: ${new Date(task.startDate).toLocaleString('en-US')}`}
                                                             >
                                                                 Start {new Date(task.startDate).getDate()}/{new Date(task.startDate).getMonth() + 1}
                                                             </span>
@@ -424,7 +424,7 @@ export const KanbanBoardView = ({
                                             >
                                                 <Plus className="w-4 h-4" />
                                                 <span>
-                                                    Thả vào <b>{col.title}</b>
+                                                    Drop into <b>{col.title}</b>
                                                 </span>
                                             </div>
                                         )}

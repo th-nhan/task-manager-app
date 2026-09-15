@@ -413,7 +413,7 @@ export const MonthCalendarView = ({
                                             {/* Quick Add Button */}
                                             <button
                                                 onClick={() => onOpenCreateModal(item.date)}
-                                                title={`Thêm công việc cho ngày ${item.dayNumber}/${item.date.getMonth() + 1}`}
+                                                title={`Add task for ${item.dayNumber}/${item.date.getMonth() + 1}`}
                                                 className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-pink-500 hover:bg-pink-100 rounded-md cursor-pointer shrink-0"
                                             >
                                                 <Plus className="w-3.5 h-3.5" />
@@ -423,7 +423,7 @@ export const MonthCalendarView = ({
                                         {/* Drop Hint when Dragging Over */}
                                         {isDragOver && (
                                             <div className="mb-1 text-[10px] font-medium text-pink-700 bg-pink-200/80 border border-dashed border-pink-400 rounded-md py-1 text-center animate-pulse">
-                                                {draggingStickerId ? '✨ Thả icon vào ngày này' : '📍 Đổi ngày công việc'}
+                                                {draggingStickerId ? '✨ Drop icon on this date' : '📍 Move task date'}
                                             </div>
                                         )}
                                     </div>
@@ -483,7 +483,7 @@ export const MonthCalendarView = ({
                                                                 e.stopPropagation();
                                                                 onToggleStatus(task);
                                                             }}
-                                                            title="Đổi trạng thái"
+                                                            title="Change status"
                                                             className="text-gray-400 hover:text-pink-600 transition-colors shrink-0 p-0.5 cursor-pointer"
                                                         >
                                                             {isDone ? (
@@ -503,7 +503,7 @@ export const MonthCalendarView = ({
                                                                 e.stopPropagation();
                                                                 onDeleteTask(task.id);
                                                             }}
-                                                            title="Xóa công việc"
+                                                            title="Delete task"
                                                             className="text-gray-300 hover:text-red-500 opacity-0 group-hover/chip:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer"
                                                         >
                                                             <Trash2 className="w-3 h-3" />
@@ -531,7 +531,7 @@ export const MonthCalendarView = ({
                                                 onClick={() => setExpandedDayKey(item.dateKey)}
                                                 className="text-[10px] text-pink-600 font-semibold bg-pink-50 hover:bg-pink-100 rounded-md py-0.5 px-1.5 text-center transition-colors cursor-pointer"
                                             >
-                                                +{hiddenCount} việc khác
+                                                +{hiddenCount} more
                                             </button>
                                         )}
 
@@ -540,7 +540,7 @@ export const MonthCalendarView = ({
                                                 onClick={() => setExpandedDayKey(null)}
                                                 className="text-[10px] text-gray-500 font-semibold bg-gray-100 hover:bg-gray-200 rounded-md py-0.5 px-1.5 text-center transition-colors cursor-pointer mt-1"
                                             >
-                                                Thu gọn
+                                                Collapse
                                             </button>
                                         )}
                                     </div>

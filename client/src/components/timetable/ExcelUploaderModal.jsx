@@ -26,11 +26,11 @@ export const ExcelUploaderModal = ({
                 onImportSuccess(parsed);
                 onClose();
             } else {
-                setError('Không thể tìm thấy cấu trúc bảng thời khóa biểu hợp lệ trong file Excel.');
+                setError('Could not find a valid timetable matrix structure in the Excel file.');
             }
         } catch (err) {
             console.error('Import error:', err);
-            setError('Đã xảy ra lỗi khi đọc file Excel. Vui lòng thử lại.');
+            setError('An error occurred while reading the Excel file. Please try again.');
         }
     };
 
@@ -65,8 +65,8 @@ export const ExcelUploaderModal = ({
                             <FileSpreadsheet className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-800 text-base">Cập Nhật File Excel TKB</h3>
-                            <p className="text-xs text-gray-500">Tải lên file thời khóa biểu mới</p>
+                            <h3 className="font-bold text-gray-800 text-base">Update Timetable Excel File</h3>
+                            <p className="text-xs text-gray-500">Upload a new timetable spreadsheet</p>
                         </div>
                     </div>
                     <button
@@ -93,12 +93,12 @@ export const ExcelUploaderModal = ({
                             <UploadCloud className="w-7 h-7" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-gray-700">Kéo thả file Excel vào đây</p>
-                            <p className="text-xs text-gray-400 mt-0.5">hoặc nhấp chuột để chọn file từ máy</p>
+                            <p className="text-sm font-bold text-gray-700">Drag and drop Excel file here</p>
+                            <p className="text-xs text-gray-400 mt-0.5">or click to browse from device</p>
                         </div>
 
                         <label className="mt-2 inline-flex items-center px-4 py-2 text-xs font-semibold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-xs cursor-pointer transition-colors">
-                            Chọn File (.xlsx / .xls)
+                            Choose File (.xlsx / .xls)
                             <input
                                 type="file"
                                 accept=".xlsx, .xls"
@@ -115,7 +115,7 @@ export const ExcelUploaderModal = ({
                     {fileName && !error && (
                         <div className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 p-3 rounded-2xl border border-emerald-200">
                             <CheckCircle2 className="w-4 h-4 shrink-0" />
-                            <span className="font-medium truncate">Đang xử lý: {fileName}</span>
+                            <span className="font-medium truncate">Processing: {fileName}</span>
                         </div>
                     )}
 
@@ -136,7 +136,7 @@ export const ExcelUploaderModal = ({
                             className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-pink-600 font-semibold transition-colors cursor-pointer"
                         >
                             <RotateCcw className="w-3.5 h-3.5" />
-                            Khôi phục TKB gốc mặc định
+                            Restore Default Timetable
                         </button>
                     </div>
                 </div>

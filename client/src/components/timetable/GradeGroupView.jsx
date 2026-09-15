@@ -37,12 +37,12 @@ export const GradeGroupView = ({ timetableItems = [], onSelectClass, onConvertTo
                                         </h3>
                                     </div>
                                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
-                                        {gradeItems.length} ca / tuần
+                                        {gradeItems.length} slots / week
                                     </span>
                                 </div>
 
                                 <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
-                                    <span>Thời lượng: ~{(gradeItems.length * 1.5).toFixed(1)} giờ</span>
+                                    <span>Duration: ~{(gradeItems.length * 1.5).toFixed(1)} hrs</span>
                                     <span>LT: {ltCount} • ML: {mlCount}</span>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@ export const GradeGroupView = ({ timetableItems = [], onSelectClass, onConvertTo
                             {/* Card Footer */}
                             <div className="p-3 bg-gray-50/60 border-t border-gray-100 text-center">
                                 <span className="text-[11px] text-gray-400 font-medium">
-                                    Đầy đủ lịch dạy khối {grade} trong tuần
+                                    Full weekly schedule for Grade {grade}
                                 </span>
                             </div>
                         </div>

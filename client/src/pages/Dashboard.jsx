@@ -36,7 +36,7 @@ const Dashboard = () => {
             setTasks(taskList);
         } catch (error) {
             console.error('Error fetching tasks:', error);
-            toast.error('Không thể tải danh sách công việc!');
+            toast.error('Failed to load tasks!');
         } finally {
             setLoading(false);
         }
@@ -67,10 +67,10 @@ const Dashboard = () => {
     const handleSaveTask = async (taskData) => {
         if (selectedTask) {
             await taskApi.updateTask(selectedTask.id, taskData);
-            toast.success('Cập nhật công việc thành công!');
+            toast.success('Task updated successfully!');
         } else {
             await taskApi.createTask(taskData);
-            toast.success('Tạo công việc mới thành công!');
+            toast.success('Task created successfully!');
         }
         fetchTasks();
     };
@@ -87,30 +87,30 @@ const Dashboard = () => {
             await taskApi.updateTask(task.id, { status: nextStatus });
             setTasks(prev => prev.map(t => (t.id === task.id ? { ...t, status: nextStatus, updatedAt: new Date().toISOString() } : t)));
             toast.info(
-                `Trạng thái: ${
+                `Status: ${
                     nextStatus === 'DONE'
-                        ? 'Hoàn thành'
+                        ? 'Done'
                         : nextStatus === 'IN_PROGRESS'
-                            ? 'Đang thực hiện'
-                            : 'Cần làm'
+                            ? 'In Progress'
+                            : 'To Do'
                 }`
             );
         } catch (err) {
-            toast.error('Cập nhật trạng thái thất bại!');
+            toast.error('Failed to update status!');
         }
     };
 
     const handleDeleteTask = async (id) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa công việc này?')) return;
+        if (!window.confirm('Are you sure you want to delete this task?')) return;
         try {
             await taskApi.deleteTask(id);
             setTasks(prev => prev.filter(t => t.id !== id));
             if (selectedTask && selectedTask.id === id) {
                 handleCloseModal();
             }
-            toast.success('Đã xóa công việc thành công!');
+            toast.success('Task deleted successfully!');
         } catch (err) {
-            toast.error('Không thể xóa công việc!');
+            toast.error('Failed to delete task!');
         }
     };
 
@@ -148,10 +148,10 @@ const Dashboard = () => {
 
             setTasks(prev => prev.map(t => (t.id === task.id ? { ...t, ...updatePayload } : t)));
             await taskApi.updateTask(task.id, updatePayload);
-            toast.success(`Đã dời sang ngày ${target.getDate()}/${target.getMonth() + 1}!`);
+            toast.success(`Rescheduled to ${target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}!`);
         } catch (err) {
             console.error('Reschedule error:', err);
-            toast.error('Không thể cập nhật ngày công việc!');
+            toast.error('Failed to reschedule task!');
             fetchTasks();
         }
     };
@@ -192,7 +192,7 @@ const Dashboard = () => {
             setTasks(prev => prev.map(t => (t.id === sourceTaskId ? { ...t, ...updateData, updatedAt: new Date().toISOString() } : t)));
             await taskApi.updateTask(sourceTaskId, updateData);
             toast.success(
-                `Chuyển sang "${
+                `Moved to "${
                     targetColumnKey === 'TODO'
                         ? 'To Do'
                         : targetColumnKey === 'IN_PROGRESS'
@@ -204,7 +204,7 @@ const Dashboard = () => {
             );
         } catch (err) {
             console.error(err);
-            toast.error('Không thể cập nhật trạng thái công việc!');
+            toast.error('Failed to update task status!');
             fetchTasks();
         }
     };

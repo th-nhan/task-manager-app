@@ -24,24 +24,24 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                 <div className="space-y-1">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold tracking-wide backdrop-blur-xs">
                         <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
-                        LỊCH DẠY ĐÃ ĐƯỢC SẮP XẾP LẠI (SHEET 3)
+                        RESCHEDULED TEACHING TIMETABLE
                     </div>
                     <h2 className="text-2xl font-black tracking-tight">
-                        Trọng Tâm Lịch Dạy Thứ 7 & Chủ Nhật
+                        Weekend Focus: Saturday & Sunday
                     </h2>
                     <p className="text-pink-100 text-xs md:text-sm">
-                        Tổng cộng 8 ca học cao điểm cuối tuần (1 ca tối Thứ 7 & 7 ca liên tục cả ngày Chủ Nhật)
+                        Total 8 peak weekend slots (1 Saturday evening slot & 7 consecutive Sunday slots)
                     </p>
                 </div>
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20">
                     <div className="text-center px-2">
-                        <div className="text-xs text-pink-100 font-medium">Thứ 7</div>
-                        <div className="text-xl font-bold">{saturdayItems.length} Ca</div>
+                        <div className="text-xs text-pink-100 font-medium">Saturday</div>
+                        <div className="text-xl font-bold">{saturdayItems.length} Slots</div>
                     </div>
                     <div className="h-8 w-[1px] bg-white/20" />
                     <div className="text-center px-2">
-                        <div className="text-xs text-pink-100 font-medium">Chủ Nhật</div>
-                        <div className="text-xl font-bold">{sundayItems.length} Ca</div>
+                        <div className="text-xs text-pink-100 font-medium">Sunday</div>
+                        <div className="text-xl font-bold">{sundayItems.length} Slots</div>
                     </div>
                 </div>
             </div>
@@ -53,15 +53,15 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                     <div className="bg-white rounded-3xl p-5 shadow-sm border border-pink-100 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 font-bold text-base">
-                                T7
+                                Sat
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-800 text-base">Lịch Dạy Thứ Bảy</h3>
-                                <p className="text-xs text-gray-500">1 ca học buổi tối</p>
+                                <h3 className="font-bold text-gray-800 text-base">Saturday Schedule</h3>
+                                <p className="text-xs text-gray-500">1 evening session</p>
                             </div>
                         </div>
                         <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                            1 Ca
+                            1 Slot
                         </span>
                     </div>
 
@@ -79,10 +79,10 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                                     <div className="pl-2 space-y-3">
                                         <div className="flex items-center justify-between">
                                             <span className="text-xs font-bold text-amber-600 flex items-center gap-1">
-                                                <Moon className="w-3.5 h-3.5" /> Buổi Tối
+                                                <Moon className="w-3.5 h-3.5" /> Evening
                                             </span>
                                             <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
-                                                Khối {item.grade}
+                                                Grade {item.grade}
                                             </span>
                                         </div>
 
@@ -91,7 +91,7 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                                                 {item.className}
                                             </h4>
                                             <div className="font-mono text-xs font-semibold text-pink-500 mt-0.5">
-                                                Mã: {item.originalCode}
+                                                Code: {item.originalCode}
                                             </div>
                                         </div>
 
@@ -114,7 +114,7 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                                                 }}
                                                 className="w-full mt-2 py-2 text-xs font-semibold text-pink-600 hover:text-white bg-pink-50 hover:bg-pink-500 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                             >
-                                                <PlusCircle className="w-3.5 h-3.5" /> Thêm vào Task
+                                                <PlusCircle className="w-3.5 h-3.5" /> Add to Tasks
                                             </button>
                                         )}
                                     </div>
@@ -129,47 +129,47 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                     <div className="bg-white rounded-3xl p-5 shadow-sm border border-pink-100 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-rose-100 flex items-center justify-center text-rose-600 font-bold text-base">
-                                CN
+                                Sun
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-800 text-base">Lịch Dạy Chủ Nhật (Full Day)</h3>
-                                <p className="text-xs text-gray-500">7 ca học liên tiếp trải dài từ 07h00 sáng đến 20h00 tối</p>
+                                <h3 className="font-bold text-gray-800 text-base">Sunday Schedule (Full Day)</h3>
+                                <p className="text-xs text-gray-500">7 consecutive sessions from 07:00 AM to 08:00 PM</p>
                             </div>
                         </div>
                         <span className="text-xs font-bold px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
-                            7 Ca Trọng Điểm
+                            7 Key Slots
                         </span>
                     </div>
 
                     {/* Sunday Shifts Subsections */}
                     <div className="space-y-4">
-                        {/* 1. Sáng */}
+                        {/* 1. Morning */}
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 px-1 text-xs font-bold text-amber-700 uppercase tracking-wide">
                                 <Sun className="w-4 h-4 text-amber-500" />
-                                <span>Ca Sáng (07h00 – 11h30 • 3 Ca)</span>
+                                <span>Morning Sessions (07:00 – 11:30 • 3 Slots)</span>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 {sundayMorning.map((item, idx) => renderSundayCard(item, idx + 1, onSelectClass, onConvertToTask))}
                             </div>
                         </div>
 
-                        {/* 2. Chiều */}
+                        {/* 2. Afternoon */}
                         <div className="space-y-2 pt-2">
                             <div className="flex items-center gap-2 px-1 text-xs font-bold text-orange-700 uppercase tracking-wide">
                                 <Sunset className="w-4 h-4 text-orange-500" />
-                                <span>Ca Chiều (14h00 – 18h30 • 3 Ca)</span>
+                                <span>Afternoon Sessions (14:00 – 18:30 • 3 Slots)</span>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 {sundayAfternoon.map((item, idx) => renderSundayCard(item, idx + 4, onSelectClass, onConvertToTask))}
                             </div>
                         </div>
 
-                        {/* 3. Tối */}
+                        {/* 3. Evening */}
                         <div className="space-y-2 pt-2">
                             <div className="flex items-center gap-2 px-1 text-xs font-bold text-indigo-700 uppercase tracking-wide">
                                 <Moon className="w-4 h-4 text-indigo-500" />
-                                <span>Ca Tối (18h30 – 20h00 • 1 Ca)</span>
+                                <span>Evening Session (18:30 – 20:00 • 1 Slot)</span>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 {sundayEvening.map((item, idx) => renderSundayCard(item, idx + 7, onSelectClass, onConvertToTask))}

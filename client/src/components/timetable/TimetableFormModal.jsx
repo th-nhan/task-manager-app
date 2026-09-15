@@ -3,16 +3,16 @@ import { X, Calendar, Clock, MapPin, GraduationCap, BookOpen, Tag, Save, AlertCi
 import { DAYS_OF_WEEK } from '../../data/timetableData';
 
 const COMMON_TIME_PRESETS = [
-    { label: '07:00 – 08:30 (Sáng)', start: '07:00', end: '08:30', shift: 'Sáng' },
-    { label: '08:30 – 10:00 (Sáng)', start: '08:30', end: '10:00', shift: 'Sáng' },
-    { label: '10:00 – 11:30 (Sáng)', start: '10:00', end: '11:30', shift: 'Sáng' },
-    { label: '14:00 – 15:30 (Chiều)', start: '14:00', end: '15:30', shift: 'Chiều' },
-    { label: '15:30 – 17:00 (Chiều)', start: '15:30', end: '17:00', shift: 'Chiều' },
-    { label: '16:45 – 18:15 (Chiều)', start: '16:45', end: '18:15', shift: 'Chiều' },
-    { label: '17:00 – 18:30 (Chiều)', start: '17:00', end: '18:30', shift: 'Chiều' },
-    { label: '18:30 – 20:00 (Tối)', start: '18:30', end: '20:00', shift: 'Tối' },
-    { label: '18:45 – 20:15 (Tối)', start: '18:45', end: '20:15', shift: 'Tối' },
-    { label: '19:30 – 21:00 (Tối)', start: '19:30', end: '21:00', shift: 'Tối' },
+    { label: '07:00 – 08:30 (Morning)', start: '07:00', end: '08:30', shift: 'Sáng' },
+    { label: '08:30 – 10:00 (Morning)', start: '08:30', end: '10:00', shift: 'Sáng' },
+    { label: '10:00 – 11:30 (Morning)', start: '10:00', end: '11:30', shift: 'Sáng' },
+    { label: '14:00 – 15:30 (Afternoon)', start: '14:00', end: '15:30', shift: 'Chiều' },
+    { label: '15:30 – 17:00 (Afternoon)', start: '15:30', end: '17:00', shift: 'Chiều' },
+    { label: '16:45 – 18:15 (Afternoon)', start: '16:45', end: '18:15', shift: 'Chiều' },
+    { label: '17:00 – 18:30 (Afternoon)', start: '17:00', end: '18:30', shift: 'Chiều' },
+    { label: '18:30 – 20:00 (Evening)', start: '18:30', end: '20:00', shift: 'Tối' },
+    { label: '18:45 – 20:15 (Evening)', start: '18:45', end: '20:15', shift: 'Tối' },
+    { label: '19:30 – 21:00 (Evening)', start: '19:30', end: '21:00', shift: 'Tối' },
 ];
 
 export const TimetableFormModal = ({
@@ -73,12 +73,12 @@ export const TimetableFormModal = ({
         setError('');
 
         if (!className.trim()) {
-            setError('Vui lòng nhập tên lớp học!');
+            setError('Please enter the class name!');
             return;
         }
 
         if (!startTime || !endTime) {
-            setError('Vui lòng chọn khung giờ học!');
+            setError('Please select time slot!');
             return;
         }
 
@@ -129,10 +129,10 @@ export const TimetableFormModal = ({
                         </div>
                         <div>
                             <h3 className="font-black text-lg">
-                                {isEdit ? 'Chỉnh Sửa Ca Học' : 'Thêm Ca Học Mới'}
+                                {isEdit ? 'Edit Class Slot' : 'Add New Class Slot'}
                             </h3>
                             <p className="text-xs text-pink-100">
-                                {isEdit ? 'Cập nhật thông tin ca học vào Thời Khóa Biểu' : 'Điền thông tin để thêm ca dạy mới vào Thời Khóa Biểu'}
+                                {isEdit ? 'Update class slot details in the Timetable' : 'Fill in the information to add a new slot to Timetable'}
                             </p>
                         </div>
                     </div>
@@ -157,13 +157,13 @@ export const TimetableFormModal = ({
                     <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                             <BookOpen className="w-3.5 h-3.5 text-pink-500" />
-                            Tên lớp học đầy đủ <span className="text-rose-500">*</span>
+                            Full Class Name <span className="text-rose-500">*</span>
                         </label>
                         <input
                             type="text"
                             value={className}
                             onChange={e => setClassName(e.target.value)}
-                            placeholder="Ví dụ: 10 Cơ bản Long Thượng 1, 12 Nâng cao Mỹ Lộc..."
+                            placeholder="E.g., Grade 10 Basic Long Thuong 1, Grade 12 Advanced..."
                             className="w-full text-sm px-4 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-pink-50/20"
                             required
                         />
@@ -173,13 +173,13 @@ export const TimetableFormModal = ({
                     <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                             <Tag className="w-3.5 h-3.5 text-pink-500" />
-                            Ký hiệu / Mã viết tắt gốc
+                            Original Code / Abbreviation
                         </label>
                         <input
                             type="text"
                             value={originalCode}
                             onChange={e => setOriginalCode(e.target.value)}
-                            placeholder="Ví dụ: 10CB LT 1, 12NC ML, ML 12CB..."
+                            placeholder="E.g., 10CB LT 1, 12NC ML, ML 12CB..."
                             className="w-full text-sm font-mono px-4 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-pink-50/20"
                         />
                     </div>
@@ -190,7 +190,7 @@ export const TimetableFormModal = ({
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5 text-pink-500" />
-                                Thứ trong tuần
+                                Day of Week
                             </label>
                             <select
                                 value={dayOfWeek}
@@ -199,7 +199,7 @@ export const TimetableFormModal = ({
                             >
                                 {DAYS_OF_WEEK.map(d => (
                                     <option key={d.key} value={d.key}>
-                                        {d.label} {d.isWeekend ? '(Cuối tuần)' : ''}
+                                        {d.labelEn || d.label} {d.isWeekend ? '(Weekend)' : ''}
                                     </option>
                                 ))}
                             </select>
@@ -209,16 +209,16 @@ export const TimetableFormModal = ({
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                 <GraduationCap className="w-3.5 h-3.5 text-pink-500" />
-                                Khối lớp
+                                Grade Level
                             </label>
                             <select
                                 value={grade}
                                 onChange={e => setGrade(Number(e.target.value))}
                                 className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800"
                             >
-                                <option value={10}>Khối 10</option>
-                                <option value={11}>Khối 11</option>
-                                <option value={12}>Khối 12</option>
+                                <option value={10}>Grade 10</option>
+                                <option value={11}>Grade 11</option>
+                                <option value={12}>Grade 12</option>
                             </select>
                         </div>
                     </div>
@@ -228,10 +228,10 @@ export const TimetableFormModal = ({
                         <label className="text-xs font-bold text-gray-700 flex items-center justify-between">
                             <span className="flex items-center gap-1.5">
                                 <Clock className="w-3.5 h-3.5 text-pink-500" />
-                                Khung giờ học (Bắt đầu - Kết thúc)
+                                Time Slot (Start - End)
                             </span>
                             <span className="text-[11px] text-pink-600 font-normal">
-                                Chuẩn 90 phút
+                                Standard 90 mins
                             </span>
                         </label>
 
@@ -256,7 +256,7 @@ export const TimetableFormModal = ({
                         {/* Custom Time inputs */}
                         <div className="grid grid-cols-2 gap-3 pt-1">
                             <div>
-                                <span className="text-[10px] text-gray-500 font-medium">Bắt đầu:</span>
+                                <span className="text-[10px] text-gray-500 font-medium">Start:</span>
                                 <input
                                     type="time"
                                     value={startTime}
@@ -266,7 +266,7 @@ export const TimetableFormModal = ({
                                 />
                             </div>
                             <div>
-                                <span className="text-[10px] text-gray-500 font-medium">Kết thúc:</span>
+                                <span className="text-[10px] text-gray-500 font-medium">End:</span>
                                 <input
                                     type="time"
                                     value={endTime}
@@ -284,7 +284,7 @@ export const TimetableFormModal = ({
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                 <MapPin className="w-3.5 h-3.5 text-pink-500" />
-                                Cơ sở / Địa điểm
+                                Branch / Location
                             </label>
                             <select
                                 value={location}
@@ -300,16 +300,16 @@ export const TimetableFormModal = ({
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                 <BookOpen className="w-3.5 h-3.5 text-pink-500" />
-                                Trình độ
+                                Academic Level
                             </label>
                             <select
                                 value={level}
                                 onChange={e => setLevel(e.target.value)}
                                 className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800"
                             >
-                                <option value="Cơ bản">Cơ bản</option>
-                                <option value="Nâng cao">Nâng cao</option>
-                                <option value="Nâng cao & Cơ bản">Nâng cao & Cơ bản</option>
+                                <option value="Cơ bản">Basic</option>
+                                <option value="Nâng cao">Advanced</option>
+                                <option value="Nâng cao & Cơ bản">Advanced & Basic</option>
                             </select>
                         </div>
                     </div>
@@ -321,14 +321,14 @@ export const TimetableFormModal = ({
                             onClick={onClose}
                             className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
                         >
-                            Hủy bỏ
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer"
                         >
                             <Save className="w-4 h-4" />
-                            <span>{isEdit ? 'Lưu Thay Đổi' : 'Thêm Ca Học'}</span>
+                            <span>{isEdit ? 'Save Changes' : 'Add Class Slot'}</span>
                         </button>
                     </div>
                 </form>

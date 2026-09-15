@@ -131,10 +131,10 @@ export const WeekScheduleView = ({
                                 }`}
                         >
                             <div className="flex items-center justify-between px-1.5 py-1">
-                                <span className="text-xs font-bold text-gray-600">{item.dayNameVi}</span>
+                                <span className="text-xs font-bold text-gray-600">{item.dayName}</span>
                                 <button
                                     onClick={() => onOpenCreateModal(item.date)}
-                                    title={`Thêm task cho ${item.dayNameVi}`}
+                                    title={`Add task for ${item.dayName}`}
                                     className="p-1 hover:bg-pink-100 rounded text-pink-500 transition-colors cursor-pointer"
                                 >
                                     <Plus className="w-3.5 h-3.5" />
@@ -194,7 +194,7 @@ export const WeekScheduleView = ({
                                                         onDeleteTask(task.id);
                                                     }}
                                                     className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer"
-                                                    title="Xóa task"
+                                                    title="Delete task"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5" />
                                                 </button>
@@ -261,15 +261,15 @@ export const WeekScheduleView = ({
                                                 {task.dueDate ? (
                                                     <span
                                                         className={`text-[9px] ${isMissing ? 'text-red-500 font-semibold' : 'text-gray-400'}`}
-                                                        title={`Deadline: ${new Date(task.dueDate).toLocaleString('vi-VN')}`}
+                                                        title={`Deadline: ${new Date(task.dueDate).toLocaleString('en-US')}`}
                                                     >
-                                                        {isMissing ? 'Quá hạn: ' : 'Deadline '}
+                                                        {isMissing ? 'Overdue: ' : 'Deadline '}
                                                         {new Date(task.dueDate).getDate()}/{new Date(task.dueDate).getMonth() + 1}
                                                     </span>
                                                 ) : task.startDate ? (
                                                     <span
                                                         className="text-[9px] text-gray-400"
-                                                        title={`Start: ${new Date(task.startDate).toLocaleString('vi-VN')}`}
+                                                        title={`Start: ${new Date(task.startDate).toLocaleString('en-US')}`}
                                                     >
                                                         Start {new Date(task.startDate).getDate()}/{new Date(task.startDate).getMonth() + 1}
                                                     </span>

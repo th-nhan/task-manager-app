@@ -32,7 +32,7 @@ export const DashboardHeader = ({ user, logout }) => {
                         }`}
                     >
                         <CheckSquare className="w-4 h-4" />
-                        <span>Công việc</span>
+                        <span>Tasks</span>
                     </Link>
 
                     {isTimetableOwner && (
@@ -40,14 +40,14 @@ export const DashboardHeader = ({ user, logout }) => {
                             to="/timetable"
                             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer relative ${
                                 isTimetable
-                                    ? 'bg-white text-pink-600 shadow-xs'
-                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/50'
+                                ? 'bg-white text-pink-600 shadow-xs'
+                                : 'text-gray-600 hover:text-pink-600 hover:bg-white/50'
                             }`}
                         >
                             <CalendarDays className="w-4 h-4" />
-                            <span>Thời khóa biểu</span>
+                            <span>Timetable</span>
                             <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full bg-pink-500 text-white shadow-xs">
-                                18 ca
+                                18 Slots
                             </span>
                         </Link>
                     )}
@@ -58,7 +58,7 @@ export const DashboardHeader = ({ user, logout }) => {
             <div className="space-x-1.5 flex items-center">
                 <button 
                     className="hover:bg-pink-100 rounded-full p-2 text-gray-500 transition-colors cursor-pointer"
-                    title="Thông báo"
+                    title="Notifications"
                 >
                     <Bell className="w-5 h-5 text-pink-400" />
                 </button>
@@ -76,7 +76,7 @@ export const DashboardHeader = ({ user, logout }) => {
 
                 <button
                     onClick={logout}
-                    title="Đăng xuất"
+                    title="Log Out"
                     className="hover:bg-rose-50 text-gray-400 hover:text-rose-500 rounded-full p-2 transition-colors cursor-pointer"
                 >
                     <LogOut className="w-5 h-5 text-pink-400 hover:text-rose-500" />
