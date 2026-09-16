@@ -53,51 +53,51 @@ export const ExcelUploaderModal = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs transition-opacity animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
             <div
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-pink-100 animate-scale-up"
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-md max-h-[90dvh] overflow-hidden border border-pink-100 flex flex-col animate-in zoom-in-95 duration-200"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-6 bg-gradient-to-r from-pink-50 to-rose-50 border-b border-pink-100 flex items-center justify-between">
+                <div className="p-4 sm:p-6 bg-gradient-to-r from-pink-50 to-rose-50 border-b border-pink-100 flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-500">
+                        <div className="w-10 h-10 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-500 shrink-0">
                             <FileSpreadsheet className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-800 text-base">Update Timetable Excel File</h3>
-                            <p className="text-xs text-gray-500">Upload a new timetable spreadsheet</p>
+                            <h3 className="font-bold text-gray-800 text-sm sm:text-base">Update Timetable Excel</h3>
+                            <p className="text-xs text-gray-500">Upload spreadsheet matrix</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-700 p-1 rounded-full hover:bg-white/80 transition-colors"
+                        className="text-gray-400 hover:text-gray-700 p-1.5 rounded-xl hover:bg-white/80 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center cursor-pointer"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Upload Zone */}
-                <div className="p-6 space-y-4">
+                <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
                     <div
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`border-2 border-dashed rounded-3xl p-8 text-center transition-all flex flex-col items-center justify-center gap-3 ${
+                        className={`border-2 border-dashed rounded-3xl p-6 sm:p-8 text-center transition-all flex flex-col items-center justify-center gap-3 ${
                             dragActive
                                 ? 'border-pink-500 bg-pink-50/50'
                                 : 'border-pink-200 hover:border-pink-400 bg-pink-50/20'
                         }`}
                     >
-                        <div className="w-14 h-14 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-500">
-                            <UploadCloud className="w-7 h-7" />
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-500">
+                            <UploadCloud className="w-6 h-6 sm:w-7 sm:h-7" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-gray-700">Drag and drop Excel file here</p>
-                            <p className="text-xs text-gray-400 mt-0.5">or click to browse from device</p>
+                            <p className="text-sm font-bold text-gray-700">Drag & drop Excel file here</p>
+                            <p className="text-xs text-gray-400 mt-0.5">or tap to select from device</p>
                         </div>
 
-                        <label className="mt-2 inline-flex items-center px-4 py-2 text-xs font-semibold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-xs cursor-pointer transition-colors">
+                        <label className="mt-2 inline-flex items-center px-4 py-2.5 text-xs font-semibold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-xs cursor-pointer transition-colors min-h-[38px]">
                             Choose File (.xlsx / .xls)
                             <input
                                 type="file"
@@ -133,7 +133,7 @@ export const ExcelUploaderModal = ({
                                 onResetDefault();
                                 onClose();
                             }}
-                            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-pink-600 font-semibold transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-pink-600 font-semibold transition-colors cursor-pointer py-2"
                         >
                             <RotateCcw className="w-3.5 h-3.5" />
                             Restore Default Timetable

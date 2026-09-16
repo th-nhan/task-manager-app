@@ -8,13 +8,14 @@ import {
     AlertCircle,
     Zap,
     Heart,
-    SportShoe,
     Flame,
     Star,
     Coffee,
     Smile,
     Trophy,
-    Sparkles
+    Sparkles,
+    ChevronRight,
+    Dumbbell
 } from 'lucide-react';
 import CustomSelect from './CustomSelect';
 
@@ -42,14 +43,8 @@ export const CALENDAR_STICKERS = [
         bg: 'bg-rose-100 text-rose-600 border-rose-300 hover:bg-rose-200',
     },
     {
-        id: 'shoe',
-        label: 'Sport',
-        icon: SportShoe,
-        bg: 'bg-emerald-100 text-emerald-600 border-emerald-300 hover:bg-emerald-200',
-    },
-    {
         id: 'flame',
-        label: 'Explosive ',
+        label: 'Explosive',
         icon: Flame,
         bg: 'bg-orange-100 text-orange-600 border-orange-300 hover:bg-orange-200',
     },
@@ -58,6 +53,12 @@ export const CALENDAR_STICKERS = [
         label: 'Important',
         icon: Star,
         bg: 'bg-purple-100 text-purple-600 border-purple-300 hover:bg-purple-200',
+    },
+    {
+        id: 'sport',
+        label: 'Sport',
+        icon: Dumbbell,
+        bg: 'bg-emerald-100 text-emerald-600 border-emerald-300 hover:bg-emerald-200',
     },
     {
         id: 'coffee',
@@ -73,7 +74,7 @@ export const CALENDAR_STICKERS = [
     },
     {
         id: 'trophy',
-        label: 'Achievement ',
+        label: 'Achievement',
         icon: Trophy,
         bg: 'bg-yellow-100 text-yellow-700 border-yellow-300 hover:bg-yellow-200',
     },
@@ -241,53 +242,55 @@ export const MonthCalendarView = ({
     };
 
     return (
-        <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col gap-4">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col gap-4 min-w-0 border border-pink-100/60">
             {/* Filter & Icon Stickers Toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-gray-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
                 <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-gray-700">Month Schedule</span>
+                    <span className="text-sm font-bold text-gray-800">Month Schedule</span>
                     <span className="text-xs bg-pink-100 text-pink-700 font-bold px-2 py-0.5 rounded-full">
                         {monthDays.filter(d => d.isCurrentMonth).length} days
                     </span>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                    {/* Draggable Icon Cards container */}
-                    <div className="flex items-center gap-1.5 bg-pink-50/80 border border-pink-200/80 text-pink-700 font-bold px-2.5 py-1 rounded-full shadow-2xs">
-                        <span className="text-[11px] text-pink-600 font-medium mr-1 select-none flex items-center gap-1">
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+                    {/* Draggable Icon Cards container with scrollable overflow on small screens */}
+                    <div className="flex items-center gap-1.5 bg-pink-50/80 border border-pink-200/80 text-pink-700 font-bold px-2.5 py-1 rounded-full shadow-2xs overflow-x-auto max-w-full">
+                        <span className="text-[11px] text-pink-600 font-medium mr-1 select-none flex items-center gap-1 shrink-0">
                             <Sparkles className="w-3.5 h-3.5 text-pink-500 animate-pulse" />
-                            <span className="hidden sm:inline">Drag icon:</span>
+                            <span className="hidden xs:inline">Icons:</span>
                         </span>
 
-                        {CALENDAR_STICKERS.map((stk) => {
-                            const IconComp = stk.icon;
-                            const isBeingDragged = draggingStickerId === stk.id;
+                        <div className="flex items-center gap-1.5 shrink-0">
+                            {CALENDAR_STICKERS.map((stk) => {
+                                const IconComp = stk.icon;
+                                const isBeingDragged = draggingStickerId === stk.id;
 
-                            return (
-                                <div
-                                    key={stk.id}
-                                    draggable={true}
-                                    onDragStart={(e) => {
-                                        e.dataTransfer.setData('application/json', JSON.stringify({ type: 'STICKER', stickerId: stk.id }));
-                                        e.dataTransfer.effectAllowed = 'copy';
-                                        setDraggingStickerId(stk.id);
-                                    }}
-                                    onDragEnd={() => {
-                                        setDraggingStickerId(null);
-                                        setDragOverDateStr(null);
-                                    }}
-                                    title={`Drag icon "${stk.label}" to any day in the calendar`}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full border transition-all cursor-grab active:cursor-grabbing hover:scale-125 hover:shadow-xs select-none ${
-                                        stk.bg
-                                    } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''}`}
-                                >
-                                    <IconComp className="w-3.5 h-3.5 pointer-events-none shrink-0" />
-                                </div>
-                            );
-                        })}
+                                return (
+                                    <div
+                                        key={stk.id}
+                                        draggable={true}
+                                        onDragStart={(e) => {
+                                            e.dataTransfer.setData('application/json', JSON.stringify({ type: 'STICKER', stickerId: stk.id }));
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            setDraggingStickerId(stk.id);
+                                        }}
+                                        onDragEnd={() => {
+                                            setDraggingStickerId(null);
+                                            setDragOverDateStr(null);
+                                        }}
+                                        title={`Drag icon "${stk.label}" to any day`}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-full border transition-all cursor-grab active:cursor-grabbing hover:scale-125 select-none shrink-0 ${
+                                            stk.bg
+                                        } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''}`}
+                                    >
+                                        <IconComp className="w-3.5 h-3.5 pointer-events-none shrink-0" />
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                     
-                    <div className="w-44">
+                    <div className="w-full sm:w-44 shrink-0">
                         <CustomSelect
                             value={filterPriority}
                             onChange={onFilterPriorityChange}
@@ -297,18 +300,24 @@ export const MonthCalendarView = ({
                 </div>
             </div>
 
-            {/* Calendar Grid */}
-            <div className="overflow-x-auto">
-                <div className="min-w-[900px]">
+            {/* Mobile swipe hint */}
+            <div className="md:hidden flex items-center justify-between text-[11px] text-pink-500 bg-pink-50/50 px-2.5 py-1 rounded-lg">
+                <span>👈 Swipe horizontally to view full calendar 👉</span>
+            </div>
+
+            {/* Calendar Grid Container */}
+            <div className="overflow-x-auto -mx-2 sm:mx-0 pb-2">
+                <div className="min-w-[720px] md:min-w-[850px] lg:min-w-[900px] px-2 sm:px-0">
                     {/* Header Columns (Mon -> Sun) */}
-                    <div className="grid grid-cols-7 gap-2 mb-2">
+                    <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2">
                         {WEEK_DAYS_HEADER.map((col, index) => (
                             <div
                                 key={index}
-                                className={`py-2 px-3 text-center rounded-xl border ${col.isWeekend
+                                className={`py-2 px-1 sm:px-3 text-center rounded-xl border ${
+                                    col.isWeekend
                                         ? 'bg-pink-50/60 border-pink-200/70 text-pink-600'
                                         : 'bg-slate-50 border-slate-200/60 text-slate-700'
-                                    }`}
+                                }`}
                             >
                                 <div className="text-xs font-bold uppercase tracking-wider">{col.en}</div>
                             </div>
@@ -316,7 +325,7 @@ export const MonthCalendarView = ({
                     </div>
 
                     {/* Month Days Grid */}
-                    <div className="grid grid-cols-7 gap-2">
+                    <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
                         {monthDays.map((item) => {
                             const dayTasks = getTasksForDate(item.date);
                             const isDragOver = dragOverDateStr === item.dateKey;
@@ -349,39 +358,42 @@ export const MonthCalendarView = ({
                                     onDrop={(e) => {
                                         handleDropOnDate(e, item.date, item.dateKey);
                                     }}
-                                    className={`min-h-[145px] rounded-xl p-2 border transition-all flex flex-col justify-between group relative ${item.isToday
-                                            ? 'bg-pink-50/30 border-pink-400 ring-2 ring-pink-300/50 shadow-xs'
+                                    className={`min-h-[120px] sm:min-h-[145px] rounded-xl p-1.5 sm:p-2 border transition-all flex flex-col justify-between group relative min-w-0 ${
+                                        item.isToday
+                                            ? 'bg-pink-50/40 border-pink-400 ring-2 ring-pink-300/50 shadow-xs'
                                             : item.isCurrentMonth
                                                 ? 'bg-white border-gray-200/80 hover:border-pink-300 hover:shadow-sm'
                                                 : 'bg-gray-50/60 border-gray-100 text-gray-400 opacity-60'
-                                        } ${isDragOver ? 'bg-pink-100/80 border-pink-500 ring-4 ring-pink-300 shadow-md scale-[1.02] z-10' : ''}`}
+                                    } ${isDragOver ? 'bg-pink-100/80 border-pink-500 ring-4 ring-pink-300 shadow-md scale-[1.02] z-10' : ''}`}
                                 >
                                     <div>
                                         {/* Day Header with Date number, count and Stickers right next to it */}
                                         <div className="flex items-center justify-between gap-1 mb-1.5 min-h-[26px]">
-                                            <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                                            <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap min-w-0">
                                                 <span
-                                                    className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full transition-colors shrink-0 ${item.isToday
+                                                    className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full transition-colors shrink-0 ${
+                                                        item.isToday
                                                             ? 'bg-pink-500 text-white shadow-xs'
                                                             : item.isCurrentMonth
                                                                 ? item.isWeekend ? 'text-pink-600 bg-pink-50' : 'text-gray-700 hover:bg-gray-100'
                                                                 : 'text-gray-400'
-                                                        }`}
+                                                    }`}
                                                 >
                                                     {item.dayNumber}
                                                 </span>
                                                 {dayTasks.length > 0 && (
                                                     <span
-                                                        className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full shrink-0 ${item.isToday
+                                                        className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full shrink-0 ${
+                                                            item.isToday
                                                                 ? 'bg-pink-200/70 text-pink-800'
                                                                 : 'bg-gray-100 text-gray-600'
-                                                            }`}
+                                                        }`}
                                                     >
                                                         {dayTasks.length}
                                                     </span>
                                                 )}
 
-                                                {/* Day Stickers / Activity Icons placed right next to the date */}
+                                                {/* Day Stickers / Activity Icons */}
                                                 {stickers.map((stkId, sIdx) => {
                                                     const stkDef = CALENDAR_STICKERS.find(s => s.id === stkId) || {
                                                         id: stkId,
@@ -399,7 +411,7 @@ export const MonthCalendarView = ({
                                                                 handleRemoveSticker(item.dateKey, sIdx);
                                                             }}
                                                             title={`${stkDef.label} (Click to remove)`}
-                                                            className={`group/stk relative flex items-center justify-center w-5 h-5 rounded-full border text-[10px] cursor-pointer hover:scale-115 hover:opacity-85 transition-all shrink-0 ${stkDef.bg}`}
+                                                            className={`group/stk relative flex items-center justify-center w-5 h-5 rounded-full border text-[10px] cursor-pointer hover:scale-115 transition-all shrink-0 ${stkDef.bg}`}
                                                         >
                                                             <StkIcon className="w-2.5 h-2.5 pointer-events-none" />
                                                             <span className="hidden group-hover/stk:flex absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-2.5 h-2.5 items-center justify-center text-[8px] font-bold shadow-xs">
@@ -414,7 +426,7 @@ export const MonthCalendarView = ({
                                             <button
                                                 onClick={() => onOpenCreateModal(item.date)}
                                                 title={`Add task for ${item.dayNumber}/${item.date.getMonth() + 1}`}
-                                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-pink-500 hover:bg-pink-100 rounded-md cursor-pointer shrink-0"
+                                                className="opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity p-1 text-pink-500 hover:bg-pink-100 rounded-md cursor-pointer shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center"
                                             >
                                                 <Plus className="w-3.5 h-3.5" />
                                             </button>
@@ -423,13 +435,13 @@ export const MonthCalendarView = ({
                                         {/* Drop Hint when Dragging Over */}
                                         {isDragOver && (
                                             <div className="mb-1 text-[10px] font-medium text-pink-700 bg-pink-200/80 border border-dashed border-pink-400 rounded-md py-1 text-center animate-pulse">
-                                                {draggingStickerId ? '✨ Drop icon on this date' : '📍 Move task date'}
+                                                {draggingStickerId ? '✨ Drop icon' : '📍 Move date'}
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Task Chips Container */}
-                                    <div className="flex flex-col gap-1.5 flex-1 min-h-[70px]">
+                                    <div className="flex flex-col gap-1.5 flex-1 min-h-[60px] min-w-0">
                                         {loading ? (
                                             <div className="text-[10px] text-gray-300 text-center py-3">...</div>
                                         ) : visibleTasks.map((task) => {
@@ -466,13 +478,14 @@ export const MonthCalendarView = ({
                                                         setDragOverDateStr(null);
                                                     }}
                                                     onClick={() => onOpenTaskDetail(task)}
-                                                    className={`px-2 py-1.5 rounded-lg border border-l-[3.5px] ${priorityBorder} ${chipBg} transition-all cursor-pointer shadow-2xs group/chip relative text-left select-none ${isDragging ? 'opacity-30 scale-95 border-dashed border-pink-400' : 'hover:shadow-xs hover:scale-[1.01]'
-                                                        }`}
+                                                    className={`px-2 py-1.5 rounded-lg border border-l-[3.5px] ${priorityBorder} ${chipBg} transition-all cursor-pointer shadow-2xs group/chip relative text-left select-none min-w-0 ${
+                                                        isDragging ? 'opacity-30 scale-95 border-dashed border-pink-400' : 'hover:shadow-xs hover:scale-[1.01]'
+                                                    }`}
                                                     title={`${task.title}${task.dueDate ? ` (Deadline: ${new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})` : ''}`}
                                                 >
-                                                    <div className="flex items-center justify-between gap-1">
+                                                    <div className="flex items-center justify-between gap-1 min-w-0">
                                                         <div className="flex items-center gap-1 min-w-0 flex-1">
-                                                            <span className="text-[11px] font-semibold truncate leading-tight">
+                                                            <span className="text-[11px] font-semibold truncate leading-tight block w-full">
                                                                 {task.title}
                                                             </span>
                                                         </div>
@@ -484,16 +497,16 @@ export const MonthCalendarView = ({
                                                                 onToggleStatus(task);
                                                             }}
                                                             title="Change status"
-                                                            className="text-gray-400 hover:text-pink-600 transition-colors shrink-0 p-0.5 cursor-pointer"
+                                                            className="text-gray-400 hover:text-pink-600 transition-colors shrink-0 p-0.5 cursor-pointer min-w-[20px] min-h-[20px] flex items-center justify-center"
                                                         >
                                                             {isDone ? (
-                                                                <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                                                             ) : isMissing ? (
-                                                                <AlertCircle className="w-3 h-3 text-red-500" />
+                                                                <AlertCircle className="w-3.5 h-3.5 text-red-500" />
                                                             ) : isProgress ? (
-                                                                <Clock className="w-3 h-3 text-amber-500" />
+                                                                <Clock className="w-3.5 h-3.5 text-amber-500" />
                                                             ) : (
-                                                                <Circle className="w-3 h-3 text-gray-400 group-hover/chip:text-pink-400" />
+                                                                <Circle className="w-3.5 h-3.5 text-gray-400 group-hover/chip:text-pink-400" />
                                                             )}
                                                         </button>
 
@@ -504,15 +517,15 @@ export const MonthCalendarView = ({
                                                                 onDeleteTask(task.id);
                                                             }}
                                                             title="Delete task"
-                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover/chip:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer"
+                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover/chip:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
                                                         >
                                                             <Trash2 className="w-3 h-3" />
                                                         </button>
                                                     </div>
 
-                                                    {/* Time snippet if any */}
+                                                    {/* Time snippet */}
                                                     {(task.startDate || task.dueDate) && (
-                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500 mt-0.5">
+                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500 mt-0.5 min-w-0">
                                                             <Clock className="w-2.5 h-2.5 text-gray-400 shrink-0" />
                                                             <span className="truncate">
                                                                 {task.startDate && new Date(task.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
@@ -555,4 +568,3 @@ export const MonthCalendarView = ({
 };
 
 export default MonthCalendarView;
-

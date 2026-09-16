@@ -213,31 +213,31 @@ export const TimetablePage = () => {
     };
 
     return (
-        <div className="bg-pink-100 min-h-screen flex flex-col gap-6 pb-12">
+        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 pb-12 overflow-x-hidden">
             {/* Navigation Header */}
             <DashboardHeader user={user} logout={logout} activePage="timetable" />
 
             {/* Main Timetable Content */}
-            <div className="flex flex-col gap-6 mx-4 md:mx-16">
+            <main className="flex flex-col gap-4 sm:gap-6 mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
                 {/* Live Status Banner */}
                 {(liveStatus.activeClass || liveStatus.nextClass) && (
-                    <div className="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-pink-200/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                        <div className="flex items-center gap-3.5">
-                            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center ${
+                    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xs border border-pink-200/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-3.5 min-w-0">
+                            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
                                 liveStatus.activeClass 
                                     ? 'bg-emerald-500 text-white animate-pulse' 
                                     : 'bg-pink-100 text-pink-600'
                             }`}>
                                 <Radio className="w-5 h-5" />
                             </div>
-                            <div>
-                                <div className="flex items-center gap-2">
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
                                     <span className="text-xs font-bold uppercase tracking-wider text-pink-600">
-                                        {liveStatus.activeClass ? '🔴 Class in Progress' : '⏰ Next Class'}
+                                        {liveStatus.activeClass ? '🔴 In Progress' : '⏰ Next Class'}
                                     </span>
                                     {liveStatus.activeClass ? (
                                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                                            ~{liveStatus.activeClass.minutesRemaining} mins left
+                                            ~{liveStatus.activeClass.minutesRemaining}m left
                                         </span>
                                     ) : liveStatus.nextClass?.isToday ? (
                                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
@@ -249,7 +249,7 @@ export const TimetablePage = () => {
                                         </span>
                                     )}
                                 </div>
-                                <div className="text-sm md:text-base font-bold text-gray-800 mt-0.5">
+                                <div className="text-sm md:text-base font-bold text-gray-800 mt-0.5 truncate">
                                     {liveStatus.activeClass
                                         ? `${liveStatus.activeClass.className} (${liveStatus.activeClass.timeRange})`
                                         : `${liveStatus.nextClass.dayOfWeek}: ${liveStatus.nextClass.className} (${liveStatus.nextClass.timeRange})`}
@@ -257,10 +257,10 @@ export const TimetablePage = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
                             <button
                                 onClick={() => handleOpenClassDetail(liveStatus.activeClass || liveStatus.nextClass)}
-                                className="px-3.5 py-1.5 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold text-xs transition-colors cursor-pointer"
+                                className="w-full md:w-auto px-4 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-600 font-bold text-xs transition-colors cursor-pointer text-center min-h-[36px]"
                             >
                                 View Details
                             </button>
@@ -272,14 +272,14 @@ export const TimetablePage = () => {
                 <TimetableStatsCards timetableItems={timetableItems} />
 
                 {/* Toolbar & View Switcher */}
-                <div className="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-pink-100 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-xs border border-pink-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4">
                     {/* View Switch Buttons */}
-                    <div className="flex flex-wrap items-center gap-1.5 p-1 bg-pink-50/80 rounded-2xl border border-pink-100">
+                    <div className="flex flex-wrap items-center gap-1.5 p-1 bg-pink-50/80 rounded-2xl border border-pink-100/80 overflow-x-auto">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'grid'
-                                    ? 'bg-pink-500 text-white shadow-sm shadow-pink-300'
+                                    ? 'bg-pink-500 text-white shadow-xs'
                                     : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
                             }`}
                         >
@@ -289,33 +289,33 @@ export const TimetablePage = () => {
 
                         <button
                             onClick={() => setViewMode('weekend')}
-                            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'weekend'
-                                    ? 'bg-pink-500 text-white shadow-sm shadow-pink-300'
+                                    ? 'bg-pink-500 text-white shadow-xs'
                                     : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
                             }`}
                         >
                             <Flame className="w-4 h-4 text-amber-300" />
-                            <span>Weekend Focus (Sat & Sun)</span>
+                            <span>Weekend (Sat & Sun)</span>
                         </button>
 
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'list'
-                                    ? 'bg-pink-500 text-white shadow-sm shadow-pink-300'
+                                    ? 'bg-pink-500 text-white shadow-xs'
                                     : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
                             }`}
                         >
                             <ListFilter className="w-4 h-4" />
-                            <span>List View ({timetableItems.length} Slots)</span>
+                            <span>List View ({timetableItems.length})</span>
                         </button>
 
                         <button
                             onClick={() => setViewMode('grade')}
-                            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'grade'
-                                    ? 'bg-pink-500 text-white shadow-sm shadow-pink-300'
+                                    ? 'bg-pink-500 text-white shadow-xs'
                                     : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
                             }`}
                         >
@@ -325,12 +325,12 @@ export const TimetablePage = () => {
                     </div>
 
                     {/* Filter & Action Buttons */}
-                    <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
+                    <div className="flex flex-wrap items-center gap-2 justify-start sm:justify-end">
                         {/* Add Class Button */}
                         <button
                             onClick={handleOpenAddModal}
                             title="Add new class session"
-                            className="flex items-center gap-1.5 px-4 py-2 text-xs md:text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer"
+                            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 text-xs md:text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer min-h-[38px]"
                         >
                             <PlusCircle className="w-4 h-4" />
                             <span>Add Class Slot</span>
@@ -341,7 +341,7 @@ export const TimetablePage = () => {
                                 <select
                                     value={selectedGrade}
                                     onChange={e => setSelectedGrade(e.target.value)}
-                                    className="text-xs px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer"
+                                    className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
                                 >
                                     <option value="ALL">All Grades</option>
                                     <option value="10">Grade 10</option>
@@ -352,7 +352,7 @@ export const TimetablePage = () => {
                                 <select
                                     value={selectedLocation}
                                     onChange={e => setSelectedLocation(e.target.value)}
-                                    className="text-xs px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer"
+                                    className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
                                 >
                                     <option value="ALL">All Locations</option>
                                     <option value="Long Thượng">Long Thượng</option>
@@ -365,27 +365,28 @@ export const TimetablePage = () => {
                         <button
                             onClick={() => setIsUploadModalOpen(true)}
                             title="Upload new Excel file"
-                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer min-h-[38px]"
                         >
                             <Upload className="w-3.5 h-3.5 text-pink-500" />
-                            <span>Import Excel</span>
+                            <span className="hidden xs:inline">Import</span>
                         </button>
 
                         {/* Export Button */}
                         <button
                             onClick={handleExport}
                             title="Export Excel file"
-                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer min-h-[38px]"
                         >
                             <Download className="w-3.5 h-3.5" />
-                            <span>Export Excel</span>
+                            <span className="hidden xs:inline">Export</span>
                         </button>
 
                         {/* Print Button */}
                         <button
                             onClick={handlePrint}
                             title="Print timetable"
-                            className="p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors cursor-pointer"
+                            aria-label="Print timetable"
+                            className="p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
                         >
                             <Printer className="w-4 h-4" />
                         </button>
@@ -393,7 +394,7 @@ export const TimetablePage = () => {
                 </div>
 
                 {/* Active View Container */}
-                <div className="w-full">
+                <div className="w-full min-w-0">
                     {viewMode === 'grid' && (
                         <WeeklyGridView
                             timetableItems={timetableItems}
@@ -429,7 +430,7 @@ export const TimetablePage = () => {
                         />
                     )}
                 </div>
-            </div>
+            </main>
 
             {/* Class Detail Modal */}
             <ClassDetailModal

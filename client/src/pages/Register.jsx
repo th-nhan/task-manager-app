@@ -69,13 +69,13 @@ const Register = () => {
     };
 
     return (
-        <div className='flex min-h-screen items-center justify-center bg-pink-100/60 p-4'>
-            <div className='w-full max-w-md rounded-2xl bg-white p-8 shadow-xl shadow-pink-200/30 border border-pink-100'>
+        <div className='flex min-h-screen min-h-[100dvh] items-center justify-center bg-pink-100/60 p-3 sm:p-4'>
+            <div className='w-full max-w-md rounded-3xl bg-white p-5 sm:p-8 shadow-xl shadow-pink-200/30 border border-pink-100'>
                 <div className="flex items-center justify-center gap-1 mb-2">
-                    <span className="text-2xl font-bold text-gray-800">Task</span>
-                    <span className="text-2xl font-bold text-pink-500">Note</span>
+                    <span className="text-2xl sm:text-3xl font-extrabold text-gray-800">Task</span>
+                    <span className="text-2xl sm:text-3xl font-extrabold text-pink-500">Note</span>
                 </div>
-                <h1 className='text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider'>Create Account</h1>
+                <h1 className='text-lg sm:text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider'>Create Account</h1>
 
                 {error && (
                     <Alert
@@ -88,7 +88,7 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-sm font-medium text-gray-700'>Full Name</label>
+                        <label className='text-xs sm:text-sm font-semibold text-gray-700'>Full Name</label>
                         <input
                             type="text"
                             name='name'
@@ -96,10 +96,10 @@ const Register = () => {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder='e.g. John Doe'
-                            className='px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200' />
+                            className='px-3.5 py-2.5 sm:py-3 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200 min-h-[44px]' />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-sm font-medium text-gray-700'>Email</label>
+                        <label className='text-xs sm:text-sm font-semibold text-gray-700'>Email</label>
                         <input
                             type="email"
                             name='email'
@@ -107,10 +107,10 @@ const Register = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder='e.g. john@example.com'
-                            className='px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200' />
+                            className='px-3.5 py-2.5 sm:py-3 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200 min-h-[44px]' />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-sm font-medium text-gray-700'>Password</label>
+                        <label className='text-xs sm:text-sm font-semibold text-gray-700'>Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -119,11 +119,11 @@ const Register = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 placeholder='At least 6 characters'
-                                className='w-full px-3.5 py-2.5 pr-10 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200' />
+                                className='w-full px-3.5 py-2.5 sm:py-3 pr-11 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200 min-h-[44px]' />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 focus:outline-none cursor-pointer p-1"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 focus:outline-none cursor-pointer p-1 min-w-[32px] min-h-[32px] flex items-center justify-center"
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -133,14 +133,14 @@ const Register = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="mt-2 rounded-xl bg-pink-400 hover:bg-pink-500 py-3 font-semibold text-white transition cursor-pointer shadow-md shadow-pink-200/50 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="mt-2 rounded-xl bg-pink-500 hover:bg-pink-600 active:bg-pink-700 py-3 font-bold text-white transition cursor-pointer shadow-md shadow-pink-200/50 disabled:cursor-not-allowed disabled:opacity-60 min-h-[44px]"
                     >
                         {loading ? 'Processing...' : 'Sign Up'}
                     </button>
                 </form>
-                <p className="mt-5 text-center text-sm text-gray-500">
+                <p className="mt-4 text-center text-xs sm:text-sm text-gray-500">
                     Already have an account?{' '}
-                    <Link to="/login" className="font-semibold text-pink-500 hover:text-pink-600 hover:underline">
+                    <Link to="/login" className="font-bold text-pink-500 hover:text-pink-600 hover:underline">
                         Log in now
                     </Link>
                 </p>
@@ -152,7 +152,7 @@ const Register = () => {
                         <span className="bg-white px-2 text-gray-400">Or</span>
                     </div>
                 </div>
-                <div className="mt-4 flex justify-center">
+                <div className="mt-4 flex justify-center w-full overflow-hidden">
                     <GoogleLogin
                         onSuccess={handleGoogleSucess}
                         onError={handleGoogleError}
@@ -162,7 +162,6 @@ const Register = () => {
                         theme="outline"
                         shape="rectangular"
                         logo_alignment="center"
-                        className="w-full"
                         />
                 </div>
             </div>

@@ -259,9 +259,9 @@ const Dashboard = () => {
     }, [viewMode, currentDate]);
 
     return (
-        <div className="bg-pink-100 min-h-screen flex flex-col gap-6 pb-12">
+        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 pb-12 overflow-x-hidden">
             {/* Header */}
-            <DashboardHeader user={user} logout={logout} />
+            <DashboardHeader user={user} logout={logout} activePage="dashboard" />
 
             {/* Toolbar & View Navigation */}
             <DashboardToolbar
@@ -275,8 +275,8 @@ const Dashboard = () => {
             />
 
             {/* Views Content Body */}
-            <div className="flex mx-6 md:mx-16">
-                <div className="w-full">
+            <main className="flex mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
+                <div className="w-full min-w-0">
                     {/* View 1: Month Calendar View */}
                     {viewMode === 'month' && (
                         <MonthCalendarView
@@ -327,7 +327,7 @@ const Dashboard = () => {
                         />
                     )}
                 </div>
-            </div>
+            </main>
 
             {/* Create / Edit Task Modal */}
             <CreateTaskModal

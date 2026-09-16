@@ -135,22 +135,29 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
 
     return (
         <div 
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-3 sm:p-4"
             onClick={onClose}
         >
             <div 
-                className="w-full max-w-xl relative max-h-[90vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl bg-white"
+                className="w-full max-w-[95vw] sm:max-w-xl relative max-h-[90dvh] sm:max-h-[90vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-white border border-pink-100 animate-in fade-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="bg-pink-300 py-5 px-6 relative flex items-center justify-between">
-                    <h2 className="text-2xl font-semibold text-white">
+                {/* Modal Header */}
+                <div className="bg-gradient-to-r from-pink-400 to-rose-400 py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0">
+                    <h2 className="text-xl sm:text-2xl font-bold">
                         {isEditMode ? 'Task Details' : 'Create Task'}
                     </h2>
-                    <button onClick={onClose} className="text-white hover:text-pink-100 transition-colors cursor-pointer">
-                        <X className="w-6 h-6" />
+                    <button
+                        onClick={onClose}
+                        className="text-white/80 hover:text-white hover:bg-white/20 p-1.5 rounded-xl transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+                        aria-label="Close modal"
+                    >
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
-                <div className="p-6 bg-pink-50/70 text-pink-400 overflow-y-auto">
+
+                {/* Modal Body */}
+                <div className="p-4 sm:p-6 bg-pink-50/40 text-pink-500 overflow-y-auto flex-1">
                     {error && (
                         <Alert
                             type="error"
@@ -159,9 +166,11 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                             className="mb-4"
                         />
                     )}
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label htmlFor="title" className="block text-sm font-medium mb-2">Title <span className="text-red-400">*</span></label>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label htmlFor="title" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                Title <span className="text-red-500">*</span>
+                            </label>
                             <input
                                 type="text"
                                 id="title"
@@ -170,14 +179,16 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                 placeholder="Enter task title..."
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-700"
+                                className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
                             />
                         </div>
 
-                        {/* Start Date & Time + Due Date */}
-                        <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* Start Date & Time + Due Date (1 col on mobile, 2 cols on tablet/desktop) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div className="w-full">
-                                <label htmlFor="startDate" className="block text-sm font-medium mb-2">Start Date & Time</label>
+                                <label htmlFor="startDate" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                    Start Date & Time
+                                </label>
                                 <div className="relative flex items-center">
                                     <input
                                         ref={startDateInputRef}
@@ -186,21 +197,24 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         name="startDate"
                                         value={formData.startDate}
                                         onChange={handleStartDateChange}
-                                        className="w-full border border-gray-200 rounded-lg pl-3 pr-10 py-2 outline-none focus:ring-2 focus:ring-pink-300 [&::-webkit-calendar-picker-indicator]:opacity-0 cursor-pointer bg-white text-gray-700 text-sm"
+                                        className="w-full border border-gray-200 rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => startDateInputRef.current?.showPicker()}
-                                        className="absolute right-3 text-pink-400 hover:text-pink-500 cursor-pointer"
+                                        onClick={() => startDateInputRef.current?.showPicker?.()}
+                                        className="absolute right-3 text-pink-400 hover:text-pink-600 cursor-pointer p-1"
                                         title="Select start date & time"
+                                        aria-label="Select start date & time"
                                     >
-                                        <Clock className="w-5 h-5" />
+                                        <Clock className="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
 
                             <div className="w-full">
-                                <label htmlFor="dueDate" className="block text-sm font-medium mb-2">Due Date & Time</label>
+                                <label htmlFor="dueDate" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                    Due Date & Time
+                                </label>
                                 <div className="relative flex items-center">
                                     <input
                                         ref={dueDateInputRef}
@@ -210,21 +224,23 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         min={formData.startDate || undefined}
                                         value={formData.dueDate}
                                         onChange={handleDueDateChange}
-                                        className="w-full border border-gray-200 rounded-lg pl-3 pr-10 py-2 outline-none focus:ring-2 focus:ring-pink-300 [&::-webkit-calendar-picker-indicator]:opacity-0 cursor-pointer bg-white text-gray-700 text-sm"
+                                        className="w-full border border-gray-200 rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => dueDateInputRef.current?.showPicker()}
-                                        className="absolute right-3 text-pink-400 hover:text-pink-500 cursor-pointer"
+                                        onClick={() => dueDateInputRef.current?.showPicker?.()}
+                                        className="absolute right-3 text-pink-400 hover:text-pink-600 cursor-pointer p-1"
                                         title="Select due date & time"
+                                        aria-label="Select due date & time"
                                     >
-                                        <Calendar className="w-5 h-5" />
+                                        <Calendar className="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* Category & Priority */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <CustomSelect
                                 label="Category"
                                 value={formData.category}
@@ -239,7 +255,8 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                             />
                         </div>
 
-                        <div className="mb-4">
+                        {/* Status */}
+                        <div>
                             <CustomSelect
                                 label="Status"
                                 value={formData.status}
@@ -248,46 +265,50 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label htmlFor="description" className="block text-sm font-medium mb-2">Description</label>
+                        {/* Description */}
+                        <div>
+                            <label htmlFor="description" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                Description
+                            </label>
                             <textarea
                                 id="description"
                                 name="description"
                                 placeholder="Enter task description..."
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 resize-none h-24 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-700 text-sm"
+                                className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 resize-none h-24 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
                             ></textarea>
                         </div>
 
-                        <div className="flex items-center justify-between pt-2">
+                        {/* Form Action Buttons */}
+                        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-gray-200/60">
                             <div>
                                 {isEditMode && onDelete && (
                                     <button
                                         type="button"
                                         onClick={() => onDelete(task.id)}
-                                        className="px-3.5 py-2 text-red-500 hover:bg-red-50 border border-red-200 rounded-lg cursor-pointer transition-colors flex items-center gap-1.5 text-sm font-medium"
+                                        className="w-full sm:w-auto px-4 py-2.5 text-red-600 hover:bg-red-50 border border-red-200 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-sm font-semibold min-h-[42px]"
                                         title="Delete this task"
                                     >
                                         <Trash2 className="w-4 h-4" />
-                                        Delete
+                                        <span>Delete Task</span>
                                     </button>
                                 )}
                             </div>
-                            <div className="flex justify-end gap-2">
+                            <div className="flex items-center gap-2 justify-end">
                                 <button 
                                     type="button" 
                                     onClick={onClose} 
-                                    className="px-4 py-2 border border-pink-200 text-pink-400 rounded-lg hover:bg-pink-100 cursor-pointer transition-colors"
+                                    className="flex-1 sm:flex-none px-4 py-2.5 border border-pink-200 text-gray-600 rounded-xl hover:bg-pink-100/60 cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     type="submit" 
                                     disabled={loading} 
-                                    className="px-5 py-2 bg-pink-400 text-white rounded-lg hover:bg-pink-500 cursor-pointer transition-colors shadow-sm disabled:opacity-50 font-medium"
+                                    className="flex-1 sm:flex-none px-5 py-2.5 bg-pink-500 text-white rounded-xl hover:bg-pink-600 cursor-pointer transition-colors shadow-md shadow-pink-200 disabled:opacity-50 font-bold text-sm min-h-[42px]"
                                 >
-                                    {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create')}
+                                    {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Task' : 'Create Task')}
                                 </button>
                             </div>
                         </div>

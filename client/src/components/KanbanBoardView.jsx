@@ -22,6 +22,7 @@ export const KanbanBoardView = ({
 }) => {
     const [draggingTaskId, setDraggingTaskId] = useState(null);
     const [dragOverColumn, setDragOverColumn] = useState(null);
+    const [mobileActiveColumn, setMobileActiveColumn] = useState('ALL'); // 'ALL' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'MISSING'
 
     const kanbanColumns = useMemo(() => [
         {
@@ -87,7 +88,6 @@ export const KanbanBoardView = ({
                 }
                 if (columnKey === 'DONE') {
                     if (!isDone) return false;
-                    // Chỉ hiển thị các task DONE trong vòng 1 tuần (7 ngày) gần nhất
                     const doneDate = new Date(task.updatedAt || task.dueDate || task.createdAt);
                     return doneDate >= oneWeekAgo;
                 }
@@ -121,11 +121,17 @@ export const KanbanBoardView = ({
         }
     };
 
+    const visibleColumns = mobileActiveColumn === 'ALL'
+        ? kanbanColumns
+        : kanbanColumns.filter(c => c.key === mobileActiveColumn);
+
     return (
-        <div className="bg-white rounded-2xl p-6 shadow-sm min-h-[500px]">
-            <div className="flex flex-wrap items-center gap-3 mb-6 justify-between">
-                <span className="text-sm font-semibold text-gray-700">Kanban Board</span>
-                <div className="w-44">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm min-h-[500px] border border-pink-100/60 min-w-0">
+            {/* Header & Filter */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+                <span className="text-sm font-bold text-gray-800">Kanban Board</span>
+
+                <div className="w-full sm:w-44">
                     <CustomSelect
                         value={filterPriority}
                         onChange={onFilterPriorityChange}
@@ -134,8 +140,43 @@ export const KanbanBoardView = ({
                 </div>
             </div>
 
+            {/* Mobile Column Tabs */}
+            <div className="flex md:hidden items-center gap-1.5 overflow-x-auto pb-3 mb-3 border-b border-gray-100">
+                <button
+                    onClick={() => setMobileActiveColumn('ALL')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 min-h-[36px] ${
+                        mobileActiveColumn === 'ALL'
+                            ? 'bg-pink-500 text-white shadow-xs'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                >
+                    All ({tasks.length})
+                </button>
+                {kanbanColumns.map(col => {
+                    const count = getColumnTasks(col.key).length;
+                    const isActive = mobileActiveColumn === col.key;
+                    return (
+                        <button
+                            key={col.key}
+                            onClick={() => setMobileActiveColumn(col.key)}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 min-h-[36px] ${
+                                isActive
+                                    ? 'bg-pink-500 text-white shadow-xs'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                        >
+                            <span>{col.title}</span>
+                            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-white/25 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                                {count}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {/* Columns Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
-                {kanbanColumns.map((col) => {
+                {visibleColumns.map((col) => {
                     const colTasks = getColumnTasks(col.key);
                     const isDragOver = dragOverColumn === col.key;
                     const IconComponent = col.icon;
@@ -164,7 +205,7 @@ export const KanbanBoardView = ({
                                 e.preventDefault();
                                 handleInternalDrop(col.key);
                             }}
-                            className={`flex flex-col h-full min-h-[520px] rounded-2xl p-3 border-2 transition-all duration-200 ${
+                            className={`flex flex-col h-full min-h-[400px] sm:min-h-[520px] rounded-2xl p-3 border-2 transition-all duration-200 min-w-0 ${
                                 isDragOver ? col.activeDropBg : col.columnBg
                             }`}
                         >
@@ -174,21 +215,21 @@ export const KanbanBoardView = ({
                                     col.headerBg
                                 } ${isDragOver ? 'shadow-xs font-bold' : ''}`}
                             >
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 min-w-0">
                                     <IconComponent
-                                        className={`w-4 h-4 ${col.iconColor} ${
+                                        className={`w-4 h-4 shrink-0 ${col.iconColor} ${
                                             isDragOver ? 'scale-110' : ''
                                         } transition-transform`}
                                     />
-                                    <span>{col.title}</span>
+                                    <span className="truncate">{col.title}</span>
                                     {col.key === 'DONE' && (
-                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60" title="Only shows tasks completed in the last 7 days">
-                                            ≤ 7 days
+                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60 shrink-0" title="Tasks completed in last 7 days">
+                                            ≤ 7d
                                         </span>
                                     )}
                                 </div>
                                 <span
-                                    className={`text-xs px-2 py-0.5 rounded-full font-bold border transition-all ${
+                                    className={`text-xs px-2 py-0.5 rounded-full font-bold border transition-all shrink-0 ${
                                         col.badgeBg
                                     } ${isDragOver ? 'scale-105 shadow-xs' : ''}`}
                                 >
@@ -197,12 +238,12 @@ export const KanbanBoardView = ({
                             </div>
 
                             {/* Tasks Container */}
-                            <div className="flex flex-col gap-2.5 flex-1">
+                            <div className="flex flex-col gap-2.5 flex-1 min-w-0">
                                 {loading ? (
                                     <div className="text-xs text-gray-400 text-center py-8">Loading...</div>
                                 ) : colTasks.length === 0 ? (
                                     <div
-                                        className={`flex flex-col items-center justify-center py-14 px-4 rounded-xl border-2 border-dashed transition-all duration-200 ${
+                                        className={`flex flex-col items-center justify-center py-12 px-4 rounded-xl border-2 border-dashed transition-all duration-200 ${
                                             isDragOver
                                                 ? `${col.dropIndicatorBorder} scale-[1.02] shadow-sm animate-pulse`
                                                 : 'border-gray-200/80 bg-gray-50/40 text-gray-400'
@@ -213,14 +254,14 @@ export const KanbanBoardView = ({
                                                 isDragOver ? 'scale-125 ' + col.iconColor : 'text-gray-300'
                                             }`}
                                         />
-                                        <span className="text-xs font-semibold">
+                                        <span className="text-xs font-semibold text-center">
                                             {isDragOver
                                                 ? `Drop into ${col.title}`
                                                 : col.key === 'DONE'
                                                     ? 'No tasks completed in 7 days'
                                                     : 'No tasks'}
                                         </span>
-                                        <span className="text-[10px] text-gray-400 mt-0.5">
+                                        <span className="text-[10px] text-gray-400 mt-0.5 text-center">
                                             {isDragOver ? 'Release to update status' : 'Drag and drop tasks here'}
                                         </span>
                                     </div>
@@ -254,46 +295,20 @@ export const KanbanBoardView = ({
                                                     onDragStart={(e) => {
                                                         e.dataTransfer.setData('text/plain', task.id);
                                                         e.dataTransfer.effectAllowed = 'move';
-
-                                                        const target = e.currentTarget;
-                                                        const clone = target.cloneNode(true);
-                                                        clone.style.position = 'fixed';
-                                                        clone.style.top = '-9999px';
-                                                        clone.style.left = '-9999px';
-                                                        clone.style.width = `${target.offsetWidth}px`;
-                                                        clone.style.opacity = '1';
-                                                        clone.style.backgroundColor = '#ffffff';
-                                                        clone.style.border = '2px solid #ec4899';
-                                                        clone.style.boxShadow =
-                                                            '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2)';
-                                                        clone.style.borderRadius = '0.75rem';
-                                                        clone.style.pointerEvents = 'none';
-                                                        document.body.appendChild(clone);
-
-                                                        const rect = target.getBoundingClientRect();
-                                                        const offsetX = Math.max(10, Math.min(e.clientX - rect.left, target.offsetWidth - 10));
-                                                        const offsetY = Math.max(10, Math.min(e.clientY - rect.top, target.offsetHeight - 10));
-                                                        e.dataTransfer.setDragImage(clone, offsetX, offsetY);
-
-                                                        setTimeout(() => {
-                                                            if (clone && clone.parentNode) {
-                                                                clone.parentNode.removeChild(clone);
-                                                            }
-                                                            setDraggingTaskId(task.id);
-                                                        }, 0);
+                                                        setDraggingTaskId(task.id);
                                                     }}
                                                     onDragEnd={() => {
                                                         setDraggingTaskId(null);
                                                         setDragOverColumn(null);
                                                     }}
                                                     onClick={() => onOpenTaskDetail(task)}
-                                                    className={`p-3 rounded-xl border border-gray-100 border-l-[6px] ${leftBorderClass} ${cardContainerClass} transition-all duration-200 cursor-grab active:cursor-grabbing flex flex-col gap-2 group relative select-none ${
+                                                    className={`p-3 rounded-xl border border-gray-100 border-l-[6px] ${leftBorderClass} ${cardContainerClass} transition-all duration-200 cursor-grab active:cursor-grabbing flex flex-col gap-2 group relative select-none min-w-0 ${
                                                         isDragging
                                                             ? 'opacity-30 scale-95 border-dashed border-2 border-pink-400 bg-pink-50/40 shadow-inner'
                                                             : 'hover:-translate-y-0.5 hover:shadow-md shadow-xs'
                                                     }`}
                                                 >
-                                                    <div className="flex items-start justify-between gap-1">
+                                                    <div className="flex items-start justify-between gap-1 min-w-0">
                                                         <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
                                                             <h4
                                                                 className="text-xs font-semibold leading-tight line-clamp-2 text-gray-800"
@@ -313,7 +328,7 @@ export const KanbanBoardView = ({
                                                                 e.stopPropagation();
                                                                 onDeleteTask(task.id);
                                                             }}
-                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer"
+                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
                                                             title="Delete task"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />
@@ -328,7 +343,7 @@ export const KanbanBoardView = ({
 
                                                     {(task.startDate || task.dueDate) && (
                                                         <div
-                                                            className={`flex items-center gap-1 text-[10px] font-medium mt-1 px-1.5 py-0.5 rounded w-fit ${
+                                                            className={`flex items-center gap-1 text-[10px] font-medium mt-1 px-1.5 py-0.5 rounded w-fit min-w-0 ${
                                                                 isMissing
                                                                     ? 'text-red-600 bg-red-50 border border-red-200/60'
                                                                     : 'text-pink-500 bg-pink-50/80'
@@ -339,7 +354,7 @@ export const KanbanBoardView = ({
                                                                     isMissing ? 'text-red-500' : 'text-pink-400'
                                                                 }`}
                                                             />
-                                                            <span>
+                                                            <span className="truncate">
                                                                 {task.startDate && (
                                                                     new Date(task.startDate).toLocaleTimeString([], {
                                                                         hour: '2-digit',
@@ -365,7 +380,7 @@ export const KanbanBoardView = ({
                                                                 e.stopPropagation();
                                                                 onToggleStatus(task);
                                                             }}
-                                                            className={`flex items-center gap-1 text-[11px] font-medium transition-colors cursor-pointer ${
+                                                            className={`flex items-center gap-1 text-[11px] font-medium transition-colors cursor-pointer min-h-[28px] ${
                                                                 isMissing
                                                                     ? 'text-red-600 hover:text-red-700'
                                                                     : 'text-gray-500 hover:text-pink-600'
@@ -403,7 +418,7 @@ export const KanbanBoardView = ({
                                                                 }`}
                                                                 title={`Deadline: ${new Date(task.dueDate).toLocaleString('en-US')}`}
                                                             >
-                                                                {isMissing ? 'Overdue: ' : 'Deadline '}
+                                                                {isMissing ? 'Overdue: ' : 'Due '}
                                                                 {new Date(task.dueDate).getDate()}/{new Date(task.dueDate).getMonth() + 1}
                                                             </span>
                                                         ) : task.startDate ? (

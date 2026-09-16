@@ -82,11 +82,9 @@ export const TimetableFormModal = ({
             return;
         }
 
-        // Calculate dayIndex
         const dayObj = DAYS_OF_WEEK.find(d => d.key === dayOfWeek);
         const dayIndex = dayObj ? dayObj.index : 1;
 
-        // Auto calculate shift if not manually set
         let calculatedShift = shift;
         const startHour = parseInt(startTime.split(':')[0], 10);
         if (startHour < 12) calculatedShift = 'Sáng';
@@ -116,36 +114,36 @@ export const TimetableFormModal = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs transition-opacity animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
             <div
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-pink-100 animate-scale-up"
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg max-h-[90dvh] overflow-hidden border border-pink-100 flex flex-col animate-in zoom-in-95 duration-200"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-6 bg-gradient-to-r from-pink-500 to-rose-500 text-white flex items-center justify-between">
+                <div className="p-4 sm:p-6 bg-gradient-to-r from-pink-500 to-rose-500 text-white flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-white font-bold">
+                        <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-white font-bold shrink-0">
                             <Calendar className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-black text-lg">
+                            <h3 className="font-black text-base sm:text-lg">
                                 {isEdit ? 'Edit Class Slot' : 'Add New Class Slot'}
                             </h3>
                             <p className="text-xs text-pink-100">
-                                {isEdit ? 'Update class slot details in the Timetable' : 'Fill in the information to add a new slot to Timetable'}
+                                {isEdit ? 'Update class slot in Timetable' : 'Add a new teaching session'}
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-white/80 hover:text-white p-1 rounded-full hover:bg-white/20 transition-colors cursor-pointer"
+                        className="text-white/80 hover:text-white p-1.5 rounded-xl hover:bg-white/20 transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Form Body */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
                     {error && (
                         <div className="flex items-center gap-2 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
                             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -163,8 +161,8 @@ export const TimetableFormModal = ({
                             type="text"
                             value={className}
                             onChange={e => setClassName(e.target.value)}
-                            placeholder="E.g., Grade 10 Basic Long Thuong 1, Grade 12 Advanced..."
-                            className="w-full text-sm px-4 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-pink-50/20"
+                            placeholder="E.g., Grade 10 Basic Long Thuong 1..."
+                            className="w-full text-sm px-3.5 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-pink-50/20"
                             required
                         />
                     </div>
@@ -179,13 +177,13 @@ export const TimetableFormModal = ({
                             type="text"
                             value={originalCode}
                             onChange={e => setOriginalCode(e.target.value)}
-                            placeholder="E.g., 10CB LT 1, 12NC ML, ML 12CB..."
-                            className="w-full text-sm font-mono px-4 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-pink-50/20"
+                            placeholder="E.g., 10CB LT 1, 12NC ML..."
+                            className="w-full text-sm font-mono px-3.5 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-pink-50/20"
                         />
                     </div>
 
                     {/* Day & Grade Row */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {/* Day of week */}
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
@@ -195,7 +193,7 @@ export const TimetableFormModal = ({
                             <select
                                 value={dayOfWeek}
                                 onChange={e => setDayOfWeek(e.target.value)}
-                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800"
+                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800 min-h-[42px]"
                             >
                                 {DAYS_OF_WEEK.map(d => (
                                     <option key={d.key} value={d.key}>
@@ -214,7 +212,7 @@ export const TimetableFormModal = ({
                             <select
                                 value={grade}
                                 onChange={e => setGrade(Number(e.target.value))}
-                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800"
+                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800 min-h-[42px]"
                             >
                                 <option value={10}>Grade 10</option>
                                 <option value={11}>Grade 11</option>
@@ -224,14 +222,14 @@ export const TimetableFormModal = ({
                     </div>
 
                     {/* Time Selection & Presets */}
-                    <div className="space-y-2 p-3.5 rounded-2xl bg-pink-50/40 border border-pink-100">
+                    <div className="space-y-2 p-3 sm:p-3.5 rounded-2xl bg-pink-50/40 border border-pink-100">
                         <label className="text-xs font-bold text-gray-700 flex items-center justify-between">
                             <span className="flex items-center gap-1.5">
                                 <Clock className="w-3.5 h-3.5 text-pink-500" />
                                 Time Slot (Start - End)
                             </span>
                             <span className="text-[11px] text-pink-600 font-normal">
-                                Standard 90 mins
+                                90 mins
                             </span>
                         </label>
 
@@ -242,7 +240,7 @@ export const TimetableFormModal = ({
                                     type="button"
                                     key={idx}
                                     onClick={() => handleApplyPreset(preset)}
-                                    className={`text-[10px] font-semibold px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                                    className={`text-[10px] font-semibold px-2 py-1 rounded-lg transition-all cursor-pointer min-h-[28px] ${
                                         startTime === preset.start && endTime === preset.end
                                             ? 'bg-pink-500 text-white shadow-xs'
                                             : 'bg-white hover:bg-pink-100 text-gray-700 border border-pink-200'
@@ -261,7 +259,7 @@ export const TimetableFormModal = ({
                                     type="time"
                                     value={startTime}
                                     onChange={e => setStartTime(e.target.value)}
-                                    className="w-full text-sm font-mono px-3 py-2 rounded-xl border border-pink-200 bg-white"
+                                    className="w-full text-sm font-mono px-3 py-2 rounded-xl border border-pink-200 bg-white min-h-[38px]"
                                     required
                                 />
                             </div>
@@ -271,7 +269,7 @@ export const TimetableFormModal = ({
                                     type="time"
                                     value={endTime}
                                     onChange={e => setEndTime(e.target.value)}
-                                    className="w-full text-sm font-mono px-3 py-2 rounded-xl border border-pink-200 bg-white"
+                                    className="w-full text-sm font-mono px-3 py-2 rounded-xl border border-pink-200 bg-white min-h-[38px]"
                                     required
                                 />
                             </div>
@@ -279,7 +277,7 @@ export const TimetableFormModal = ({
                     </div>
 
                     {/* Location & Level Row */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {/* Location */}
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
@@ -289,7 +287,7 @@ export const TimetableFormModal = ({
                             <select
                                 value={location}
                                 onChange={e => setLocation(e.target.value)}
-                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800"
+                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800 min-h-[42px]"
                             >
                                 <option value="Long Thượng">Long Thượng</option>
                                 <option value="Mỹ Lộc">Mỹ Lộc</option>
@@ -305,7 +303,7 @@ export const TimetableFormModal = ({
                             <select
                                 value={level}
                                 onChange={e => setLevel(e.target.value)}
-                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800"
+                                className="w-full text-sm px-3 py-2.5 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white cursor-pointer font-medium text-gray-800 min-h-[42px]"
                             >
                                 <option value="Cơ bản">Basic</option>
                                 <option value="Nâng cao">Advanced</option>
@@ -315,17 +313,17 @@ export const TimetableFormModal = ({
                     </div>
 
                     {/* Action buttons */}
-                    <div className="pt-4 flex items-center justify-end gap-3 border-t border-gray-100">
+                    <div className="pt-3 flex items-center justify-end gap-2.5 border-t border-gray-100">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
+                            className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer min-h-[40px]"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer"
+                            className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer min-h-[40px]"
                         >
                             <Save className="w-4 h-4" />
                             <span>{isEdit ? 'Save Changes' : 'Add Class Slot'}</span>

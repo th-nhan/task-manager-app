@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Clock, MapPin, PlusCircle, Edit, Trash2, ChevronRight } from 'lucide-react';
+import { Search, Filter, Clock, MapPin, PlusCircle, Edit, Trash2, ChevronRight, LayoutList, Table } from 'lucide-react';
 import { GRADE_CONFIG, LOCATION_CONFIG, LEVEL_CONFIG } from '../../data/timetableData';
 
 export const TimetableListView = ({
@@ -14,6 +14,7 @@ export const TimetableListView = ({
     const [filterLocation, setFilterLocation] = useState('ALL');
     const [filterDay, setFilterDay] = useState('ALL');
     const [sortBy, setSortBy] = useState('id'); // 'id' | 'day' | 'time' | 'grade'
+    const [mobileDisplayMode, setMobileDisplayMode] = useState('cards'); // 'cards' | 'table'
 
     // Filter and sort items
     const filteredAndSortedItems = useMemo(() => {
@@ -53,17 +54,39 @@ export const TimetableListView = ({
     };
 
     return (
-        <div className="bg-white rounded-3xl shadow-sm border border-pink-100 overflow-hidden space-y-4">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-pink-100 overflow-hidden space-y-4 min-w-0">
             {/* Filter Toolbar */}
-            <div className="p-4 md:p-6 bg-gradient-to-r from-pink-50/60 via-white to-pink-50/40 border-b border-pink-100 space-y-4">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 className="text-lg font-bold text-gray-800">
-                            📋 Detailed Schedule List ({timetableItems.length} Slots)
-                        </h2>
-                        <p className="text-xs text-gray-500">
-                            Search, edit, delete, and manage schedule flexibly
-                        </p>
+            <div className="p-4 sm:p-6 bg-gradient-to-r from-pink-50/60 via-white to-pink-50/40 border-b border-pink-100 space-y-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-base sm:text-lg font-bold text-gray-800">
+                                📋 Detailed Schedule List ({timetableItems.length} Slots)
+                            </h2>
+                            <p className="text-xs text-gray-500">
+                                Search, edit, and manage teaching sessions
+                            </p>
+                        </div>
+
+                        {/* Mobile display mode toggle */}
+                        <div className="flex sm:hidden items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200">
+                            <button
+                                type="button"
+                                onClick={() => setMobileDisplayMode('cards')}
+                                className={`p-1.5 rounded-md ${mobileDisplayMode === 'cards' ? 'bg-pink-500 text-white' : 'text-gray-600'}`}
+                                title="Card View"
+                            >
+                                <LayoutList className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setMobileDisplayMode('table')}
+                                className={`p-1.5 rounded-md ${mobileDisplayMode === 'table' ? 'bg-pink-500 text-white' : 'text-gray-600'}`}
+                                title="Table View"
+                            >
+                                <Table className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Search Input */}
@@ -73,8 +96,8 @@ export const TimetableListView = ({
                             type="text"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            placeholder="Search class, code (e.g. 12NC, My Loc)..."
-                            className="w-full pl-9 pr-4 py-2 text-xs md:text-sm rounded-2xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            placeholder="Search class, code (12NC, My Loc)..."
+                            className="w-full pl-9 pr-4 py-2.5 text-xs sm:text-sm rounded-2xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
                         />
                     </div>
                 </div>
@@ -89,7 +112,7 @@ export const TimetableListView = ({
                     <select
                         value={filterGrade}
                         onChange={e => setFilterGrade(e.target.value)}
-                        className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer min-h-[34px]"
                     >
                         <option value="ALL">All Grades</option>
                         <option value="10">Grade 10</option>
@@ -101,7 +124,7 @@ export const TimetableListView = ({
                     <select
                         value={filterLocation}
                         onChange={e => setFilterLocation(e.target.value)}
-                        className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer min-h-[34px]"
                     >
                         <option value="ALL">All Locations</option>
                         <option value="Long Thượng">Long Thượng</option>
@@ -112,7 +135,7 @@ export const TimetableListView = ({
                     <select
                         value={filterDay}
                         onChange={e => setFilterDay(e.target.value)}
-                        className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer min-h-[34px]"
                     >
                         <option value="ALL">All Days</option>
                         <option value="Thứ 2">Monday</option>
@@ -126,23 +149,111 @@ export const TimetableListView = ({
 
                     {/* Sort Filter */}
                     <div className="ml-auto flex items-center gap-1">
-                        <span className="text-gray-400">Sort by:</span>
+                        <span className="text-gray-400 hidden xs:inline">Sort:</span>
                         <select
                             value={sortBy}
                             onChange={e => setSortBy(e.target.value)}
-                            className="px-3 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer"
+                            className="px-2.5 py-1.5 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 focus:outline-none cursor-pointer min-h-[34px]"
                         >
-                            <option value="id">By Index</option>
-                            <option value="day">By Day of Week</option>
-                            <option value="time">By Time</option>
-                            <option value="grade">By Grade</option>
+                            <option value="id">Index</option>
+                            <option value="day">Day of Week</option>
+                            <option value="time">Time</option>
+                            <option value="grade">Grade</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto px-4 md:px-6 pb-6">
+            {/* MOBILE ONLY: Card List View */}
+            <div className={`px-4 pb-4 sm:hidden space-y-3 ${mobileDisplayMode === 'cards' ? 'block' : 'hidden'}`}>
+                {filteredAndSortedItems.length === 0 ? (
+                    <div className="py-8 text-center text-gray-400 text-xs">
+                        No classes match the filter criteria.
+                    </div>
+                ) : (
+                    filteredAndSortedItems.map((item, index) => {
+                        const gradeStyle = GRADE_CONFIG[item.grade] || GRADE_CONFIG[10];
+
+                        return (
+                            <div
+                                key={item.id}
+                                onClick={() => onSelectClass && onSelectClass(item)}
+                                className="p-3.5 rounded-2xl bg-white border border-pink-100 hover:border-pink-300 shadow-xs transition-all cursor-pointer flex flex-col gap-2.5 relative overflow-hidden"
+                            >
+                                <div className={`absolute top-0 left-0 bottom-0 w-1.5 ${gradeStyle.pillColor}`} />
+
+                                <div className="pl-1.5 flex items-start justify-between gap-2">
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                            <span className="text-xs font-bold text-pink-600">
+                                                {item.dayOfWeek}
+                                            </span>
+                                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-pink-50 text-pink-700 font-semibold">
+                                                {item.shift}
+                                            </span>
+                                            <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-md ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
+                                                G{item.grade}
+                                            </span>
+                                        </div>
+
+                                        <h4 className="font-bold text-sm text-gray-900 mt-1 line-clamp-2">
+                                            {item.className}
+                                        </h4>
+                                        <p className="font-mono text-xs font-bold text-pink-500 mt-0.5">
+                                            {item.originalCode}
+                                        </p>
+                                    </div>
+
+                                    <div className="text-right shrink-0">
+                                        <span className="text-xs font-mono font-bold text-gray-700 block">
+                                            {item.timeRange}
+                                        </span>
+                                        <span className="text-[10px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded inline-block mt-1">
+                                            {item.location}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="pl-1.5 flex items-center justify-between pt-2 border-t border-gray-100" onClick={e => e.stopPropagation()}>
+                                    <div className="flex items-center gap-1">
+                                        {onEdit && (
+                                            <button
+                                                onClick={() => onEdit(item)}
+                                                className="p-1.5 rounded-lg bg-gray-100 text-gray-600 hover:text-pink-600 transition-colors cursor-pointer min-h-[34px] min-w-[34px] flex items-center justify-center"
+                                                title="Edit"
+                                            >
+                                                <Edit className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                        {onDelete && (
+                                            <button
+                                                onClick={() => handleDelete(item)}
+                                                className="p-1.5 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors cursor-pointer min-h-[34px] min-w-[34px] flex items-center justify-center"
+                                                title="Delete"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {onConvertToTask && (
+                                        <button
+                                            onClick={() => onConvertToTask(item)}
+                                            className="flex items-center gap-1 px-3 py-1.5 bg-pink-500 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer min-h-[34px]"
+                                        >
+                                            <PlusCircle className="w-3.5 h-3.5" />
+                                            <span>Task</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
+
+            {/* DESKTOP & TABLET: Table View (or mobile when toggled) */}
+            <div className={`overflow-x-auto px-4 sm:px-6 pb-6 ${mobileDisplayMode === 'cards' ? 'hidden sm:block' : 'block'}`}>
                 <table className="w-full border-collapse text-left min-w-[760px]">
                     <thead>
                         <tr className="border-b border-pink-100 text-[11px] font-bold text-gray-400 uppercase tracking-wider bg-gray-50/50">
@@ -186,7 +297,7 @@ export const TimetableListView = ({
                                         </td>
                                         <td className="py-3.5 px-4 font-mono font-bold text-gray-700">
                                             <div className="flex items-center gap-1">
-                                                <Clock className="w-3.5 h-3.5 text-pink-400" />
+                                                <Clock className="w-3.5 h-3.5 text-pink-400 shrink-0" />
                                                 <span>{item.timeRange}</span>
                                             </div>
                                         </td>
@@ -205,7 +316,7 @@ export const TimetableListView = ({
                                         </td>
                                         <td className="py-3.5 px-3">
                                             <span className="inline-flex items-center gap-1 text-gray-600 font-medium">
-                                                <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                                                <MapPin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                                                 {item.location}
                                             </span>
                                         </td>
@@ -215,7 +326,7 @@ export const TimetableListView = ({
                                                     <button
                                                         onClick={() => onEdit(item)}
                                                         title="Edit class slot"
-                                                        className="p-1.5 rounded-lg hover:bg-pink-100 text-gray-500 hover:text-pink-600 transition-colors cursor-pointer"
+                                                        className="p-1.5 rounded-lg hover:bg-pink-100 text-gray-500 hover:text-pink-600 transition-colors cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center"
                                                     >
                                                         <Edit className="w-4 h-4" />
                                                     </button>
@@ -224,7 +335,7 @@ export const TimetableListView = ({
                                                     <button
                                                         onClick={() => handleDelete(item)}
                                                         title="Delete class slot"
-                                                        className="p-1.5 rounded-lg hover:bg-rose-100 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
+                                                        className="p-1.5 rounded-lg hover:bg-rose-100 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -233,7 +344,7 @@ export const TimetableListView = ({
                                                     <button
                                                         onClick={() => onConvertToTask(item)}
                                                         title="Create task from this slot"
-                                                        className="p-1.5 rounded-lg hover:bg-pink-100 text-pink-500 hover:text-pink-700 transition-colors cursor-pointer"
+                                                        className="p-1.5 rounded-lg hover:bg-pink-100 text-pink-500 hover:text-pink-700 transition-colors cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center"
                                                     >
                                                         <PlusCircle className="w-4 h-4" />
                                                     </button>
