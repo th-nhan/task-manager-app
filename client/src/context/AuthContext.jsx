@@ -1,26 +1,65 @@
-import { createContext, useState, useEffect, useContext, Children } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
+import { authApi } from "../api/authApi";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const savedUser = localStorage.getItem('user');
+    const refreshUser = async () => {
         const token = localStorage.getItem('token');
+        if (!token) return null;
 
-        if(savedUser && token) {
-            setUser(JSON.parse(savedUser));
+        try {
+            const res = await authApi.getProfile();
+            if (res?.user) {
+                setUser(res.user);
+                localStorage.setItem('user', JSON.stringify(res.user));
+                return res.user;
+            }
+        } catch (error) {
+            console.error('Failed to sync profile from server:', error);
+            if (error?.response?.status === 401) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                setUser(null);
+            }
         }
-        setLoading(false);
+        return null;
+    };
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const savedUser = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+
+            if (savedUser && token) {
+                try {
+                    setUser(JSON.parse(savedUser));
+                } catch (e) {
+                    localStorage.removeItem('user');
+                }
+            }
+
+            // Sync latest user info (avatar, name, email) from server on app load
+            if (token) {
+                await refreshUser();
+            }
+
+            setLoading(false);
+        };
+
+        initAuth();
     }, []);
 
-    const login = (useData, token) => {
-        localStorage.setItem('user', JSON.stringify(useData));
+    const login = (userData, token) => {
+        localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('token', token);
-        setUser(useData);
-    }
+        setUser(userData);
+        // Refresh immediately to ensure complete profile data
+        refreshUser();
+    };
 
     const updateUser = (updatedData) => {
         setUser((prev) => {
@@ -37,11 +76,10 @@ export const AuthProvider = ({children}) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, updateUser, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, updateUser, refreshUser, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );
 };
 
 export const useAuth = () => useContext(AuthContext);
-

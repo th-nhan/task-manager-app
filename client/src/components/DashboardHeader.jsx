@@ -85,7 +85,7 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                                 <CalendarDays className="w-4 h-4" />
                                 <span>Timetable</span>
                                 <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full bg-pink-500 text-white shadow-xs">
-                                    18 Slots
+                                    19 Slots
                                 </span>
                             </Link>
                         )}

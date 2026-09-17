@@ -39,7 +39,7 @@ import {
 } from 'lucide-react';
 
 const ADMIN_EMAIL = 'tthhaannnnhhaann@gmail.com';
-const STORAGE_KEY = 'task_manager_timetable_items_v2';
+const STORAGE_KEY = 'task_manager_timetable_items_v3';
 
 export const TimetablePage = () => {
     const { user, logout } = useAuth();
