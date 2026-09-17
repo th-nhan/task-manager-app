@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import TimetablePage from "./pages/TimetablePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                         <Route element={<ProtectedRoute />}>
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/timetable" element={<TimetablePage />} />
+                            <Route path="/profile" element={<ProfilePage />} />
                         </Route>
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />
                     </Routes>

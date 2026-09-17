@@ -5,8 +5,9 @@ import { Link, useLocation } from 'react-router-dom';
 export const DashboardHeader = ({ user, logout, activePage }) => {
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const isProfile = location.pathname.includes('/profile') || activePage === 'profile';
     const isTimetable = location.pathname.includes('/timetable') || activePage === 'timetable';
-    const isDashboard = location.pathname.includes('/dashboard') || (!isTimetable && location.pathname === '/');
+    const isDashboard = (location.pathname.includes('/dashboard') || location.pathname === '/') && !isTimetable && !isProfile;
     const isTimetableOwner = user?.email?.toLowerCase() === 'tthhaannnnhhaann@gmail.com';
 
     // Close mobile drawer on route change or ESC key
@@ -88,6 +89,18 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                                 </span>
                             </Link>
                         )}
+
+                        <Link
+                            to="/profile"
+                            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
+                                isProfile
+                                    ? 'bg-white text-pink-600 shadow-xs'
+                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/50'
+                            }`}
+                        >
+                            <User className="w-4 h-4" />
+                            <span>Profile</span>
+                        </Link>
                     </nav>
                 </div>
 
@@ -101,7 +114,13 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                         <Bell className="w-5 h-5 text-pink-400" />
                     </button>
 
-                    <div className="flex items-center gap-2 text-gray-600 hover:bg-pink-50 rounded-2xl px-2 sm:px-2.5 py-1.5 cursor-pointer transition-colors border border-transparent hover:border-pink-100">
+                    <Link
+                        to="/profile"
+                        title="View Profile"
+                        className={`flex items-center gap-2 text-gray-600 hover:bg-pink-50 rounded-2xl px-2 sm:px-2.5 py-1.5 cursor-pointer transition-colors border ${
+                            isProfile ? 'bg-pink-50 border-pink-200 text-pink-600' : 'border-transparent hover:border-pink-100'
+                        }`}
+                    >
                         {user?.avatarUrl ? (
                             <img src={user.avatarUrl} alt="Avatar" className="w-7 h-7 rounded-full object-cover border border-pink-200" />
                         ) : (
@@ -110,7 +129,7 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                             </div>
                         )}
                         <span className="text-sm font-bold text-gray-800 hidden sm:inline max-w-[120px] truncate">{user?.name}</span>
-                    </div>
+                    </Link>
 
                     <button
                         onClick={logout}
@@ -150,8 +169,12 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                                 </button>
                             </div>
 
-                            {/* User Profile Card */}
-                            <div className="flex items-center gap-3 p-3 bg-pink-50/70 rounded-2xl border border-pink-100">
+                            {/* User Profile Card (Clickable to Profile) */}
+                            <Link
+                                to="/profile"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="flex items-center gap-3 p-3 bg-pink-50/70 hover:bg-pink-100/80 rounded-2xl border border-pink-100 transition-colors"
+                            >
                                 {user?.avatarUrl ? (
                                     <img src={user.avatarUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover border-2 border-pink-300" />
                                 ) : (
@@ -163,7 +186,7 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                                     <p className="font-bold text-sm text-gray-800 truncate">{user?.name || 'User'}</p>
                                     <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                                 </div>
-                            </div>
+                            </Link>
 
                             {/* Navigation Links */}
                             <div className="space-y-1">
@@ -204,6 +227,21 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                                         </span>
                                     </Link>
                                 )}
+
+                                <Link
+                                    to="/profile"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all min-h-[44px] ${
+                                        isProfile
+                                            ? 'bg-pink-500 text-white shadow-md shadow-pink-200'
+                                            : 'text-gray-700 hover:bg-pink-50 hover:text-pink-600'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <User className="w-5 h-5" />
+                                        <span>My Profile</span>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
 
