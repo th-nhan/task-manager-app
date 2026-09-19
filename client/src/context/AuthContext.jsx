@@ -42,12 +42,12 @@ export const AuthProvider = ({ children }) => {
                 }
             }
 
-            // Sync latest user info (avatar, name, email) from server on app load
-            if (token) {
-                await refreshUser();
-            }
-
             setLoading(false);
+
+            // Sync latest user info (avatar, name, email) from server in the background (non-blocking)
+            if (token) {
+                refreshUser();
+            }
         };
 
         initAuth();
