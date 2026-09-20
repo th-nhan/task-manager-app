@@ -30,7 +30,7 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                         Weekend Focus: Saturday & Sunday
                     </h2>
                     <p className="text-pink-100 text-xs sm:text-sm">
-                        Total 8 peak weekend slots (1 Saturday evening slot & 7 consecutive Sunday slots)
+                        Total {saturdayItems.length + sundayItems.length} peak weekend slots ({saturdayItems.length} Saturday & {sundayItems.length} Sunday slots)
                     </p>
                 </div>
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/20 w-full sm:w-auto justify-around sm:justify-start">
@@ -57,11 +57,11 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                             </div>
                             <div>
                                 <h3 className="font-bold text-gray-800 text-sm sm:text-base">Saturday Schedule</h3>
-                                <p className="text-xs text-gray-500">1 evening session</p>
+                                <p className="text-xs text-gray-500">{saturdayItems.length} session{saturdayItems.length > 1 ? 's' : ''}</p>
                             </div>
                         </div>
                         <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 shrink-0">
-                            1 Slot
+                            {saturdayItems.length} Slot{saturdayItems.length > 1 ? 's' : ''}
                         </span>
                     </div>
 
@@ -133,48 +133,54 @@ export const WeekendFocusView = ({ timetableItems = [], onSelectClass, onConvert
                             </div>
                             <div>
                                 <h3 className="font-bold text-gray-800 text-sm sm:text-base">Sunday Schedule (Full Day)</h3>
-                                <p className="text-xs text-gray-500">7 sessions from 07:00 AM to 08:00 PM</p>
+                                <p className="text-xs text-gray-500">{sundayItems.length} sessions from 07:00 AM to 08:00 PM</p>
                             </div>
                         </div>
                         <span className="text-xs font-bold px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 shrink-0">
-                            7 Slots
+                            {sundayItems.length} Slots
                         </span>
                     </div>
 
                     {/* Sunday Shifts Subsections */}
                     <div className="space-y-4">
                         {/* 1. Morning */}
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-2 px-1 text-xs font-bold text-amber-700 uppercase tracking-wide">
-                                <Sun className="w-4 h-4 text-amber-500 shrink-0" />
-                                <span>Morning Sessions (07:00 – 11:30 • 3 Slots)</span>
+                        {sundayMorning.length > 0 && (
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 px-1 text-xs font-bold text-amber-700 uppercase tracking-wide">
+                                    <Sun className="w-4 h-4 text-amber-500 shrink-0" />
+                                    <span>Morning Sessions ({sundayMorning.length} Slots)</span>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    {sundayMorning.map((item, idx) => renderSundayCard(item, idx + 1, onSelectClass, onConvertToTask))}
+                                </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                                {sundayMorning.map((item, idx) => renderSundayCard(item, idx + 1, onSelectClass, onConvertToTask))}
-                            </div>
-                        </div>
+                        )}
 
                         {/* 2. Afternoon */}
-                        <div className="space-y-2 pt-2">
-                            <div className="flex items-center gap-2 px-1 text-xs font-bold text-orange-700 uppercase tracking-wide">
-                                <Sunset className="w-4 h-4 text-orange-500 shrink-0" />
-                                <span>Afternoon Sessions (14:00 – 18:30 • 3 Slots)</span>
+                        {sundayAfternoon.length > 0 && (
+                            <div className="space-y-2 pt-2">
+                                <div className="flex items-center gap-2 px-1 text-xs font-bold text-orange-700 uppercase tracking-wide">
+                                    <Sunset className="w-4 h-4 text-orange-500 shrink-0" />
+                                    <span>Afternoon Sessions ({sundayAfternoon.length} Slots)</span>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    {sundayAfternoon.map((item, idx) => renderSundayCard(item, sundayMorning.length + idx + 1, onSelectClass, onConvertToTask))}
+                                </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                                {sundayAfternoon.map((item, idx) => renderSundayCard(item, idx + 4, onSelectClass, onConvertToTask))}
-                            </div>
-                        </div>
+                        )}
 
                         {/* 3. Evening */}
-                        <div className="space-y-2 pt-2">
-                            <div className="flex items-center gap-2 px-1 text-xs font-bold text-indigo-700 uppercase tracking-wide">
-                                <Moon className="w-4 h-4 text-indigo-500 shrink-0" />
-                                <span>Evening Session (18:30 – 20:00 • 1 Slot)</span>
+                        {sundayEvening.length > 0 && (
+                            <div className="space-y-2 pt-2">
+                                <div className="flex items-center gap-2 px-1 text-xs font-bold text-indigo-700 uppercase tracking-wide">
+                                    <Moon className="w-4 h-4 text-indigo-500 shrink-0" />
+                                    <span>Evening Sessions ({sundayEvening.length} Slot{sundayEvening.length > 1 ? 's' : ''})</span>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    {sundayEvening.map((item, idx) => renderSundayCard(item, sundayMorning.length + sundayAfternoon.length + idx + 1, onSelectClass, onConvertToTask))}
+                                </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                                {sundayEvening.map((item, idx) => renderSundayCard(item, idx + 7, onSelectClass, onConvertToTask))}
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
 import { taskApi } from '../api/taskApi';
+import { timetableApi } from '../api/timetableApi';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { CreateTaskModal } from '../components/CreateTaskModal';
 import {
@@ -39,7 +40,7 @@ import {
 } from 'lucide-react';
 
 const ADMIN_EMAIL = 'tthhaannnnhhaann@gmail.com';
-const STORAGE_KEY = 'task_manager_timetable_items_v3';
+const STORAGE_KEY = 'task_manager_timetable_items_v4';
 
 export const TimetablePage = () => {
     const { user, logout } = useAuth();
@@ -62,6 +63,30 @@ export const TimetablePage = () => {
             return DEFAULT_TIMETABLE_ITEMS;
         }
     });
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Fetch live timetable from database on mount
+    useEffect(() => {
+        const fetchTimetable = async () => {
+            try {
+                setIsLoading(true);
+                const res = await timetableApi.getTimetable();
+                if (res.data?.success && Array.isArray(res.data?.data) && res.data.data.length > 0) {
+                    setTimetableItems(res.data.data);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(res.data.data));
+                }
+            } catch (error) {
+                console.error("Failed to fetch timetable from database:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (isAuthorized) {
+            fetchTimetable();
+        }
+    }, [isAuthorized]);
 
     // View mode: 'grid' | 'weekend' | 'list' | 'grade'
     const [viewMode, setViewMode] = useState('grid');
@@ -93,20 +118,38 @@ export const TimetablePage = () => {
         return getLiveScheduleStatus(timetableItems, currentTime);
     }, [timetableItems, currentTime]);
 
-    // Save changes to localStorage
+    // Save changes to state & localStorage
     const persistTimetable = (newItems) => {
         setTimetableItems(newItems);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
     };
 
-    const handleUpdateTimetableFromExcel = (newItems) => {
+    const handleUpdateTimetableFromExcel = async (newItems) => {
         persistTimetable(newItems);
-        toast.success(`Updated ${newItems.length} class sessions from Excel file!`);
+        try {
+            const res = await timetableApi.syncBulk(newItems);
+            if (res.data?.data) {
+                persistTimetable(res.data.data);
+            }
+            toast.success(`Synced ${newItems.length} class sessions to Database!`);
+        } catch (error) {
+            console.error("Error syncing Excel timetable to database:", error);
+            toast.warning(`Updated locally (Database sync failed)`);
+        }
     };
 
-    const handleResetDefault = () => {
+    const handleResetDefault = async () => {
         persistTimetable(DEFAULT_TIMETABLE_ITEMS);
-        toast.info('Reset timetable to default data.');
+        try {
+            const res = await timetableApi.syncBulk(DEFAULT_TIMETABLE_ITEMS);
+            if (res.data?.data) {
+                persistTimetable(res.data.data);
+            }
+            toast.info('Reset and synced timetable to default in Database.');
+        } catch (error) {
+            console.error("Error resetting default in database:", error);
+            toast.info('Reset timetable locally.');
+        }
     };
 
     // Open Add Modal
@@ -122,31 +165,57 @@ export const TimetablePage = () => {
     };
 
     // Save Class (Create or Update)
-    const handleSaveClass = (classData) => {
-        if (editingClassItem) {
-            // Update existing
-            const updated = timetableItems.map(item =>
-                item.id === editingClassItem.id ? { ...item, ...classData } : item
-            );
-            persistTimetable(updated);
-            toast.success(`Updated class session "${classData.className}" successfully!`);
-        } else {
-            // Add new
-            const updated = [...timetableItems, classData];
-            persistTimetable(updated);
-            toast.success(`Added class session "${classData.className}" to Timetable!`);
+    const handleSaveClass = async (classData) => {
+        try {
+            if (editingClassItem) {
+                // Update existing in backend
+                const res = await timetableApi.updateItem(editingClassItem.id, classData);
+                const updatedItem = res.data?.data || { ...editingClassItem, ...classData };
+                const updated = timetableItems.map(item =>
+                    item.id === editingClassItem.id ? updatedItem : item
+                );
+                persistTimetable(updated);
+                toast.success(`Updated class session "${classData.className}" in Database!`);
+            } else {
+                // Add new in backend
+                const res = await timetableApi.createItem(classData);
+                const newItem = res.data?.data || classData;
+                const updated = [...timetableItems, newItem];
+                persistTimetable(updated);
+                toast.success(`Added class session "${classData.className}" to Database!`);
+            }
+        } catch (error) {
+            console.error("Error saving class to database:", error);
+            if (editingClassItem) {
+                const updated = timetableItems.map(item =>
+                    item.id === editingClassItem.id ? { ...item, ...classData } : item
+                );
+                persistTimetable(updated);
+            } else {
+                const updated = [...timetableItems, classData];
+                persistTimetable(updated);
+            }
+            toast.warning(`Saved locally (Database sync failed)`);
         }
     };
 
     // Delete Class
-    const handleDeleteClass = (classId) => {
+    const handleDeleteClass = async (classId) => {
         const itemToDelete = timetableItems.find(i => i.id === classId);
         const updated = timetableItems.filter(item => item.id !== classId);
         persistTimetable(updated);
-        toast.success(`Deleted class session "${itemToDelete?.className || ''}" successfully!`);
+
         if (selectedClass && selectedClass.id === classId) {
             setIsDetailModalOpen(false);
             setSelectedClass(null);
+        }
+
+        try {
+            await timetableApi.deleteItem(classId);
+            toast.success(`Deleted class session "${itemToDelete?.className || ''}" successfully!`);
+        } catch (error) {
+            console.error("Error deleting class from database:", error);
+            toast.info(`Deleted locally`);
         }
     };
 

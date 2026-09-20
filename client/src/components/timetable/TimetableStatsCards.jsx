@@ -92,7 +92,7 @@ export const TimetableStatsCards = ({ timetableItems = [] }) => {
                     </div>
                     <p className="text-[11px] text-pink-100 mt-0.5 flex items-center gap-1 truncate">
                         <Sparkles className="w-3 h-3 text-yellow-300 shrink-0" />
-                        Sun: 7 slots | Sat: 1 slot
+                        Sun: {timetableItems.filter(t => t.dayIndex === 0).length} slots | Sat: {timetableItems.filter(t => t.dayIndex === 6).length} slots
                     </p>
                 </div>
             </div>

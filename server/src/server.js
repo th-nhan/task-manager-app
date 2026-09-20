@@ -4,6 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import categoryRoutes from "./routes/category.route.js";
+import timetableRoutes from "./routes/timetable.routes.js";
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/timetable', timetableRoutes);
 
 app.get('/api/health',(req,res) =>{
     res.json({message: 'Server is running normally'});

@@ -6,6 +6,7 @@ const COMMON_TIME_PRESETS = [
     { label: '07:00 – 08:30 (Morning)', start: '07:00', end: '08:30', shift: 'Sáng' },
     { label: '08:30 – 10:00 (Morning)', start: '08:30', end: '10:00', shift: 'Sáng' },
     { label: '10:00 – 11:30 (Morning)', start: '10:00', end: '11:30', shift: 'Sáng' },
+    { label: '12:30 – 14:00 (Afternoon)', start: '12:30', end: '14:00', shift: 'Chiều' },
     { label: '14:00 – 15:30 (Afternoon)', start: '14:00', end: '15:30', shift: 'Chiều' },
     { label: '15:30 – 17:00 (Afternoon)', start: '15:30', end: '17:00', shift: 'Chiều' },
     { label: '16:45 – 18:15 (Afternoon)', start: '16:45', end: '18:15', shift: 'Chiều' },

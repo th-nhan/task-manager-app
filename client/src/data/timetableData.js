@@ -228,18 +228,33 @@ export const DEFAULT_TIMETABLE_ITEMS = [
         shift: 'Sáng'
     },
     {
+        id: 20,
+        dayOfWeek: 'Chủ nhật',
+        dayIndex: 0,
+        timeRange: '12h30 – 14h00',
+        startTime: '12:30',
+        endTime: '14:00',
+        className: '10 Mỹ Lộc',
+        originalCode: '10 ML',
+        grade: 10,
+        level: 'Cơ bản',
+        location: 'Mỹ Lộc',
+        group: '10 ML',
+        shift: 'Chiều'
+    },
+    {
         id: 15,
         dayOfWeek: 'Chủ nhật',
         dayIndex: 0,
         timeRange: '14h00 – 15h30',
         startTime: '14:00',
         endTime: '15:30',
-        className: '10 Cơ bản Long Thượng 2',
-        originalCode: '10CB 2',
+        className: '10 Long Thượng',
+        originalCode: '10 LT',
         grade: 10,
         level: 'Cơ bản',
         location: 'Long Thượng',
-        group: '10CB 2',
+        group: '10 LT',
         shift: 'Chiều'
     },
     {
@@ -326,6 +341,15 @@ export const TIME_SLOTS_MATRIX = [
         period: 'Ca 3 (Sáng)',
         periodEn: 'Slot 3 (Morning)',
         startTimes: ['10:00']
+    },
+    { 
+        id: 'slot_1230',
+        slot: '12h30 – 14h00', 
+        label: '12:30 – 14:00', 
+        shift: 'Chiều', 
+        period: 'Ca Trưa / Chiều (12h30 - 14h)',
+        periodEn: 'Noon / Early Afternoon (12:30 - 2:00 PM)',
+        startTimes: ['12:30']
     },
     { 
         id: 'slot_1400',

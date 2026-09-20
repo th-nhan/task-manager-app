@@ -34,8 +34,9 @@ model User {
   avatarUrl String?    @map("avatar_url")
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  tasks     Task[]
-  categories Category[]
+  tasks          Task[]
+  categories     Category[]
+  timetableItems TimetableItem[]
 
   @@map("users")
 }
@@ -68,4 +69,28 @@ model Task {
   category    Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@map("tasks")
+}
+
+model TimetableItem {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  dayOfWeek    String   @map("day_of_week")
+  dayIndex     Int      @map("day_index")
+  timeRange    String   @map("time_range")
+  startTime    String   @map("start_time")
+  endTime      String   @map("end_time")
+  className    String   @map("class_name")
+  originalCode String   @map("original_code")
+  grade        Int
+  level        String
+  location     String
+  group        String?
+  shift        String
+  note         String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("timetable_items")
 }
