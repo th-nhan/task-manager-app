@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, LogOut, CheckSquare, CalendarDays, Menu, X, User } from 'lucide-react';
+import { LogOut, CheckSquare, CalendarDays, Menu, X, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { NotificationDropdown } from './NotificationDropdown';
 
 export const DashboardHeader = ({ user, logout, activePage }) => {
     const location = useLocation();
@@ -80,7 +81,7 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
                                     isTimetable
                                         ? 'bg-white text-pink-600 shadow-xs'
                                         : 'text-gray-600 hover:text-pink-600 hover:bg-white/50'
-                                }`}
+                                    }`}
                             >
                                 <CalendarDays className="w-4 h-4" />
                                 <span>Timetable</span>
@@ -106,13 +107,8 @@ export const DashboardHeader = ({ user, logout, activePage }) => {
 
                 {/* Right User Actions */}
                 <div className="flex items-center gap-1 sm:gap-2">
-                    <button 
-                        className="hover:bg-pink-100 rounded-full p-2 text-gray-500 transition-colors cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center"
-                        title="Notifications"
-                        aria-label="Notifications"
-                    >
-                        <Bell className="w-5 h-5 text-pink-400" />
-                    </button>
+                    {/* Notification Dropdown */}
+                    <NotificationDropdown user={user} />
 
                     <Link
                         to="/profile"
