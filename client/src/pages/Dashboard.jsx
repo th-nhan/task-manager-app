@@ -259,7 +259,7 @@ const Dashboard = () => {
     }, [viewMode, currentDate]);
 
     return (
-        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 pb-12 overflow-x-hidden">
+        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 pb-24">
             {/* Header */}
             <DashboardHeader user={user} logout={logout} activePage="dashboard" />
 

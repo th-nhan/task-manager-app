@@ -15,7 +15,8 @@ import {
     Trophy,
     Sparkles,
     ChevronRight,
-    Dumbbell
+    Dumbbell,
+    X,
 } from 'lucide-react';
 import CustomSelect from './CustomSelect';
 
@@ -30,6 +31,12 @@ const WEEK_DAYS_HEADER = [
 ];
 
 export const CALENDAR_STICKERS = [
+    {
+        id: 'sparkle',
+        label: 'Sparkle',
+        icon: Sparkles,
+        bg: 'bg-pink-100 text-pink-600 border-pink-300 hover:bg-pink-200',
+    },
     {
         id: 'zap',
         label: 'Energetic',
@@ -96,6 +103,7 @@ export const MonthCalendarView = ({
     const [draggingTaskId, setDraggingTaskId] = useState(null);
     const [draggingStickerId, setDraggingStickerId] = useState(null);
     const [dragOverDateStr, setDragOverDateStr] = useState(null);
+    const [selectedStampStickerId, setSelectedStampStickerId] = useState(null);
     const [expandedDayKey, setExpandedDayKey] = useState(null);
 
     // Stored stickers by dateKey: { "2026-09-10": ["zap", "heart"] }
@@ -115,6 +123,72 @@ export const MonthCalendarView = ({
             console.error('Failed to save day stickers:', e);
         }
     }, [dayStickers]);
+
+    // Handle ESC key to cancel stamp mode
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setSelectedStampStickerId(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Auto-scroll when dragging near viewport edges
+    useEffect(() => {
+        if (!draggingStickerId && !draggingTaskId) return;
+
+        let animFrame = null;
+        let scrollSpeed = 0;
+
+        const scrollLoop = () => {
+            if (scrollSpeed !== 0) {
+                window.scrollBy(0, scrollSpeed);
+                animFrame = requestAnimationFrame(scrollLoop);
+            } else {
+                animFrame = null;
+            }
+        };
+
+        const handleWindowDragOver = (e) => {
+            const threshold = 100;
+            const topDist = e.clientY;
+            const bottomDist = window.innerHeight - e.clientY;
+
+            if (bottomDist < threshold && bottomDist >= 0) {
+                // Near bottom of screen -> scroll down
+                scrollSpeed = Math.min(18, Math.max(4, Math.round((threshold - bottomDist) / 3)));
+                if (!animFrame) animFrame = requestAnimationFrame(scrollLoop);
+            } else if (topDist < threshold && topDist >= 0) {
+                // Near top of screen -> scroll up
+                scrollSpeed = -Math.min(18, Math.max(4, Math.round((threshold - topDist) / 3)));
+                if (!animFrame) animFrame = requestAnimationFrame(scrollLoop);
+            } else {
+                scrollSpeed = 0;
+            }
+        };
+
+        const handleWindowDragEnd = () => {
+            scrollSpeed = 0;
+            if (animFrame) {
+                cancelAnimationFrame(animFrame);
+                animFrame = null;
+            }
+        };
+
+        window.addEventListener('dragover', handleWindowDragOver);
+        window.addEventListener('dragend', handleWindowDragEnd);
+        window.addEventListener('drop', handleWindowDragEnd);
+
+        return () => {
+            scrollSpeed = 0;
+            if (animFrame) cancelAnimationFrame(animFrame);
+            window.removeEventListener('dragover', handleWindowDragOver);
+            window.removeEventListener('dragend', handleWindowDragEnd);
+            window.removeEventListener('drop', handleWindowDragEnd);
+        };
+    }, [draggingStickerId, draggingTaskId]);
 
     const handleAddSticker = (dateKey, stickerId) => {
         setDayStickers(prev => {
@@ -241,9 +315,12 @@ export const MonthCalendarView = ({
         }
     };
 
+    const activeStampSticker = CALENDAR_STICKERS.find(s => s.id === selectedStampStickerId);
+    const ActiveStampIcon = activeStampSticker?.icon;
+
     return (
-        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col gap-4 min-w-0 border border-pink-100/60">
-            {/* Filter & Icon Stickers Toolbar */}
+        <div className="bg-white rounded-2xl p-3 sm:p-5 shadow-sm flex flex-col gap-4 min-w-0 border border-pink-100/60 relative pb-20">
+            {/* Top Header with Month info and Priority Filter */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-gray-800">Month Schedule</span>
@@ -252,44 +329,7 @@ export const MonthCalendarView = ({
                     </span>
                 </div>
 
-                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
-                    {/* Draggable Icon Cards container with scrollable overflow on small screens */}
-                    <div className="flex items-center gap-1.5 bg-pink-50/80 border border-pink-200/80 text-pink-700 font-bold px-2.5 py-1 rounded-full shadow-2xs overflow-x-auto max-w-full">
-                        <span className="text-[11px] text-pink-600 font-medium mr-1 select-none flex items-center gap-1 shrink-0">
-                            <Sparkles className="w-3.5 h-3.5 text-pink-500 animate-pulse" />
-                            <span className="hidden xs:inline">Icons:</span>
-                        </span>
-
-                        <div className="flex items-center gap-1.5 shrink-0">
-                            {CALENDAR_STICKERS.map((stk) => {
-                                const IconComp = stk.icon;
-                                const isBeingDragged = draggingStickerId === stk.id;
-
-                                return (
-                                    <div
-                                        key={stk.id}
-                                        draggable={true}
-                                        onDragStart={(e) => {
-                                            e.dataTransfer.setData('application/json', JSON.stringify({ type: 'STICKER', stickerId: stk.id }));
-                                            e.dataTransfer.effectAllowed = 'copy';
-                                            setDraggingStickerId(stk.id);
-                                        }}
-                                        onDragEnd={() => {
-                                            setDraggingStickerId(null);
-                                            setDragOverDateStr(null);
-                                        }}
-                                        title={`Drag icon "${stk.label}" to any day`}
-                                        className={`w-7 h-7 flex items-center justify-center rounded-full border transition-all cursor-grab active:cursor-grabbing hover:scale-125 select-none shrink-0 ${
-                                            stk.bg
-                                        } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''}`}
-                                    >
-                                        <IconComp className="w-3.5 h-3.5 pointer-events-none shrink-0" />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                    
+                <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
                     <div className="w-full sm:w-44 shrink-0">
                         <CustomSelect
                             value={filterPriority}
@@ -306,7 +346,7 @@ export const MonthCalendarView = ({
             </div>
 
             {/* Calendar Grid Container */}
-            <div className="overflow-x-auto -mx-2 sm:mx-0 pb-2">
+            <div className="overflow-x-auto -mx-2 sm:mx-0 pb-4">
                 <div className="min-w-[720px] md:min-w-[850px] lg:min-w-[900px] px-2 sm:px-0">
                     {/* Header Columns (Mon -> Sun) */}
                     <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2">
@@ -358,13 +398,23 @@ export const MonthCalendarView = ({
                                     onDrop={(e) => {
                                         handleDropOnDate(e, item.date, item.dateKey);
                                     }}
+                                    onClick={(e) => {
+                                        if (selectedStampStickerId) {
+                                            e.stopPropagation();
+                                            handleAddSticker(item.dateKey, selectedStampStickerId);
+                                        }
+                                    }}
                                     className={`min-h-[120px] sm:min-h-[145px] rounded-xl p-1.5 sm:p-2 border transition-all flex flex-col justify-between group relative min-w-0 ${
                                         item.isToday
                                             ? 'bg-pink-50/40 border-pink-400 ring-2 ring-pink-300/50 shadow-xs'
                                             : item.isCurrentMonth
                                                 ? 'bg-white border-gray-200/80 hover:border-pink-300 hover:shadow-sm'
                                                 : 'bg-gray-50/60 border-gray-100 text-gray-400 opacity-60'
-                                    } ${isDragOver ? 'bg-pink-100/80 border-pink-500 ring-4 ring-pink-300 shadow-md scale-[1.02] z-10' : ''}`}
+                                    } ${
+                                        isDragOver ? 'bg-pink-100/80 border-pink-500 ring-4 ring-pink-300 shadow-md scale-[1.02] z-10' : ''
+                                    } ${
+                                        selectedStampStickerId ? 'cursor-pointer hover:border-pink-400 hover:ring-2 hover:ring-pink-300 hover:bg-pink-50/50' : ''
+                                    }`}
                                 >
                                     <div>
                                         {/* Day Header with Date number, count and Stickers right next to it */}
@@ -424,7 +474,10 @@ export const MonthCalendarView = ({
 
                                             {/* Quick Add Button */}
                                             <button
-                                                onClick={() => onOpenCreateModal(item.date)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onOpenCreateModal(item.date);
+                                                }}
                                                 title={`Add task for ${item.dayNumber}/${item.date.getMonth() + 1}`}
                                                 className="opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity p-1 text-pink-500 hover:bg-pink-100 rounded-md cursor-pointer shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center"
                                             >
@@ -436,6 +489,14 @@ export const MonthCalendarView = ({
                                         {isDragOver && (
                                             <div className="mb-1 text-[10px] font-medium text-pink-700 bg-pink-200/80 border border-dashed border-pink-400 rounded-md py-1 text-center animate-pulse">
                                                 {draggingStickerId ? '✨ Drop icon' : '📍 Move date'}
+                                            </div>
+                                        )}
+
+                                        {/* Stamp Mode Hover Hint */}
+                                        {!isDragOver && selectedStampStickerId && (
+                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 text-[10px] text-pink-700 bg-pink-100/90 border border-pink-300 rounded-md py-0.5 px-1 mb-1 font-semibold">
+                                                <ActiveStampIcon className="w-2.5 h-2.5 text-pink-600" />
+                                                <span>Click to stamp</span>
                                             </div>
                                         )}
                                     </div>
@@ -541,7 +602,10 @@ export const MonthCalendarView = ({
                                         {/* "+X more" expand / collapse button */}
                                         {hiddenCount > 0 && !isExpanded && (
                                             <button
-                                                onClick={() => setExpandedDayKey(item.dateKey)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setExpandedDayKey(item.dateKey);
+                                                }}
                                                 className="text-[10px] text-pink-600 font-semibold bg-pink-50 hover:bg-pink-100 rounded-md py-0.5 px-1.5 text-center transition-colors cursor-pointer"
                                             >
                                                 +{hiddenCount} more
@@ -550,7 +614,10 @@ export const MonthCalendarView = ({
 
                                         {isExpanded && hiddenCount > 0 && (
                                             <button
-                                                onClick={() => setExpandedDayKey(null)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setExpandedDayKey(null);
+                                                }}
                                                 className="text-[10px] text-gray-500 font-semibold bg-gray-100 hover:bg-gray-200 rounded-md py-0.5 px-1.5 text-center transition-colors cursor-pointer mt-1"
                                             >
                                                 Collapse
@@ -558,6 +625,75 @@ export const MonthCalendarView = ({
                                         )}
                                     </div>
                                 </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+
+            {/* FIXED FLOATING ICON PALETTE DOCK (Always Fixed at Viewport Bottom) */}
+            <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 max-w-[95vw] pointer-events-none">
+                {/* Stamp Mode Active Floating Banner */}
+                {selectedStampStickerId && activeStampSticker && (
+                    <div className="pointer-events-auto flex items-center justify-between gap-2.5 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-xl border border-white/20 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                        <div className="flex items-center gap-2 min-w-0">
+                            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/25 shrink-0">
+                                <ActiveStampIcon className="w-3.5 h-3.5 text-white" />
+                            </span>
+                            <span className="truncate">
+                                <b>Chế độ dán:</b> Nhấp vào bất kỳ ô ngày nào để dán "<b>{activeStampSticker.label}</b>"
+                            </span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setSelectedStampStickerId(null)}
+                            className="shrink-0 flex items-center gap-1 bg-white/20 hover:bg-white/35 text-white px-2.5 py-0.5 rounded-full text-[11px] font-bold cursor-pointer transition-colors"
+                        >
+                            <X className="w-3 h-3" />
+                            <span>Thoát (Esc)</span>
+                        </button>
+                    </div>
+                )}
+
+                {/* Floating Dock Pill Toolbar */}
+                <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-3 bg-white/95 backdrop-blur-md px-4 sm:px-5 py-2.5 sm:py-3 rounded-full border border-pink-200/90 shadow-2xl transition-all hover:shadow-pink-200/50">
+                    <span className="text-xs text-pink-600 font-bold select-none flex items-center gap-1.5 shrink-0 pr-1">
+                        <Sparkles className="w-4 h-4 text-pink-500 animate-pulse" />
+                        <span className="hidden sm:inline">Kéo / Dán:</span>
+                    </span>
+
+                    <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 py-1 px-1">
+                        {CALENDAR_STICKERS.map((stk) => {
+                            const IconComp = stk.icon;
+                            const isBeingDragged = draggingStickerId === stk.id;
+                            const isSelectedStamp = selectedStampStickerId === stk.id;
+
+                            return (
+                                <button
+                                    key={stk.id}
+                                    type="button"
+                                    draggable={true}
+                                    onDragStart={(e) => {
+                                        e.dataTransfer.setData('application/json', JSON.stringify({ type: 'STICKER', stickerId: stk.id }));
+                                        e.dataTransfer.effectAllowed = 'copy';
+                                        setDraggingStickerId(stk.id);
+                                    }}
+                                    onDragEnd={() => {
+                                        setDraggingStickerId(null);
+                                        setDragOverDateStr(null);
+                                    }}
+                                    onClick={() => {
+                                        setSelectedStampStickerId(prev => (prev === stk.id ? null : stk.id));
+                                    }}
+                                    title={`Kéo hoặc nhấp "${stk.label}" để dán vào ô ngày`}
+                                    className={`w-7.5 h-7.5 sm:w-8 sm:h-8 flex items-center justify-center rounded-full border transition-transform duration-200 cursor-grab active:cursor-grabbing hover:scale-120 hover:z-10 select-none shrink-0 m-0.5 ${
+                                        stk.bg
+                                    } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''} ${
+                                        isSelectedStamp ? 'ring-3 ring-pink-500 scale-120 shadow-md animate-bounce' : ''
+                                    }`}
+                                >
+                                    <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4 pointer-events-none shrink-0" />
+                                </button>
                             );
                         })}
                     </div>
