@@ -64,6 +64,7 @@ export const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState('info'); // 'info' | 'security' | 'stats'
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [isSavingProfile, setIsSavingProfile] = useState(false);
+    const [isSavingAvatar, setIsSavingAvatar] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
 
     // Avatar modal / picker state
@@ -120,6 +121,37 @@ export const ProfilePage = () => {
         }
     };
 
+    // Auto save avatar directly without needing to click Save Changes
+    const saveAvatarDirectly = async (newAvatarUrl) => {
+        setIsSavingAvatar(true);
+        try {
+            const nameToSave = profileData.name?.trim() || user?.name || 'User';
+            const res = await authApi.updateProfile({
+                name: nameToSave,
+                avatarUrl: newAvatarUrl,
+            });
+
+            if (res?.user) {
+                setProfileData((prev) => ({
+                    ...prev,
+                    avatarUrl: res.user.avatarUrl,
+                }));
+                updateUser({
+                    name: res.user.name,
+                    avatarUrl: res.user.avatarUrl,
+                });
+                setShowAvatarPicker(false);
+                setCustomAvatarUrl('');
+                toast.success('Avatar updated successfully! ✨');
+            }
+        } catch (error) {
+            console.error('Update avatar error:', error);
+            toast.error(error.message || 'Failed to update avatar. Please try again.');
+        } finally {
+            setIsSavingAvatar(false);
+        }
+    };
+
     // Handle Local File Upload & Auto-compression to Base64
     const handleFileUpload = (e) => {
         const file = e.target.files?.[0];
@@ -127,19 +159,21 @@ export const ProfilePage = () => {
 
         if (!file.type.startsWith('image/')) {
             toast.error('Please select a valid image file (PNG, JPG, WebP)');
+            e.target.value = '';
             return;
         }
 
         // Limit size to max 5MB before downscaling
         if (file.size > 5 * 1024 * 1024) {
             toast.warning('Image is too large! Please choose an image under 5MB');
+            e.target.value = '';
             return;
         }
 
         const reader = new FileReader();
         reader.onload = (event) => {
             const img = new Image();
-            img.onload = () => {
+            img.onload = async () => {
                 // Resize image to max 400x400 for crisp & lightweight avatar
                 const canvas = document.createElement('canvas');
                 const maxSize = 400;
@@ -164,19 +198,16 @@ export const ProfilePage = () => {
                 ctx.drawImage(img, 0, 0, width, height);
 
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                setProfileData((prev) => ({ ...prev, avatarUrl: dataUrl }));
-                setShowAvatarPicker(false);
-                toast.info('Avatar selected! Click "Save Changes" to apply.');
+                await saveAvatarDirectly(dataUrl);
             };
             img.src = event.target.result;
         };
         reader.readAsDataURL(file);
+        e.target.value = '';
     };
 
     const handleSelectPresetAvatar = (url) => {
-        setProfileData((prev) => ({ ...prev, avatarUrl: url }));
-        setShowAvatarPicker(false);
-        toast.info('Preset chosen! Click "Save Changes" to apply.');
+        saveAvatarDirectly(url);
     };
 
     const handleApplyCustomUrl = () => {
@@ -184,16 +215,11 @@ export const ProfilePage = () => {
             toast.warning('Please enter a valid image URL');
             return;
         }
-        setProfileData((prev) => ({ ...prev, avatarUrl: customAvatarUrl.trim() }));
-        setCustomAvatarUrl('');
-        setShowAvatarPicker(false);
-        toast.info('Image URL applied! Click "Save Changes" to apply.');
+        saveAvatarDirectly(customAvatarUrl.trim());
     };
 
     const handleRemoveAvatar = () => {
-        setProfileData((prev) => ({ ...prev, avatarUrl: '' }));
-        setShowAvatarPicker(false);
-        toast.info('Avatar removed! Click "Save Changes" to apply.');
+        saveAvatarDirectly('');
     };
 
     // Save Profile Information
@@ -303,6 +329,15 @@ export const ProfilePage = () => {
 
     return (
         <div className="min-h-screen bg-linear-to-b from-pink-50/50 via-white to-pink-50/30 flex flex-col font-sans">
+            {/* Hidden global file input for avatar uploading */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                accept="image/*"
+                className="hidden"
+            />
+
             <DashboardHeader user={user} logout={logout} activePage="profile" />
 
             <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8">
@@ -336,7 +371,12 @@ export const ProfilePage = () => {
                     <div className="relative flex flex-col md:flex-row items-center md:items-start gap-5 sm:gap-6">
                         {/* Avatar with Camera Overlay */}
                         <div className="relative group shrink-0">
-                            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden ring-4 ring-pink-100 shadow-md bg-linear-to-tr from-pink-400 to-rose-400 flex items-center justify-center text-white text-3xl font-black select-none">
+                            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden ring-4 ring-pink-100 shadow-md bg-linear-to-tr from-pink-400 to-rose-400 flex items-center justify-center text-white text-3xl font-black select-none relative">
+                                {isSavingAvatar && (
+                                    <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center text-white z-10">
+                                        <RefreshCw className="w-6 h-6 animate-spin text-white" />
+                                    </div>
+                                )}
                                 {profileData.avatarUrl ? (
                                     <img
                                         src={profileData.avatarUrl}
@@ -352,7 +392,8 @@ export const ProfilePage = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowAvatarPicker(true)}
-                                className="absolute -bottom-1.5 -right-1.5 p-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-2xl shadow-lg hover:shadow-pink-200 hover:scale-105 active:scale-95 transition-all cursor-pointer ring-4 ring-white min-w-[38px] min-h-[38px] flex items-center justify-center"
+                                disabled={isSavingAvatar}
+                                className="absolute -bottom-1.5 -right-1.5 p-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-2xl shadow-lg hover:shadow-pink-200 hover:scale-105 active:scale-95 transition-all cursor-pointer ring-4 ring-white min-w-[38px] min-h-[38px] flex items-center justify-center group-hover:bg-pink-600 disabled:opacity-50"
                                 title="Change avatar"
                                 aria-label="Change avatar"
                             >
@@ -448,176 +489,89 @@ export const ProfilePage = () => {
 
                 {/* TAB 1: Profile Information */}
                 {activeTab === 'info' && (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {/* Main Form */}
-                        <div className="lg:col-span-2 bg-white rounded-3xl p-5 sm:p-7 md:p-8 shadow-xs border border-pink-100">
-                            <h2 className="text-base sm:text-lg font-black text-gray-800 mb-1">Edit Profile</h2>
-                            <p className="text-xs text-gray-400 mb-6">Update your personal account information and avatar</p>
-
-                            <form onSubmit={handleSaveProfile} className="space-y-5">
-                                {/* Name Input */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                                        Full Name
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                                            <User className="w-4 h-4 text-pink-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            value={profileData.name}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, name: e.target.value })
-                                            }
-                                            placeholder="Enter your full name"
-                                            className="w-full pl-10 pr-4 py-3 bg-pink-50/30 border border-pink-100 rounded-2xl text-sm font-medium text-gray-800 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all min-h-[44px]"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Email Input (Read-only) */}
-                                <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                            Email Address
-                                        </label>
-                                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
-                                            <CheckCircle2 className="w-3.5 h-3.5" />
-                                            Verified
-                                        </span>
-                                    </div>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                                            <Mail className="w-4 h-4 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="email"
-                                            value={profileData.email}
-                                            disabled
-                                            className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium text-gray-500 cursor-not-allowed select-none min-h-[44px]"
-                                        />
-                                    </div>
-                                    <p className="text-[11px] text-gray-400 mt-1.5 flex items-center gap-1">
-                                        <AlertCircle className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-                                        Email is used for account identification and sign in, it cannot be changed.
-                                    </p>
-                                </div>
-
-                                {/* Avatar URL Input */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                                        Avatar Image URL (Optional)
-                                    </label>
-                                    <div className="flex flex-col sm:flex-row gap-2">
-                                        <div className="relative flex-1">
-                                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                                                <LinkIcon className="w-4 h-4 text-pink-400" />
-                                            </div>
-                                            <input
-                                                type="url"
-                                                value={profileData.avatarUrl || ''}
-                                                onChange={(e) =>
-                                                    setProfileData({ ...profileData, avatarUrl: e.target.value })
-                                                }
-                                                placeholder="https://example.com/avatar.jpg"
-                                                className="w-full pl-10 pr-4 py-3 bg-pink-50/30 border border-pink-100 rounded-2xl text-sm font-medium text-gray-800 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all truncate min-h-[44px]"
-                                            />
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowAvatarPicker(true)}
-                                            className="px-4 py-3 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-2xl text-xs font-bold transition-all cursor-pointer shrink-0 min-h-[44px]"
-                                        >
-                                            Pick Avatar
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Save Button */}
-                                <div className="pt-4 flex items-center justify-end gap-3 border-t border-pink-50">
-                                    <button
-                                        type="submit"
-                                        disabled={isSavingProfile}
-                                        className="w-full sm:w-auto px-6 py-3 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white font-bold text-sm rounded-2xl shadow-md shadow-pink-200 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed min-h-[44px]"
-                                    >
-                                        {isSavingProfile ? (
-                                            <>
-                                                <RefreshCw className="w-4 h-4 animate-spin" />
-                                                <span>Saving...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Check className="w-4 h-4" />
-                                                <span>Save Changes</span>
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </form>
+                    <div className="max-w-2xl mx-auto bg-white rounded-3xl p-5 sm:p-7 md:p-8 shadow-xs border border-pink-100">
+                        <div className="flex items-center gap-3.5 mb-6">
+                            <div className="p-3 bg-pink-50 rounded-2xl text-pink-600 shrink-0">
+                                <User className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h2 className="text-base sm:text-lg font-black text-gray-800">Account Information</h2>
+                                <p className="text-xs text-gray-400">Update your personal account display name</p>
+                            </div>
                         </div>
 
-                        {/* Side Avatar Card */}
-                        <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-xs border border-pink-100 flex flex-col items-center text-center space-y-4 sm:space-y-5">
-                            <h3 className="text-sm sm:text-base font-bold text-gray-800">Profile Photo</h3>
-
-                            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl ring-4 ring-pink-100 shadow-inner overflow-hidden bg-pink-100 flex items-center justify-center shrink-0">
-                                {profileData.avatarUrl ? (
-                                    <img
-                                        src={profileData.avatarUrl}
-                                        alt="Preview"
-                                        className="w-full h-full object-cover"
+                        <form onSubmit={handleSaveProfile} className="space-y-5">
+                            {/* Name Input */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                                    Full Name
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                        <User className="w-4 h-4 text-pink-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={profileData.name}
+                                        onChange={(e) =>
+                                            setProfileData({ ...profileData, name: e.target.value })
+                                        }
+                                        placeholder="Enter your full name"
+                                        className="w-full pl-10 pr-4 py-3 bg-pink-50/30 border border-pink-100 rounded-2xl text-sm font-medium text-gray-800 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all min-h-[44px]"
+                                        required
                                     />
-                                ) : (
-                                    <span className="text-3xl sm:text-4xl font-black text-pink-500">
-                                        {profileData.name?.charAt(0)?.toUpperCase() || 'U'}
+                                </div>
+                            </div>
+
+                            {/* Email Input (Read-only) */}
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Email Address
+                                    </label>
+                                    <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                                        <CheckCircle2 className="w-3.5 h-3.5" />
+                                        Verified
                                     </span>
-                                )}
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                        <Mail className="w-4 h-4 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        value={profileData.email}
+                                        disabled
+                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium text-gray-500 cursor-not-allowed select-none min-h-[44px]"
+                                    />
+                                </div>
+                                <p className="text-[11px] text-gray-400 mt-1.5 flex items-center gap-1">
+                                    <AlertCircle className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                                    Email is used for account identification and sign in, it cannot be changed.
+                                </p>
                             </div>
 
-                            <div className="w-full space-y-2">
+                            {/* Save Button */}
+                            <div className="pt-4 flex items-center justify-end gap-3 border-t border-pink-50">
                                 <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="w-full py-2.5 px-4 bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer min-h-[40px]"
+                                    type="submit"
+                                    disabled={isSavingProfile}
+                                    className="w-full sm:w-auto px-6 py-3 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white font-bold text-sm rounded-2xl shadow-md shadow-pink-200 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed min-h-[44px]"
                                 >
-                                    <Upload className="w-4 h-4" />
-                                    <span>Upload from Device</span>
+                                    {isSavingProfile ? (
+                                        <>
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                            <span>Saving...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Check className="w-4 h-4" />
+                                            <span>Save Changes</span>
+                                        </>
+                                    )}
                                 </button>
-                                <input
-                                    type="file"
-                                    ref={fileInputRef}
-                                    onChange={handleFileUpload}
-                                    accept="image/*"
-                                    className="hidden"
-                                />
-
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAvatarPicker(true)}
-                                    className="w-full py-2.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer min-h-[40px]"
-                                >
-                                    <Sparkles className="w-4 h-4 text-pink-400" />
-                                    <span>Preset Avatar Gallery</span>
-                                </button>
-
-                                {profileData.avatarUrl && (
-                                    <button
-                                        type="button"
-                                        onClick={handleRemoveAvatar}
-                                        className="w-full py-2 px-4 text-rose-500 hover:bg-rose-50 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[36px]"
-                                    >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                        <span>Remove Photo</span>
-                                    </button>
-                                )}
                             </div>
-
-                            <p className="text-[11px] text-gray-400">
-                                Supports JPG, PNG, WebP or direct image link. Recommended size: 400x400px.
-                            </p>
-                        </div>
+                        </form>
                     </div>
                 )}
 
@@ -905,29 +859,72 @@ export const ProfilePage = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4">
                     <div
                         className="fixed inset-0 bg-black/40 backdrop-blur-xs animate-in fade-in"
-                        onClick={() => setShowAvatarPicker(false)}
+                        onClick={() => !isSavingAvatar && setShowAvatarPicker(false)}
                     />
 
                     <div className="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-pink-100 z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between pb-3.5 border-b border-pink-100 mb-4 sm:mb-5">
                             <h3 className="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2">
                                 <Sparkles className="w-5 h-5 text-pink-500" />
-                                <span>Choose Avatar</span>
+                                <span>Change Profile Photo</span>
                             </h3>
                             <button
                                 onClick={() => setShowAvatarPicker(false)}
-                                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                disabled={isSavingAvatar}
+                                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
                                 aria-label="Close"
                             >
                                 ✕
                             </button>
                         </div>
 
-                        {/* Presets Grid */}
+                        {/* Current Avatar Quick Actions */}
+                        {profileData.avatarUrl && (
+                            <div className="flex items-center justify-between p-3 bg-pink-50/50 rounded-2xl border border-pink-100 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-pink-200 shrink-0">
+                                        <img
+                                            src={profileData.avatarUrl}
+                                            alt="Current Avatar"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                    <span className="text-xs font-bold text-gray-700">Current Photo</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveAvatar}
+                                    disabled={isSavingAvatar}
+                                    className="px-3 py-1.5 text-rose-500 hover:bg-rose-50 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                                >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                    <span>Remove Photo</span>
+                                </button>
+                            </div>
+                        )}
+
                         <div className="space-y-4">
+                            {/* Upload local file button */}
+                            <div>
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    disabled={isSavingAvatar}
+                                    className="w-full py-3 px-4 bg-pink-50 hover:bg-pink-100 active:scale-[0.99] text-pink-700 font-bold text-xs sm:text-sm rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-pink-200/60 disabled:opacity-50 min-h-[44px]"
+                                >
+                                    {isSavingAvatar ? (
+                                        <RefreshCw className="w-4 h-4 animate-spin text-pink-600" />
+                                    ) : (
+                                        <Upload className="w-4 h-4" />
+                                    )}
+                                    <span>Upload from Device (PNG, JPG, WebP)</span>
+                                </button>
+                            </div>
+
+                            {/* Presets Grid */}
                             <div>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
-                                    Cute Illustrated Presets
+                                    Or pick a Cute Illustrated Avatar
                                 </p>
                                 <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
                                     {AVATAR_PRESETS.map((preset, idx) => (
@@ -935,60 +932,74 @@ export const ProfilePage = () => {
                                             key={idx}
                                             type="button"
                                             onClick={() => handleSelectPresetAvatar(preset)}
-                                            className="group relative p-1.5 rounded-2xl border-2 border-pink-100 hover:border-pink-500 hover:shadow-md transition-all cursor-pointer bg-pink-50/50 hover:bg-pink-100/50"
+                                            disabled={isSavingAvatar}
+                                            className={`group relative p-1.5 rounded-2xl border-2 transition-all cursor-pointer bg-pink-50/50 hover:bg-pink-100/50 hover:scale-105 active:scale-95 disabled:opacity-50 ${
+                                                profileData.avatarUrl === preset
+                                                    ? 'border-pink-500 ring-2 ring-pink-300 shadow-md'
+                                                    : 'border-pink-100 hover:border-pink-300'
+                                            }`}
                                         >
                                             <img
                                                 src={preset}
                                                 alt={`Preset ${idx + 1}`}
-                                                className="w-full aspect-square rounded-xl object-cover group-hover:scale-105 transition-transform"
+                                                className="w-full aspect-square rounded-xl object-cover"
                                             />
+                                            {profileData.avatarUrl === preset && (
+                                                <div className="absolute top-1 right-1 p-0.5 bg-pink-500 text-white rounded-full">
+                                                    <Check className="w-3 h-3" />
+                                                </div>
+                                            )}
                                         </button>
                                     ))}
                                 </div>
                             </div>
 
                             {/* Direct Custom Image URL */}
-                            <div className="pt-2">
+                            <div className="pt-2 border-t border-pink-100">
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                                    Or paste an image URL
+                                    Or paste an Image URL
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-2">
-                                    <input
-                                        type="url"
-                                        value={customAvatarUrl}
-                                        onChange={(e) => setCustomAvatarUrl(e.target.value)}
-                                        placeholder="https://..."
-                                        className="flex-1 px-3.5 py-2.5 bg-pink-50/30 border border-pink-100 rounded-2xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[40px]"
-                                    />
+                                    <div className="relative flex-1">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                            <LinkIcon className="w-3.5 h-3.5 text-pink-400" />
+                                        </div>
+                                        <input
+                                            type="url"
+                                            value={customAvatarUrl}
+                                            onChange={(e) => setCustomAvatarUrl(e.target.value)}
+                                            placeholder="https://example.com/avatar.png"
+                                            className="w-full pl-9 pr-3.5 py-2.5 bg-pink-50/30 border border-pink-100 rounded-2xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[40px]"
+                                            disabled={isSavingAvatar}
+                                        />
+                                    </div>
                                     <button
                                         type="button"
                                         onClick={handleApplyCustomUrl}
-                                        className="px-4 py-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-2xl text-xs font-bold transition-colors cursor-pointer shadow-xs min-h-[40px]"
+                                        disabled={isSavingAvatar || !customAvatarUrl.trim()}
+                                        className="px-4 py-2.5 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white rounded-2xl text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50 min-h-[40px] flex items-center justify-center gap-1.5"
                                     >
-                                        Apply
+                                        {isSavingAvatar ? (
+                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                        ) : (
+                                            <Check className="w-3.5 h-3.5" />
+                                        )}
+                                        <span>Save URL</span>
                                     </button>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Upload local file */}
-                            <div className="pt-3 border-t border-pink-100 flex items-center justify-between gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="px-4 py-2.5 bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs rounded-2xl transition-colors flex items-center gap-2 cursor-pointer min-h-[40px]"
-                                >
-                                    <Upload className="w-4 h-4" />
-                                    <span>Upload from computer</span>
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAvatarPicker(false)}
-                                    className="px-4 py-2.5 text-gray-500 hover:bg-gray-100 font-bold text-xs rounded-2xl transition-colors cursor-pointer min-h-[40px]"
-                                >
-                                    Close
-                                </button>
-                            </div>
+                        {/* Modal Footer */}
+                        <div className="mt-5 pt-3 border-t border-pink-100 flex justify-end">
+                            <button
+                                type="button"
+                                onClick={() => setShowAvatarPicker(false)}
+                                disabled={isSavingAvatar}
+                                className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-2xl transition-colors cursor-pointer min-h-[40px]"
+                            >
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
