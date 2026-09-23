@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
 import { taskApi } from '../api/taskApi';
@@ -19,6 +20,7 @@ const PRIORITY_FILTER_OPTIONS = [
 const Dashboard = () => {
     const { user, logout } = useAuth();
     const toast = useToast();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -46,6 +48,32 @@ const Dashboard = () => {
         fetchTasks();
     }, [fetchTasks]);
 
+    // Handle deep-linking from notifications or URL (e.g. ?taskId=... or ?view=...)
+    useEffect(() => {
+        const viewParam = searchParams.get('view');
+        if (viewParam && ['month', 'week', 'kanban'].includes(viewParam)) {
+            setViewMode(viewParam);
+        }
+    }, [searchParams]);
+
+    useEffect(() => {
+        const taskIdParam = searchParams.get('taskId');
+        if (taskIdParam && tasks.length > 0) {
+            const foundTask = tasks.find(t => (t._id || t.id) === taskIdParam);
+            if (foundTask) {
+                setSelectedTask(foundTask);
+                setIsModalOpen(true);
+                if (foundTask.dueDate || foundTask.startDate) {
+                    const targetDate = new Date(foundTask.dueDate || foundTask.startDate);
+                    if (!isNaN(targetDate.getTime())) {
+                        setCurrentDate(targetDate);
+                        setSelectedDate(targetDate);
+                    }
+                }
+            }
+        }
+    }, [searchParams, tasks]);
+
     const handleOpenCreateModal = (date = null) => {
         if (date) {
             setSelectedDate(new Date(date));
@@ -62,6 +90,13 @@ const Dashboard = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedTask(null);
+        if (searchParams.get('taskId')) {
+            setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                next.delete('taskId');
+                return next;
+            }, { replace: true });
+        }
     };
 
     const handleSaveTask = async (taskData) => {

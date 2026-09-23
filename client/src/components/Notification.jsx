@@ -33,7 +33,7 @@ const typeConfig = {
 };
 
 export const NotificationItem = ({ notification, onRemove }) => {
-    const { id, message, type = 'info', title, duration = 4000 } = notification;
+    const { id, message, type = 'info', title, duration = 4000, onClick, link } = notification;
     const [isExiting, setIsExiting] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const timeoutRef = useRef(null);
@@ -44,11 +44,20 @@ export const NotificationItem = ({ notification, onRemove }) => {
     const IconComponent = config.icon;
     const displayTitle = title || config.defaultTitle;
 
-    const handleClose = () => {
+    const handleClose = (e) => {
+        if (e) e.stopPropagation();
         setIsExiting(true);
         setTimeout(() => {
             onRemove(id);
         }, 200);
+    };
+
+    const handleClick = () => {
+        if (typeof onClick === 'function') {
+            onClick(notification);
+        } else if (link) {
+            window.location.href = link;
+        }
     };
 
     useEffect(() => {
@@ -83,11 +92,16 @@ export const NotificationItem = ({ notification, onRemove }) => {
         setIsPaused(false);
     };
 
+    const isClickable = Boolean(onClick || link);
+
     return (
         <div
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onClick={isClickable ? handleClick : undefined}
             className={`w-full max-w-sm bg-white/95 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 shadow-xl shadow-pink-200/40 border ${config.borderColor} relative overflow-hidden transition-all duration-200 flex items-start gap-3 select-none ${
+                isClickable ? 'cursor-pointer hover:shadow-2xl hover:scale-[1.02]' : ''
+            } ${
                 isExiting
                     ? 'opacity-0 translate-x-8 scale-95 duration-200'
                     : 'animate-in fade-in slide-in-from-top-4 duration-300'
@@ -115,7 +129,7 @@ export const NotificationItem = ({ notification, onRemove }) => {
             <button
                 type="button"
                 onClick={handleClose}
-                className="text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-lg p-1 transition-colors cursor-pointer shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center"
+                className="text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-lg p-1 transition-colors cursor-pointer shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center z-10"
                 aria-label="Close notification"
             >
                 <X className="w-4 h-4" />

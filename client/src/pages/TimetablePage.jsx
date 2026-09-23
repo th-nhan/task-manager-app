@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
 import { taskApi } from '../api/taskApi';
@@ -45,6 +45,7 @@ const STORAGE_KEY = 'task_manager_timetable_items_v4';
 export const TimetablePage = () => {
     const { user, logout } = useAuth();
     const toast = useToast();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // Verify if the logged-in user is the only authorized email
     const isAuthorized = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
@@ -97,6 +98,22 @@ export const TimetablePage = () => {
     const [selectedClass, setSelectedClass] = useState(null);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+    // Handle deep-linking query parameters (e.g. ?view=weekend or ?classId=...)
+    useEffect(() => {
+        const viewParam = searchParams.get('view');
+        if (viewParam && ['grid', 'weekend', 'list', 'grade'].includes(viewParam)) {
+            setViewMode(viewParam);
+        }
+        const classIdParam = searchParams.get('classId');
+        if (classIdParam && timetableItems.length > 0) {
+            const foundClass = timetableItems.find(item => String(item.id) === String(classIdParam));
+            if (foundClass) {
+                setSelectedClass(foundClass);
+                setIsDetailModalOpen(true);
+            }
+        }
+    }, [searchParams, timetableItems]);
 
     // Form Modal (Create / Edit)
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
