@@ -17,6 +17,8 @@ import {
     ChevronRight,
     Dumbbell,
     X,
+    ChevronDown,
+    ChevronUp,
 } from 'lucide-react';
 import CustomSelect from './CustomSelect';
 
@@ -105,6 +107,7 @@ export const MonthCalendarView = ({
     const [dragOverDateStr, setDragOverDateStr] = useState(null);
     const [selectedStampStickerId, setSelectedStampStickerId] = useState(null);
     const [expandedDayKey, setExpandedDayKey] = useState(null);
+    const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(false);
 
     // Stored stickers by dateKey: { "2026-09-10": ["zap", "heart"] }
     const [dayStickers, setDayStickers] = useState(() => {
@@ -345,8 +348,8 @@ export const MonthCalendarView = ({
                 <span>👈 Swipe horizontally to view full calendar 👉</span>
             </div>
 
-            {/* Calendar Grid Container */}
-            <div className="overflow-x-auto -mx-2 sm:mx-0 pb-4">
+            {/* Calendar Grid Container with padding for floating dock */}
+            <div className="overflow-x-auto -mx-2 sm:mx-0 pb-20 sm:pb-24">
                 <div className="min-w-[720px] md:min-w-[850px] lg:min-w-[900px] px-2 sm:px-0">
                     {/* Header Columns (Mon -> Sun) */}
                     <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2">
@@ -631,73 +634,100 @@ export const MonthCalendarView = ({
                 </div>
             </div>
 
-            {/* FIXED FLOATING ICON PALETTE DOCK (Always Fixed at Viewport Bottom) */}
-            <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 max-w-[95vw] pointer-events-none">
+            {/* FIXED FLOATING ICON PALETTE DOCK (Optimized for Mobile & Desktop) */}
+            <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1.5 w-full max-w-[calc(100vw-20px)] sm:max-w-max pointer-events-none px-1">
                 {/* Stamp Mode Active Floating Banner */}
                 {selectedStampStickerId && activeStampSticker && (
-                    <div className="pointer-events-auto flex items-center justify-between gap-2.5 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-xl border border-white/20 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                        <div className="flex items-center gap-2 min-w-0">
+                    <div className="pointer-events-auto flex items-center justify-between gap-2 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white px-3 sm:px-4 py-1.5 rounded-xl sm:rounded-full text-xs font-medium shadow-xl border border-white/20 animate-in fade-in slide-in-from-bottom-2 duration-200 w-full sm:w-auto max-w-[calc(100vw-24px)]">
+                        <div className="flex items-center gap-1.5 min-w-0">
                             <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/25 shrink-0">
                                 <ActiveStampIcon className="w-3.5 h-3.5 text-white" />
                             </span>
-                            <span className="truncate">
-                                <b>Chế độ dán:</b> Nhấp vào bất kỳ ô ngày nào để dán "<b>{activeStampSticker.label}</b>"
+                            <span className="truncate text-[11px] sm:text-xs">
+                                <b>Dán:</b> Chạm ô ngày để dán "<b>{activeStampSticker.label}</b>"
                             </span>
                         </div>
                         <button
                             type="button"
                             onClick={() => setSelectedStampStickerId(null)}
-                            className="shrink-0 flex items-center gap-1 bg-white/20 hover:bg-white/35 text-white px-2.5 py-0.5 rounded-full text-[11px] font-bold cursor-pointer transition-colors"
+                            className="shrink-0 flex items-center gap-1 bg-white/20 hover:bg-white/35 text-white px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold cursor-pointer transition-colors"
                         >
                             <X className="w-3 h-3" />
-                            <span>Thoát (Esc)</span>
+                            <span>Thoát</span>
                         </button>
                     </div>
                 )}
 
-                {/* Floating Dock Pill Toolbar */}
-                <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-3 bg-white/95 backdrop-blur-md px-4 sm:px-5 py-2.5 sm:py-3 rounded-full border border-pink-200/90 shadow-2xl transition-all hover:shadow-pink-200/50">
-                    <span className="text-xs text-pink-600 font-bold select-none flex items-center gap-1.5 shrink-0 pr-1">
-                        <Sparkles className="w-4 h-4 text-pink-500 animate-pulse" />
-                        <span className="hidden sm:inline">Kéo / Dán:</span>
-                    </span>
+                {/* Collapsed Mini Pill Button */}
+                {isToolbarCollapsed ? (
+                    <button
+                        type="button"
+                        onClick={() => setIsToolbarCollapsed(false)}
+                        className="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-pink-200/90 shadow-xl hover:shadow-pink-200/50 text-pink-600 text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                        title="Mở thanh dán sticker"
+                    >
+                        <Sparkles className="w-3.5 h-3.5 text-pink-500 animate-pulse" />
+                        <span>Sticker ({CALENDAR_STICKERS.length})</span>
+                        <ChevronUp className="w-3.5 h-3.5 text-pink-400" />
+                    </button>
+                ) : (
+                    /* Floating Dock Pill Toolbar */
+                    <div className="pointer-events-auto flex items-center justify-between sm:justify-start gap-1 sm:gap-2.5 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl sm:rounded-full border border-pink-200/90 shadow-2xl transition-all hover:shadow-pink-200/50 w-full sm:w-auto max-w-full">
+                        {/* Left Label */}
+                        <div className="text-xs text-pink-600 font-bold select-none flex items-center gap-1 shrink-0 pl-1">
+                            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-500" />
+                            <span className="hidden sm:inline text-xs">Kéo / Dán:</span>
+                        </div>
 
-                    <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 py-1 px-1">
-                        {CALENDAR_STICKERS.map((stk) => {
-                            const IconComp = stk.icon;
-                            const isBeingDragged = draggingStickerId === stk.id;
-                            const isSelectedStamp = selectedStampStickerId === stk.id;
+                        {/* Scrollable Stickers Strip */}
+                        <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 px-0.5 min-w-0 flex-1 sm:flex-initial touch-pan-x">
+                            {CALENDAR_STICKERS.map((stk) => {
+                                const IconComp = stk.icon;
+                                const isBeingDragged = draggingStickerId === stk.id;
+                                const isSelectedStamp = selectedStampStickerId === stk.id;
 
-                            return (
-                                <button
-                                    key={stk.id}
-                                    type="button"
-                                    draggable={true}
-                                    onDragStart={(e) => {
-                                        e.dataTransfer.setData('application/json', JSON.stringify({ type: 'STICKER', stickerId: stk.id }));
-                                        e.dataTransfer.effectAllowed = 'copy';
-                                        setDraggingStickerId(stk.id);
-                                    }}
-                                    onDragEnd={() => {
-                                        setDraggingStickerId(null);
-                                        setDragOverDateStr(null);
-                                    }}
-                                    onClick={() => {
-                                        setSelectedStampStickerId(prev => (prev === stk.id ? null : stk.id));
-                                    }}
-                                    title={`Kéo hoặc nhấp "${stk.label}" để dán vào ô ngày`}
-                                    className={`w-7.5 h-7.5 sm:w-8 sm:h-8 flex items-center justify-center rounded-full border transition-transform duration-200 cursor-grab active:cursor-grabbing hover:scale-120 hover:z-10 select-none shrink-0 m-0.5 ${
-                                        stk.bg
-                                    } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''} ${
-                                        isSelectedStamp ? 'ring-3 ring-pink-500 scale-120 shadow-md animate-bounce' : ''
-                                    }`}
-                                >
-                                    <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4 pointer-events-none shrink-0" />
-                                </button>
-                            );
-                        })}
+                                return (
+                                    <button
+                                        key={stk.id}
+                                        type="button"
+                                        draggable={true}
+                                        onDragStart={(e) => {
+                                            e.dataTransfer.setData('application/json', JSON.stringify({ type: 'STICKER', stickerId: stk.id }));
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            setDraggingStickerId(stk.id);
+                                        }}
+                                        onDragEnd={() => {
+                                            setDraggingStickerId(null);
+                                            setDragOverDateStr(null);
+                                        }}
+                                        onClick={() => {
+                                            setSelectedStampStickerId(prev => (prev === stk.id ? null : stk.id));
+                                        }}
+                                        title={`Kéo hoặc nhấp "${stk.label}" để dán`}
+                                        className={`w-7 h-7 sm:w-8 sm:h-8 min-w-[28px] sm:min-w-[32px] flex items-center justify-center rounded-full border transition-all duration-150 cursor-grab active:cursor-grabbing hover:scale-115 active:scale-95 select-none shrink-0 ${
+                                            stk.bg
+                                        } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''} ${
+                                            isSelectedStamp ? 'ring-2 ring-pink-500 scale-110 shadow-md animate-bounce' : ''
+                                        }`}
+                                    >
+                                        <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4 pointer-events-none shrink-0" />
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Collapse Button */}
+                        <button
+                            type="button"
+                            onClick={() => setIsToolbarCollapsed(true)}
+                            className="p-1 text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-full transition-colors shrink-0 ml-0.5 cursor-pointer"
+                            title="Thu gọn thanh sticker"
+                            aria-label="Thu gọn"
+                        >
+                            <ChevronDown className="w-4 h-4" />
+                        </button>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

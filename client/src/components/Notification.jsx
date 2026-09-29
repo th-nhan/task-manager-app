@@ -183,9 +183,9 @@ const NotificationContainer = ({ notifications, onRemove }) => {
     if (!notifications || notifications.length === 0) return null;
 
     return (
-        <div className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[9999] flex flex-col gap-2 max-w-[calc(100vw-24px)] sm:max-w-sm w-full pointer-events-none p-0">
+        <div className="fixed top-3 inset-x-3 sm:inset-x-auto sm:right-5 sm:top-5 z-[9999] flex flex-col items-center sm:items-end gap-2 max-w-sm sm:w-auto mx-auto sm:mx-0 pointer-events-none p-0">
             {notifications.map((notification) => (
-                <div key={notification.id} className="pointer-events-auto">
+                <div key={notification.id} className="pointer-events-auto w-full">
                     <NotificationItem notification={notification} onRemove={onRemove} />
                 </div>
             ))}

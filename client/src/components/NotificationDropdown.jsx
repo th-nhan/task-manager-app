@@ -352,41 +352,64 @@ export const NotificationDropdown = ({ user }) => {
                 )}
             </button>
 
+            {/* Backdrop for Mobile */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 sm:hidden animate-in fade-in duration-200"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(false);
+                    }}
+                    aria-hidden="true"
+                />
+            )}
+
             {/* Notification Popover Dropdown */}
             {isOpen && (
                 <div 
-                    className="absolute right-0 sm:right-0 top-full mt-2 w-[calc(100vw-24px)] sm:w-96 max-w-sm bg-white rounded-2xl shadow-2xl border border-pink-100 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150 origin-top-right"
-                    style={{ right: 'min(0px, calc(100vw - 100% - 16px))' }}
+                    className="fixed inset-x-3.5 top-15 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 sm:max-w-sm bg-white rounded-2xl shadow-2xl border border-pink-100 z-50 overflow-hidden flex flex-col max-h-[calc(100dvh-80px)] sm:max-h-[560px] animate-in fade-in zoom-in-95 duration-150 origin-top"
                 >
                     {/* Header */}
-                    <div className="px-4 py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 text-white flex items-center justify-between shadow-xs">
-                        <div className="flex items-center gap-2">
-                            <h3 className="font-extrabold text-sm sm:text-base tracking-tight">Thông báo</h3>
+                    <div className="px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-400 text-white flex items-center justify-between shadow-xs shrink-0">
+                        <div className="flex items-center gap-2 min-w-0">
+                            <h3 className="font-extrabold text-sm sm:text-base tracking-tight truncate">Thông báo</h3>
                             {unreadCount > 0 ? (
-                                <span className="bg-white/20 backdrop-blur-xs text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
+                                <span className="bg-white/20 backdrop-blur-xs text-white text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0">
                                     {unreadCount} mới
                                 </span>
                             ) : (
-                                <span className="bg-white/20 text-white text-[11px] font-medium px-2 py-0.5 rounded-full">
+                                <span className="bg-white/20 text-white text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0">
                                     Tất cả đã đọc
                                 </span>
                             )}
                         </div>
 
-                        {unreadCount > 0 && (
+                        <div className="flex items-center gap-1.5 shrink-0">
+                            {unreadCount > 0 && (
+                                <button
+                                    onClick={markAllAsRead}
+                                    className="text-xs font-semibold text-white/90 hover:text-white bg-white/15 hover:bg-white/25 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                                    title="Đánh dấu tất cả là đã đọc"
+                                >
+                                    <CheckCheck className="w-3.5 h-3.5" />
+                                    <span>Đã đọc</span>
+                                </button>
+                            )}
+
+                            {/* Mobile Close Button */}
                             <button
-                                onClick={markAllAsRead}
-                                className="text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
-                                title="Đánh dấu tất cả là đã đọc"
+                                type="button"
+                                onClick={() => setIsOpen(false)}
+                                className="sm:hidden text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-1 rounded-lg transition-colors cursor-pointer"
+                                aria-label="Đóng thông báo"
                             >
-                                <CheckCheck className="w-3.5 h-3.5" />
-                                <span>Đã đọc</span>
+                                <X className="w-4 h-4" />
                             </button>
-                        )}
+                        </div>
                     </div>
 
                     {/* Filter Tabs */}
-                    <div className="flex items-center gap-1 p-1.5 bg-pink-50/50 border-b border-pink-100 text-xs font-bold text-gray-600">
+                    <div className="flex items-center gap-1 p-1.5 bg-pink-50/50 border-b border-pink-100 text-xs font-bold text-gray-600 shrink-0">
                         <button
                             type="button"
                             onClick={() => setFilter('all')}
@@ -423,7 +446,7 @@ export const NotificationDropdown = ({ user }) => {
                     </div>
 
                     {/* Notification Items List */}
-                    <div className="max-h-[340px] overflow-y-auto divide-y divide-gray-50 overscroll-contain">
+                    <div className="flex-1 overflow-y-auto divide-y divide-gray-50 overscroll-contain max-h-[380px] sm:max-h-[360px]">
                         {filteredNotifications.length === 0 ? (
                             <div className="py-10 px-4 text-center">
                                 <div className="w-12 h-12 rounded-full bg-pink-50 text-pink-400 mx-auto flex items-center justify-center mb-3">
@@ -441,7 +464,7 @@ export const NotificationDropdown = ({ user }) => {
                                 <div
                                     key={item.id}
                                     onClick={() => handleNotificationClick(item)}
-                                    className={`p-3.5 flex items-start gap-3 transition-colors cursor-pointer group relative hover:bg-pink-50/60 ${
+                                    className={`p-3 sm:p-3.5 flex items-start gap-2.5 sm:gap-3 transition-colors cursor-pointer group relative hover:bg-pink-50/60 ${
                                         !item.isRead 
                                             ? 'bg-pink-50/30' 
                                             : 'bg-white'
@@ -470,18 +493,18 @@ export const NotificationDropdown = ({ user }) => {
                                             <span className="text-[10px] text-gray-400 font-medium">
                                                 {formatTimeAgo(item.time)}
                                             </span>
-                                            <span className="text-[10px] text-pink-500 font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+                                            <span className="text-[10px] text-pink-500 font-semibold opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
                                                 {item.actionLabel || 'Xem ngay'}
                                                 <ChevronRight className="w-3 h-3" />
                                             </span>
                                         </div>
                                     </div>
 
-                                    {/* Delete Button (Visible on Hover) */}
+                                    {/* Delete Button (Easy touch on mobile, hover on desktop) */}
                                     <button
                                         type="button"
                                         onClick={(e) => deleteNotification(item.id, e)}
-                                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all absolute top-3 right-2 cursor-pointer z-10"
+                                        className="opacity-70 hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all absolute top-2.5 right-2 cursor-pointer z-10"
                                         title="Xóa thông báo"
                                     >
                                         <Trash2 className="w-3.5 h-3.5" />
@@ -493,7 +516,7 @@ export const NotificationDropdown = ({ user }) => {
 
                     {/* Footer */}
                     {notifications.length > 0 && (
-                        <div className="p-2.5 bg-gray-50/80 border-t border-pink-100 flex items-center justify-between text-xs">
+                        <div className="p-2.5 bg-gray-50/80 border-t border-pink-100 flex items-center justify-between text-xs shrink-0">
                             <span className="text-gray-400 text-[11px] px-2 font-medium">
                                 TaskNote Notifications
                             </span>
