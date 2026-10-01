@@ -5,6 +5,7 @@ import {
     CheckCircle2,
     AlertCircle,
     Trash2,
+    Copy,
     Plus,
 } from 'lucide-react';
 import CustomSelect from './CustomSelect';
@@ -18,6 +19,7 @@ export const KanbanBoardView = ({
     onOpenTaskDetail,
     onToggleStatus,
     onDeleteTask,
+    onDuplicateTask,
     onDropTask,
 }) => {
     const [draggingTaskId, setDraggingTaskId] = useState(null);
@@ -323,16 +325,30 @@ export const KanbanBoardView = ({
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                onDeleteTask(task.id);
-                                                            }}
-                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
-                                                            title="Delete task"
-                                                        >
-                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                        </button>
+                                                        <div className="flex items-center gap-0.5 shrink-0">
+                                                            {onDuplicateTask && (
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        onDuplicateTask(task);
+                                                                    }}
+                                                                    className="text-gray-300 hover:text-pink-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                                    title="Sao chép công việc (Duplicate)"
+                                                                >
+                                                                    <Copy className="w-3.5 h-3.5" />
+                                                                </button>
+                                                            )}
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    onDeleteTask(task.id);
+                                                                }}
+                                                                className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                                title="Delete task"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     {task.description && (

@@ -5,6 +5,7 @@ import {
     Circle,
     CheckCircle2,
     Trash2,
+    Copy,
     AlertCircle,
     Zap,
     Heart,
@@ -100,6 +101,7 @@ export const MonthCalendarView = ({
     onOpenTaskDetail,
     onToggleStatus,
     onDeleteTask,
+    onDuplicateTask,
     onRescheduleTask,
 }) => {
     const [draggingTaskId, setDraggingTaskId] = useState(null);
@@ -573,6 +575,20 @@ export const MonthCalendarView = ({
                                                                 <Circle className="w-3.5 h-3.5 text-gray-400 group-hover/chip:text-pink-400" />
                                                             )}
                                                         </button>
+
+                                                        {/* Quick duplicate button */}
+                                                        {onDuplicateTask && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    onDuplicateTask(task);
+                                                                }}
+                                                                title="Sao chép công việc (Duplicate)"
+                                                                className="text-gray-300 hover:text-pink-500 opacity-0 group-hover/chip:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                            >
+                                                                <Copy className="w-3 h-3" />
+                                                            </button>
+                                                        )}
 
                                                         {/* Quick delete button */}
                                                         <button

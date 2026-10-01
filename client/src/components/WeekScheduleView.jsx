@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Plus, Clock, Circle, CheckCircle2, Trash2, AlertCircle, LayoutGrid, CalendarDays } from 'lucide-react';
+import { Plus, Clock, Circle, CheckCircle2, Trash2, Copy, AlertCircle, LayoutGrid, CalendarDays } from 'lucide-react';
 import CustomSelect from './CustomSelect';
 
 export const WeekScheduleView = ({
@@ -15,6 +15,7 @@ export const WeekScheduleView = ({
     onOpenTaskDetail,
     onToggleStatus,
     onDeleteTask,
+    onDuplicateTask,
 }) => {
     // Mobile view mode: 'single' (focused selected day) or 'grid' (horizontal 7 cols)
     const [mobileLayout, setMobileLayout] = useState('single');
@@ -231,16 +232,30 @@ export const WeekScheduleView = ({
                                                 )}
                                             </div>
 
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    onDeleteTask(task.id);
-                                                }}
-                                                className="text-gray-400 hover:text-red-500 p-1 min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer"
-                                                title="Delete task"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
+                                            <div className="flex items-center gap-1 shrink-0">
+                                                {onDuplicateTask && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onDuplicateTask(task);
+                                                        }}
+                                                        className="text-gray-400 hover:text-pink-600 p-1 min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer transition-colors"
+                                                        title="Sao chép công việc (Duplicate)"
+                                                    >
+                                                        <Copy className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onDeleteTask(task.id);
+                                                    }}
+                                                    className="text-gray-400 hover:text-red-500 p-1 min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer transition-colors"
+                                                    title="Delete task"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div className="flex items-center justify-between pt-2 border-t border-gray-100/80 text-xs">
@@ -356,16 +371,30 @@ export const WeekScheduleView = ({
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            onDeleteTask(task.id);
-                                                        }}
-                                                        className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
-                                                        title="Delete task"
-                                                    >
-                                                        <Trash2 className="w-3.5 h-3.5" />
-                                                    </button>
+                                                    <div className="flex items-center gap-0.5 shrink-0">
+                                                        {onDuplicateTask && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    onDuplicateTask(task);
+                                                                }}
+                                                                className="text-gray-300 hover:text-pink-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                                title="Sao chép công việc (Duplicate)"
+                                                            >
+                                                                <Copy className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                onDeleteTask(task.id);
+                                                            }}
+                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                            title="Delete task"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    </div>
                                                 </div>
 
                                                 {task.description && (

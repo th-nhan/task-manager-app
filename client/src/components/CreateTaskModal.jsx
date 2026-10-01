@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Calendar, Clock, Trash2 } from 'lucide-react';
+import { X, Calendar, Clock, Trash2, Copy } from 'lucide-react';
 import { Alert } from './Notification';
 import CustomSelect from './CustomSelect';
 
@@ -34,7 +34,7 @@ const toLocalISOString = (date) => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, onDelete = null }) => {
+const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, onDelete = null, onDuplicate = null }) => {
     const startDateInputRef = useRef(null);
     const dueDateInputRef = useRef(null);
     const [formData, setFormData] = useState({
@@ -282,16 +282,30 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
 
                         {/* Form Action Buttons */}
                         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-gray-200/60">
-                            <div>
+                            <div className="flex flex-wrap items-center gap-2">
                                 {isEditMode && onDelete && (
                                     <button
                                         type="button"
                                         onClick={() => onDelete(task.id)}
-                                        className="w-full sm:w-auto px-4 py-2.5 text-red-600 hover:bg-red-50 border border-red-200 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-sm font-semibold min-h-[42px]"
+                                        className="w-full sm:w-auto px-3.5 py-2 text-red-600 hover:bg-red-50 border border-red-200 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold min-h-[40px]"
                                         title="Delete this task"
                                     >
                                         <Trash2 className="w-4 h-4" />
-                                        <span>Delete Task</span>
+                                        <span>Delete</span>
+                                    </button>
+                                )}
+                                {isEditMode && onDuplicate && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            onClose();
+                                            onDuplicate(task);
+                                        }}
+                                        className="w-full sm:w-auto px-3.5 py-2 text-pink-600 hover:bg-pink-50 border border-pink-200 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold min-h-[40px]"
+                                        title="Duplicate this task (Sao chép)"
+                                    >
+                                        <Copy className="w-4 h-4" />
+                                        <span>Duplicate</span>
                                     </button>
                                 )}
                             </div>

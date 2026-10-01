@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
 import { taskApi } from '../api/taskApi';
 import { CreateTaskModal } from '../components/CreateTaskModal';
+import { DuplicateTaskModal } from '../components/DuplicateTaskModal';
 import { MonthCalendarView } from '../components/MonthCalendarView';
 import { WeekScheduleView } from '../components/WeekScheduleView';
 import { KanbanBoardView } from '../components/KanbanBoardView';
@@ -25,6 +26,8 @@ const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTask, setSelectedTask] = useState(null);
+    const [taskToDuplicate, setTaskToDuplicate] = useState(null);
+    const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(false);
     const [viewMode, setViewMode] = useState('month'); // 'month' | 'week' | 'kanban'
@@ -97,6 +100,22 @@ const Dashboard = () => {
                 return next;
             }, { replace: true });
         }
+    };
+
+    const handleOpenDuplicateModal = (task) => {
+        setTaskToDuplicate(task);
+        setIsDuplicateModalOpen(true);
+    };
+
+    const handleCloseDuplicateModal = () => {
+        setTaskToDuplicate(null);
+        setIsDuplicateModalOpen(false);
+    };
+
+    const handleDuplicateTask = async (taskData) => {
+        await taskApi.createTask(taskData);
+        toast.success(`Task "${taskData.title}" duplicated successfully!`);
+        fetchTasks();
     };
 
     const handleSaveTask = async (taskData) => {
@@ -325,6 +344,7 @@ const Dashboard = () => {
                             onOpenTaskDetail={handleOpenTaskDetail}
                             onToggleStatus={handleToggleStatus}
                             onDeleteTask={handleDeleteTask}
+                            onDuplicateTask={handleOpenDuplicateModal}
                             onRescheduleTask={handleRescheduleTask}
                         />
                     )}
@@ -344,6 +364,7 @@ const Dashboard = () => {
                             onOpenTaskDetail={handleOpenTaskDetail}
                             onToggleStatus={handleToggleStatus}
                             onDeleteTask={handleDeleteTask}
+                            onDuplicateTask={handleOpenDuplicateModal}
                         />
                     )}
 
@@ -358,6 +379,7 @@ const Dashboard = () => {
                             onOpenTaskDetail={handleOpenTaskDetail}
                             onToggleStatus={handleToggleStatus}
                             onDeleteTask={handleDeleteTask}
+                            onDuplicateTask={handleOpenDuplicateModal}
                             onDropTask={handleDropTaskKanban}
                         />
                     )}
@@ -372,6 +394,15 @@ const Dashboard = () => {
                 defaultDate={selectedDate}
                 task={selectedTask}
                 onDelete={handleDeleteTask}
+                onDuplicate={handleOpenDuplicateModal}
+            />
+
+            {/* Duplicate Task Modal */}
+            <DuplicateTaskModal
+                isOpen={isDuplicateModalOpen}
+                onClose={handleCloseDuplicateModal}
+                task={taskToDuplicate}
+                onDuplicateSubmit={handleDuplicateTask}
             />
         </div>
     );
