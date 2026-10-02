@@ -20,7 +20,7 @@ const getCategoryBadge = (categoryName) => {
         case 'work':
             return 'bg-pink-100 text-pink-700 border-pink-200';
         case 'personal':
-            return 'bg-rose-100 text-rose-700 border-rose-200';
+            return 'bg-pink-100 text-pink-700 border-pink-200';
         case 'learning':
             return 'bg-pink-50 text-pink-600 border-pink-200';
         default:
@@ -224,7 +224,7 @@ export const DuplicateTaskModal = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Modal Header */}
-                <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0 shadow-sm">
+                <div className="bg-pink-500 py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0 shadow-sm">
                     <div className="flex items-center gap-2.5">
                         <div className="p-2 rounded-xl bg-white/20 backdrop-blur-xs shadow-inner">
                             <Copy className="w-5 h-5 text-white" />
@@ -310,14 +310,14 @@ export const DuplicateTaskModal = ({
                                 <button
                                     type="button"
                                     onClick={() => applyQuickShift('today')}
-                                    className="px-2.5 py-1.5 text-xs font-bold rounded-xl border border-pink-300 bg-pink-100/80 hover:bg-pink-200 text-pink-800 transition-colors cursor-pointer flex items-center justify-center gap-1 shadow-2xs"
+                                    className="px-2.5 py-1.5 text-xs font-bold rounded-xl border border-pink-300 bg-pink-100 hover:bg-pink-200 text-pink-700 transition-colors cursor-pointer flex items-center justify-center gap-1 shadow-2xs"
                                 >
                                     <span>Today</span>
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => applyQuickShift('tomorrow')}
-                                    className="px-2.5 py-1.5 text-xs font-semibold rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
+                                    className="px-2.5 py-1.5 text-xs font-semibold rounded-xl border border-pink-200 bg-pink-50 hover:bg-pink-100 text-pink-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
                                 >
                                     <span>Tomorrow</span>
                                 </button>
@@ -407,8 +407,8 @@ export const DuplicateTaskModal = ({
                                         onClick={() => setStatus(opt.value)}
                                         className={`py-2 px-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer text-center ${
                                             status === opt.value
-                                                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-500 shadow-sm shadow-pink-200'
-                                                : 'bg-white text-gray-600 border-pink-200/80 hover:bg-pink-50/60 hover:border-pink-300'
+                                                ? 'bg-pink-500 text-white border-pink-500 shadow-sm shadow-pink-200 hover:bg-pink-600'
+                                                : 'bg-white text-gray-600 border-pink-200 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'
                                         }`}
                                     >
                                         {opt.label}
@@ -422,14 +422,14 @@ export const DuplicateTaskModal = ({
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2.5 border border-pink-200 text-gray-600 rounded-xl hover:bg-pink-50/80 cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
+                                className="px-4 py-2.5 border border-pink-200 text-gray-600 rounded-xl hover:bg-pink-50 hover:text-pink-600 cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 cursor-pointer transition-all shadow-md shadow-pink-200 disabled:opacity-50 font-bold text-sm min-h-[42px] flex items-center justify-center gap-1.5"
+                                className="px-5 py-2.5 bg-pink-500 hover:bg-pink-600 active:bg-pink-700 text-white rounded-xl cursor-pointer transition-colors shadow-md shadow-pink-200 disabled:opacity-50 font-bold text-sm min-h-[42px] flex items-center justify-center gap-1.5"
                             >
                                 <Copy className="w-4 h-4" />
                                 <span>{loading ? 'Duplicating...' : 'Duplicate Task'}</span>
