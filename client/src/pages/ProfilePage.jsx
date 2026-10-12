@@ -856,22 +856,22 @@ export const ProfilePage = () => {
 
             {/* AVATAR PICKER MODAL */}
             {showAvatarPicker && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
                     <div
                         className="fixed inset-0 bg-black/40 backdrop-blur-xs animate-in fade-in"
                         onClick={() => !isSavingAvatar && setShowAvatarPicker(false)}
                     />
 
-                    <div className="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-pink-100 z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between pb-3.5 border-b border-pink-100 mb-4 sm:mb-5">
-                            <h3 className="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2">
-                                <Sparkles className="w-5 h-5 text-pink-500" />
+                    <div className="relative w-full max-w-md bg-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-pink-100 z-10 animate-in zoom-in-95 duration-200 max-h-[92dvh] overflow-y-auto no-scrollbar">
+                        <div className="flex items-center justify-between pb-2.5 border-b border-pink-100 mb-3">
+                            <h3 className="text-sm sm:text-base font-black text-gray-800 flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-pink-500" />
                                 <span>Change Profile Photo</span>
                             </h3>
                             <button
                                 onClick={() => setShowAvatarPicker(false)}
                                 disabled={isSavingAvatar}
-                                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
+                                className="p-1 text-gray-400 hover:text-gray-600 hover:bg-pink-50 rounded-xl transition-colors cursor-pointer min-w-[30px] min-h-[30px] flex items-center justify-center disabled:opacity-50"
                                 aria-label="Close"
                             >
                                 ✕
@@ -880,22 +880,22 @@ export const ProfilePage = () => {
 
                         {/* Current Avatar Quick Actions */}
                         {profileData.avatarUrl && (
-                            <div className="flex items-center justify-between p-3 bg-pink-50/50 rounded-2xl border border-pink-100 mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-pink-200 shrink-0">
+                            <div className="flex items-center justify-between p-2 sm:p-2.5 bg-pink-50/50 rounded-2xl border border-pink-100 mb-2.5">
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                    <div className="w-8 h-8 rounded-xl overflow-hidden ring-2 ring-pink-200 shrink-0">
                                         <img
                                             src={profileData.avatarUrl}
                                             alt="Current Avatar"
                                             className="w-full h-full object-cover"
                                         />
                                     </div>
-                                    <span className="text-xs font-bold text-gray-700">Current Photo</span>
+                                    <span className="text-xs font-bold text-gray-700 truncate">Current Photo</span>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={handleRemoveAvatar}
                                     disabled={isSavingAvatar}
-                                    className="px-3 py-1.5 text-rose-500 hover:bg-rose-50 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                                    className="px-2.5 py-1 text-rose-500 hover:bg-rose-50 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
                                 >
                                     <Trash2 className="w-3.5 h-3.5" />
                                     <span>Remove Photo</span>
@@ -903,19 +903,19 @@ export const ProfilePage = () => {
                             </div>
                         )}
 
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             {/* Upload local file button */}
                             <div>
                                 <button
                                     type="button"
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={isSavingAvatar}
-                                    className="w-full py-3 px-4 bg-pink-50 hover:bg-pink-100 active:scale-[0.99] text-pink-700 font-bold text-xs sm:text-sm rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-pink-200/60 disabled:opacity-50 min-h-[44px]"
+                                    className="w-full py-2.5 px-3.5 bg-pink-50 hover:bg-pink-100 active:scale-[0.99] text-pink-700 font-bold text-xs sm:text-sm rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-pink-200/60 disabled:opacity-50 min-h-[38px]"
                                 >
                                     {isSavingAvatar ? (
-                                        <RefreshCw className="w-4 h-4 animate-spin text-pink-600" />
+                                        <RefreshCw className="w-3.5 h-3.5 animate-spin text-pink-600" />
                                     ) : (
-                                        <Upload className="w-4 h-4" />
+                                        <Upload className="w-3.5 h-3.5" />
                                     )}
                                     <span>Upload from Device (PNG, JPG, WebP)</span>
                                 </button>
@@ -923,30 +923,30 @@ export const ProfilePage = () => {
 
                             {/* Presets Grid */}
                             <div>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
                                     Or pick a Cute Illustrated Avatar
                                 </p>
-                                <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
+                                <div className="grid grid-cols-4 gap-2">
                                     {AVATAR_PRESETS.map((preset, idx) => (
                                         <button
                                             key={idx}
                                             type="button"
                                             onClick={() => handleSelectPresetAvatar(preset)}
                                             disabled={isSavingAvatar}
-                                            className={`group relative p-1.5 rounded-2xl border-2 transition-all cursor-pointer bg-pink-50/50 hover:bg-pink-100/50 hover:scale-105 active:scale-95 disabled:opacity-50 ${
+                                            className={`group relative p-1 sm:p-1.5 rounded-2xl border-2 transition-all cursor-pointer bg-pink-50/40 hover:bg-pink-100/50 hover:scale-105 active:scale-95 disabled:opacity-50 ${
                                                 profileData.avatarUrl === preset
-                                                    ? 'border-pink-500 ring-2 ring-pink-300 shadow-md'
+                                                    ? 'border-pink-500 ring-2 ring-pink-300 shadow-xs'
                                                     : 'border-pink-100 hover:border-pink-300'
                                             }`}
                                         >
                                             <img
                                                 src={preset}
                                                 alt={`Preset ${idx + 1}`}
-                                                className="w-full aspect-square rounded-xl object-cover"
+                                                className="w-full aspect-square max-h-12 sm:max-h-14 mx-auto rounded-xl object-cover"
                                             />
                                             {profileData.avatarUrl === preset && (
                                                 <div className="absolute top-1 right-1 p-0.5 bg-pink-500 text-white rounded-full">
-                                                    <Check className="w-3 h-3" />
+                                                    <Check className="w-2.5 h-2.5" />
                                                 </div>
                                             )}
                                         </button>
@@ -956,11 +956,11 @@ export const ProfilePage = () => {
 
                             {/* Direct Custom Image URL */}
                             <div className="pt-2 border-t border-pink-100">
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
                                     Or paste an Image URL
                                 </p>
-                                <div className="flex flex-col sm:flex-row gap-2">
-                                    <div className="relative flex-1">
+                                <div className="flex items-center gap-2">
+                                    <div className="relative flex-1 min-w-0">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                             <LinkIcon className="w-3.5 h-3.5 text-pink-400" />
                                         </div>
@@ -969,7 +969,7 @@ export const ProfilePage = () => {
                                             value={customAvatarUrl}
                                             onChange={(e) => setCustomAvatarUrl(e.target.value)}
                                             placeholder="https://example.com/avatar.png"
-                                            className="w-full pl-9 pr-3.5 py-2.5 bg-pink-50/30 border border-pink-100 rounded-2xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[40px]"
+                                            className="w-full pl-8 pr-3 py-2 bg-pink-50/30 border border-pink-100 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[36px]"
                                             disabled={isSavingAvatar}
                                         />
                                     </div>
@@ -977,7 +977,7 @@ export const ProfilePage = () => {
                                         type="button"
                                         onClick={handleApplyCustomUrl}
                                         disabled={isSavingAvatar || !customAvatarUrl.trim()}
-                                        className="px-4 py-2.5 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white rounded-2xl text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50 min-h-[40px] flex items-center justify-center gap-1.5"
+                                        className="px-3.5 py-2 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50 min-h-[36px] flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap"
                                     >
                                         {isSavingAvatar ? (
                                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -991,12 +991,12 @@ export const ProfilePage = () => {
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="mt-5 pt-3 border-t border-pink-100 flex justify-end">
+                        <div className="mt-3 pt-2.5 border-t border-pink-100 flex justify-end">
                             <button
                                 type="button"
                                 onClick={() => setShowAvatarPicker(false)}
                                 disabled={isSavingAvatar}
-                                className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-2xl transition-colors cursor-pointer min-h-[40px]"
+                                className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-xs rounded-xl transition-colors cursor-pointer min-h-[32px]"
                             >
                                 Close
                             </button>
