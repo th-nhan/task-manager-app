@@ -2,31 +2,29 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
-import { taskApi } from '../api/taskApi';
 import { timetableApi } from '../api/timetableApi';
 import { DashboardHeader } from '../components/DashboardHeader';
-import { CreateTaskModal } from '../components/CreateTaskModal';
 import {
     DEFAULT_TIMETABLE_ITEMS,
     getLiveScheduleStatus,
-    exportTimetableToExcel
+    exportTimetableToExcel,
+    getDayLabelEn
 } from '../data/timetableData';
 
 import { TimetableStatsCards } from '../components/timetable/TimetableStatsCards';
 import { WeeklyGridView } from '../components/timetable/WeeklyGridView';
-import { WeekendFocusView } from '../components/timetable/WeekendFocusView';
-import { TimetableListView } from '../components/timetable/TimetableListView';
 import { GradeGroupView } from '../components/timetable/GradeGroupView';
 import { ClassDetailModal } from '../components/timetable/ClassDetailModal';
 import { TimetableFormModal } from '../components/timetable/TimetableFormModal';
 import { ExcelUploaderModal } from '../components/timetable/ExcelUploaderModal';
+import { SalaryAttendanceView } from '../components/timetable/SalaryAttendanceView';
+import Footer from '../components/Footer';
 
 import {
     Calendar,
     LayoutGrid,
-    Flame,
-    ListFilter,
     GraduationCap,
+    DollarSign,
     Download,
     Upload,
     Printer,
@@ -47,12 +45,12 @@ export const TimetablePage = () => {
     const toast = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    // Verify if the logged-in user is the only authorized email
-    const isAuthorized = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    // Verify if the user is authenticated
+    const isAuthorized = Boolean(user);
 
-    // If not authorized, redirect immediately to /dashboard
+    // If not logged in, redirect immediately to /login
     if (!isAuthorized) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     // Timetable items state with localStorage persistence for admin
@@ -99,10 +97,10 @@ export const TimetablePage = () => {
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-    // Handle deep-linking query parameters (e.g. ?view=weekend or ?classId=...)
+    // Handle deep-linking query parameters (e.g. ?view=salary or ?classId=...)
     useEffect(() => {
         const viewParam = searchParams.get('view');
-        if (viewParam && ['grid', 'weekend', 'list', 'grade'].includes(viewParam)) {
+        if (viewParam && ['grid', 'grade', 'salary'].includes(viewParam)) {
             setViewMode(viewParam);
         }
         const classIdParam = searchParams.get('classId');
@@ -118,10 +116,6 @@ export const TimetablePage = () => {
     // Form Modal (Create / Edit)
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [editingClassItem, setEditingClassItem] = useState(null);
-
-    // Create task modal for converting class to task
-    const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
-    const [taskPrefillData, setTaskPrefillData] = useState(null);
 
     // Live schedule calculation
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -241,50 +235,6 @@ export const TimetablePage = () => {
         setIsDetailModalOpen(true);
     };
 
-    // Convert class to task
-    const handleConvertToTask = (classItem) => {
-        const now = new Date();
-        const currentDayIndex = now.getDay();
-        let daysToAdd = (classItem.dayIndex - currentDayIndex + 7) % 7;
-        if (daysToAdd === 0 && classItem.startTime < `${now.getHours()}:${now.getMinutes()}`) {
-            daysToAdd = 7;
-        }
-
-        const taskDate = new Date();
-        taskDate.setDate(now.getDate() + daysToAdd);
-
-        const [startH, startM] = classItem.startTime.split(':').map(Number);
-        const [endH, endM] = classItem.endTime.split(':').map(Number);
-
-        const startDate = new Date(taskDate);
-        startDate.setHours(startH, startM, 0, 0);
-
-        const dueDate = new Date(taskDate);
-        dueDate.setHours(endH, endM, 0, 0);
-
-        setTaskPrefillData({
-            title: `Teaching Class: ${classItem.className} (${classItem.originalCode})`,
-            description: `Time: ${classItem.timeRange}\nLocation: ${classItem.location}\nGrade: ${classItem.grade} - Level: ${classItem.level}`,
-            priority: 'HIGH',
-            status: 'TODO',
-            startDate: startDate.toISOString(),
-            dueDate: dueDate.toISOString()
-        });
-        setIsCreateTaskModalOpen(true);
-    };
-
-    const handleSaveTaskFromModal = async (taskData) => {
-        try {
-            await taskApi.createTask(taskData);
-            toast.success('Task created successfully in Schedule/Dashboard!');
-            setIsCreateTaskModalOpen(false);
-            setTaskPrefillData(null);
-        } catch (err) {
-            console.error('Error creating task:', err);
-            toast.error('Failed to create task from timetable!');
-        }
-    };
-
     const handleExport = () => {
         if (timetableItems.length === 0) {
             toast.warning('Timetable is currently empty, no data to export!');
@@ -299,12 +249,12 @@ export const TimetablePage = () => {
     };
 
     return (
-        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 pb-12 overflow-x-hidden">
+        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 overflow-x-hidden">
             {/* Navigation Header */}
             <DashboardHeader user={user} logout={logout} activePage="timetable" />
 
             {/* Main Timetable Content */}
-            <main className="flex flex-col gap-4 sm:gap-6 mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
+            <main className="flex-1 flex flex-col gap-4 sm:gap-6 mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
                 {/* Live Status Banner */}
                 {(liveStatus.activeClass || liveStatus.nextClass) && (
                     <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xs border border-pink-200/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -331,14 +281,14 @@ export const TimetablePage = () => {
                                         </span>
                                     ) : (
                                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                                            {liveStatus.nextClass?.dayOfWeek}
+                                            {getDayLabelEn(liveStatus.nextClass?.dayOfWeek)}
                                         </span>
                                     )}
                                 </div>
                                 <div className="text-sm md:text-base font-bold text-gray-800 mt-0.5 truncate">
                                     {liveStatus.activeClass
                                         ? `${liveStatus.activeClass.className} (${liveStatus.activeClass.timeRange})`
-                                        : `${liveStatus.nextClass.dayOfWeek}: ${liveStatus.nextClass.className} (${liveStatus.nextClass.timeRange})`}
+                                        : `${getDayLabelEn(liveStatus.nextClass.dayOfWeek)}: ${liveStatus.nextClass.className} (${liveStatus.nextClass.timeRange})`}
                                 </div>
                             </div>
                         </div>
@@ -374,30 +324,6 @@ export const TimetablePage = () => {
                         </button>
 
                         <button
-                            onClick={() => setViewMode('weekend')}
-                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
-                                viewMode === 'weekend'
-                                    ? 'bg-pink-500 text-white shadow-xs'
-                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
-                            }`}
-                        >
-                            <Flame className="w-4 h-4 text-amber-300" />
-                            <span>Weekend (Sat & Sun)</span>
-                        </button>
-
-                        <button
-                            onClick={() => setViewMode('list')}
-                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
-                                viewMode === 'list'
-                                    ? 'bg-pink-500 text-white shadow-xs'
-                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
-                            }`}
-                        >
-                            <ListFilter className="w-4 h-4" />
-                            <span>List View ({timetableItems.length})</span>
-                        </button>
-
-                        <button
                             onClick={() => setViewMode('grade')}
                             className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'grade'
@@ -407,6 +333,18 @@ export const TimetablePage = () => {
                         >
                             <GraduationCap className="w-4 h-4" />
                             <span>By Grade</span>
+                        </button>
+
+                        <button
+                            onClick={() => setViewMode('salary')}
+                            className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
+                                viewMode === 'salary'
+                                    ? 'bg-pink-500 text-white shadow-xs'
+                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                            }`}
+                        >
+                            <DollarSign className="w-4 h-4" />
+                            <span>Salary & Attendance</span>
                         </button>
                     </div>
 
@@ -490,42 +428,36 @@ export const TimetablePage = () => {
                         />
                     )}
 
-                    {viewMode === 'weekend' && (
-                        <WeekendFocusView
-                            timetableItems={timetableItems}
-                            onSelectClass={handleOpenClassDetail}
-                            onConvertToTask={handleConvertToTask}
-                        />
-                    )}
-
-                    {viewMode === 'list' && (
-                        <TimetableListView
-                            timetableItems={timetableItems}
-                            onSelectClass={handleOpenClassDetail}
-                            onConvertToTask={handleConvertToTask}
-                            onEdit={handleOpenEditModal}
-                            onDelete={handleDeleteClass}
-                        />
-                    )}
-
                     {viewMode === 'grade' && (
                         <GradeGroupView
                             timetableItems={timetableItems}
                             onSelectClass={handleOpenClassDetail}
-                            onConvertToTask={handleConvertToTask}
+                        />
+                    )}
+
+                    {viewMode === 'salary' && (
+                        <SalaryAttendanceView
+                            toast={toast}
+                            timetableItems={timetableItems}
                         />
                     )}
                 </div>
             </main>
+
+            {/* Footer */}
+            <Footer className="mt-auto pb-4" />
 
             {/* Class Detail Modal */}
             <ClassDetailModal
                 isOpen={isDetailModalOpen}
                 onClose={() => setIsDetailModalOpen(false)}
                 classItem={selectedClass}
-                onConvertToTask={handleConvertToTask}
                 onEdit={handleOpenEditModal}
                 onDelete={handleDeleteClass}
+                onStatusChange={(cls, st) => {
+                    const label = st === 'COMPLETED' ? 'Taught' : st === 'MAKE_UP' ? 'Make-up' : st === 'CANCELLED' ? 'Cancelled' : 'Scheduled';
+                    toast.success(`Updated status for "${cls.originalCode || cls.className}" to ${label}!`);
+                }}
             />
 
             {/* Timetable Form Modal (Create / Edit) */}
@@ -545,17 +477,6 @@ export const TimetablePage = () => {
                 onClose={() => setIsUploadModalOpen(false)}
                 onImportSuccess={handleUpdateTimetableFromExcel}
                 onResetDefault={handleResetDefault}
-            />
-
-            {/* Create Task Modal (when converting from timetable) */}
-            <CreateTaskModal
-                isOpen={isCreateTaskModalOpen}
-                onClose={() => {
-                    setIsCreateTaskModalOpen(false);
-                    setTaskPrefillData(null);
-                }}
-                onSubmit={handleSaveTaskFromModal}
-                task={taskPrefillData}
             />
         </div>
     );

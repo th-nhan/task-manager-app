@@ -36,7 +36,8 @@ model User {
   updatedAt DateTime   @updatedAt @map("updated_at")
   tasks          Task[]
   categories     Category[]
-  timetableItems TimetableItem[]
+  timetableItems   TimetableItem[]
+  teachingSessions TeachingSession[]
 
   @@map("users")
 }
@@ -90,7 +91,42 @@ model TimetableItem {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teachingSessions TeachingSession[]
 
   @@map("timetable_items")
+}
+
+enum SessionStatus {
+  COMPLETED
+  CANCELLED
+  MAKE_UP
+  PENDING
+}
+
+model TeachingSession {
+  id              String        @id @default(uuid())
+  userId          String        @map("user_id")
+  timetableItemId String?       @map("timetable_item_id")
+  date            DateTime
+  dayOfWeek       String        @map("day_of_week")
+  dayIndex        Int           @map("day_index")
+  timeRange       String        @map("time_range")
+  startTime       String        @map("start_time")
+  endTime         String        @map("end_time")
+  className       String        @map("class_name")
+  originalCode    String?       @map("original_code")
+  grade           Int?
+  location        String?
+  shift           String?
+  rate            Int           @default(60000)
+  status          SessionStatus @default(PENDING)
+  note            String?
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timetableItem TimetableItem? @relation(fields: [timetableItemId], references: [id], onDelete: SetNull)
+
+  @@map("teaching_sessions")
 }

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import CustomSelect from './CustomSelect';
 
+
 const WEEK_DAYS_HEADER = [
     { vi: 'Thứ 2', en: 'Mon', isWeekend: false },
     { vi: 'Thứ 3', en: 'Tue', isWeekend: false },
@@ -103,6 +104,8 @@ export const MonthCalendarView = ({
     onDeleteTask,
     onDuplicateTask,
     onRescheduleTask,
+    onRefreshTasks,
+    toast,
 }) => {
     const [draggingTaskId, setDraggingTaskId] = useState(null);
     const [draggingStickerId, setDraggingStickerId] = useState(null);
@@ -110,6 +113,8 @@ export const MonthCalendarView = ({
     const [selectedStampStickerId, setSelectedStampStickerId] = useState(null);
     const [expandedDayKey, setExpandedDayKey] = useState(null);
     const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(false);
+
+
 
     // Stored stickers by dateKey: { "2026-09-10": ["zap", "heart"] }
     const [dayStickers, setDayStickers] = useState(() => {
@@ -296,7 +301,7 @@ export const MonthCalendarView = ({
         setDraggingTaskId(null);
         setDraggingStickerId(null);
 
-        // Check if dropping a sticker icon
+        // Check if dropping a sticker
         try {
             const jsonData = e.dataTransfer.getData('application/json');
             if (jsonData) {
@@ -515,7 +520,6 @@ export const MonthCalendarView = ({
                                             const isMissing = !isDone && Boolean(task.dueDate && new Date(task.dueDate) < new Date());
                                             const isProgress = !isMissing && task.status === 'IN_PROGRESS';
                                             const isDragging = draggingTaskId === task.id;
-
                                             const priorityBorder = task.priority === 'HIGH'
                                                 ? 'border-l-red-500'
                                                 : task.priority === 'MEDIUM'
@@ -547,13 +551,15 @@ export const MonthCalendarView = ({
                                                     className={`px-2 py-1.5 rounded-lg border border-l-[3.5px] ${priorityBorder} ${chipBg} transition-all cursor-pointer shadow-2xs group/chip relative text-left select-none min-w-0 ${
                                                         isDragging ? 'opacity-30 scale-95 border-dashed border-pink-400' : 'hover:shadow-xs hover:scale-[1.01]'
                                                     }`}
-                                                    title={`${task.title}${task.dueDate ? ` (Deadline: ${new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})` : ''}`}
+                                                    title={task.title}
                                                 >
-                                                    <div className="flex items-center justify-between gap-1 min-w-0">
-                                                        <div className="flex items-center gap-1 min-w-0 flex-1">
-                                                            <span className="text-[11px] font-semibold truncate leading-tight block w-full">
-                                                                {task.title}
-                                                            </span>
+                                                    <div className="flex items-start justify-between gap-1 min-w-0">
+                                                        <div className="min-w-0 flex-1">
+                                                            <div className="flex items-center gap-1 min-w-0">
+                                                                <span className="text-[11px] font-semibold truncate leading-tight block w-full">
+                                                                    {task.title}
+                                                                </span>
+                                                            </div>
                                                         </div>
 
                                                         {/* Status toggle icon */}
@@ -652,6 +658,8 @@ export const MonthCalendarView = ({
 
             {/* FIXED FLOATING ICON PALETTE DOCK (Optimized for Mobile & Desktop) */}
             <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1.5 w-full max-w-[calc(100vw-20px)] sm:max-w-max pointer-events-none px-1">
+
+
                 {/* Stamp Mode Active Floating Banner */}
                 {selectedStampStickerId && activeStampSticker && (
                     <div className="pointer-events-auto flex items-center justify-between gap-2 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white px-3 sm:px-4 py-1.5 rounded-xl sm:rounded-full text-xs font-medium shadow-xl border border-white/20 animate-in fade-in slide-in-from-bottom-2 duration-200 w-full sm:w-auto max-w-[calc(100vw-24px)]">

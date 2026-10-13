@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
 import { authApi } from '../api/authApi';
 import DashboardHeader from '../components/DashboardHeader';
+import Footer from '../components/Footer';
 import {
     User,
     Mail,
@@ -853,6 +854,9 @@ export const ProfilePage = () => {
                     </div>
                 )}
             </main>
+
+            {/* Footer */}
+            <Footer className="mt-auto pb-4" />
 
             {/* AVATAR PICKER MODAL */}
             {showAvatarPicker && (

@@ -6,6 +6,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/NotificationContext';
 import { Alert } from '../components/Notification';
+import Footer from '../components/Footer';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ const Register = () => {
     };
 
     return (
-        <div className='flex min-h-screen min-h-[100dvh] items-center justify-center bg-pink-100/60 p-3 sm:p-4'>
+        <div className='flex min-h-screen min-h-[100dvh] flex-col items-center justify-center bg-pink-100/60 p-3 sm:p-4'>
             <div className='w-full max-w-md rounded-3xl bg-white p-5 sm:p-8 shadow-xl shadow-pink-200/30 border border-pink-100'>
                 <div className="flex items-center justify-center gap-1 mb-2">
                     <span className="text-2xl sm:text-3xl font-extrabold text-gray-800">Task</span>
@@ -165,6 +166,7 @@ const Register = () => {
                         />
                 </div>
             </div>
+            <Footer className="mt-4" />
         </div>
     );
 };

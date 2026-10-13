@@ -1,5 +1,5 @@
 import React from 'react';
-import { DAYS_OF_WEEK, TIME_SLOTS_MATRIX, GRADE_CONFIG, LOCATION_CONFIG } from '../../data/timetableData';
+import { DAYS_OF_WEEK, TIME_SLOTS_MATRIX, GRADE_CONFIG, LOCATION_CONFIG, isSessionPassed } from '../../data/timetableData';
 import { Clock, MapPin, Sparkles } from 'lucide-react';
 
 export const WeeklyGridView = ({
@@ -132,35 +132,46 @@ export const WeeklyGridView = ({
                                                         {classes.map(cls => {
                                                             const gradeStyle = GRADE_CONFIG[cls.grade] || GRADE_CONFIG[10];
 
-                                                            return (
-                                                                <button
-                                                                    key={cls.id}
-                                                                    onClick={() => onSelectClass && onSelectClass(cls)}
-                                                                    className={`w-full text-left p-2 rounded-2xl bg-gradient-to-br ${gradeStyle.cardBg} border border-pink-200/80 shadow-xs hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden`}
-                                                                >
-                                                                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${gradeStyle.pillColor}`} />
+                                                                            const savedStatus = typeof window !== 'undefined' ? localStorage.getItem(`tt_status_${cls.id}`) : null;
+                                                                            const hasPassedToday = isToday && isSessionPassed(new Date(), cls.endTime, cls.startTime);
+                                                                            const isTaught = savedStatus === 'COMPLETED' || hasPassedToday;
 
-                                                                    <div className="pl-1 flex flex-col gap-1">
-                                                                        <div className="flex items-center justify-between gap-1">
-                                                                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
-                                                                                G{cls.grade}
-                                                                            </span>
-                                                                            <span className="text-[9px] font-bold text-gray-600 bg-white/80 px-1 rounded">
-                                                                                {cls.location === 'Long Thượng' ? 'LT' : 'ML'}
-                                                                            </span>
-                                                                        </div>
+                                                                            return (
+                                                                                <button
+                                                                                    key={cls.id}
+                                                                                    onClick={() => onSelectClass && onSelectClass(cls)}
+                                                                                    className={`w-full text-left p-2 rounded-2xl bg-gradient-to-br ${gradeStyle.cardBg} border ${isTaught ? 'border-pink-300 ring-1 ring-pink-400/30' : 'border-pink-200/80'} shadow-xs hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden`}
+                                                                                >
+                                                                                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${gradeStyle.pillColor}`} />
 
-                                                                        <div className="font-bold text-xs text-gray-900 group-hover:text-pink-600 transition-colors leading-tight line-clamp-2">
-                                                                            {cls.originalCode || cls.className}
-                                                                        </div>
+                                                                                    <div className="pl-1 flex flex-col gap-1">
+                                                                                        <div className="flex items-center justify-between gap-1">
+                                                                                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
+                                                                                                G{cls.grade}
+                                                                                            </span>
+                                                                                            <div className="flex items-center gap-1">
+                                                                                                {isTaught && (
+                                                                                                    <span className="text-[8px] font-extrabold text-rose-600 bg-rose-50 px-1 py-0.2 rounded border border-rose-200">
+                                                                                                        ✓ Taught
+                                                                                                    </span>
+                                                                                                )}
+                                                                                                <span className="text-[9px] font-bold text-gray-600 bg-white/80 px-1 rounded">
+                                                                                                    {cls.location === 'Long Thượng' ? 'LT' : 'ML'}
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
 
-                                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500">
-                                                                            <Clock className="w-2.5 h-2.5 text-pink-400" />
-                                                                            <span>{cls.startTime} - {cls.endTime}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            );
+                                                                                        <div className="font-bold text-xs text-gray-900 group-hover:text-pink-600 transition-colors leading-tight line-clamp-2">
+                                                                                            {cls.originalCode || cls.className}
+                                                                                        </div>
+
+                                                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500">
+                                                                                            <Clock className="w-2.5 h-2.5 text-pink-400" />
+                                                                                            <span>{cls.startTime} - {cls.endTime}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </button>
+                                                                            );
                                                         })}
                                                     </div>
                                                 )}

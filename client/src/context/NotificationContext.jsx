@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import NotificationContainer from '../components/Notification';
 
 const NotificationContext = createContext(null);
@@ -30,14 +30,14 @@ export const NotificationProvider = ({ children }) => {
         return id;
     }, []);
 
-    const toast = {
+    const toast = useMemo(() => ({
         success: (message, options = {}) => showNotification(message, { ...options, type: 'success' }),
         error: (message, options = {}) => showNotification(message, { ...options, type: 'error' }),
         warning: (message, options = {}) => showNotification(message, { ...options, type: 'warning' }),
         info: (message, options = {}) => showNotification(message, { ...options, type: 'info' }),
         show: showNotification,
         dismiss: removeNotification,
-    };
+    }), [showNotification, removeNotification]);
 
     return (
         <NotificationContext.Provider value={{ showNotification, removeNotification, toast }}>

@@ -10,6 +10,7 @@ import { WeekScheduleView } from '../components/WeekScheduleView';
 import { KanbanBoardView } from '../components/KanbanBoardView';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { DashboardToolbar } from '../components/DashboardToolbar';
+import Footer from '../components/Footer';
 
 const PRIORITY_FILTER_OPTIONS = [
     { value: 'ALL', label: 'All Priority' },
@@ -36,7 +37,7 @@ const Dashboard = () => {
     const fetchTasks = useCallback(async () => {
         try {
             setLoading(true);
-            const res = await taskApi.getTasks({ limit: 100 });
+            const res = await taskApi.getTasks({ limit: 500 });
             const taskList = res?.data || (Array.isArray(res) ? res : []);
             setTasks(taskList);
         } catch (error) {
@@ -45,7 +46,8 @@ const Dashboard = () => {
         } finally {
             setLoading(false);
         }
-    }, [toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         fetchTasks();
@@ -313,7 +315,7 @@ const Dashboard = () => {
     }, [viewMode, currentDate]);
 
     return (
-        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 pb-24">
+        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6">
             {/* Header */}
             <DashboardHeader user={user} logout={logout} activePage="dashboard" />
 
@@ -329,7 +331,7 @@ const Dashboard = () => {
             />
 
             {/* Views Content Body */}
-            <main className="flex mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
+            <main className="flex-1 flex mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
                 <div className="w-full min-w-0">
                     {/* View 1: Month Calendar View */}
                     {viewMode === 'month' && (
@@ -346,6 +348,8 @@ const Dashboard = () => {
                             onDeleteTask={handleDeleteTask}
                             onDuplicateTask={handleOpenDuplicateModal}
                             onRescheduleTask={handleRescheduleTask}
+                            onRefreshTasks={fetchTasks}
+                            toast={toast}
                         />
                     )}
 
@@ -385,6 +389,9 @@ const Dashboard = () => {
                     )}
                 </div>
             </main>
+
+            {/* Footer */}
+            <Footer className="mt-auto pb-4" />
 
             {/* Create / Edit Task Modal */}
             <CreateTaskModal

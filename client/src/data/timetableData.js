@@ -314,13 +314,26 @@ export const DAYS_OF_WEEK = [
     { key: 'Chủ nhật', label: 'Sunday', labelEn: 'Sunday', shortLabel: 'Sun', shortLabelEn: 'Sun', index: 0, isWeekend: true }
 ];
 
+export const VI_TO_EN_DAY = {
+    'Thứ 2': 'Monday',
+    'Thứ 3': 'Tuesday',
+    'Thứ 4': 'Wednesday',
+    'Thứ 5': 'Thursday',
+    'Thứ 6': 'Friday',
+    'Thứ 7': 'Saturday',
+    'Chủ nhật': 'Sunday',
+    'Chủ Nhật': 'Sunday',
+};
+
+export const getDayLabelEn = (day) => VI_TO_EN_DAY[day] || day;
+
 export const TIME_SLOTS_MATRIX = [
     { 
         id: 'slot_0700',
         slot: '07h00 – 08h30', 
         label: '07:00 – 08:30', 
-        shift: 'Sáng', 
-        period: 'Ca 1 (Sáng)',
+        shift: 'Morning', 
+        period: 'Slot 1 (Morning)',
         periodEn: 'Slot 1 (Morning)',
         startTimes: ['07:00']
     },
@@ -328,8 +341,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_0830',
         slot: '08h30 – 10h00', 
         label: '08:30 – 10:00', 
-        shift: 'Sáng', 
-        period: 'Ca 2 (Sáng)',
+        shift: 'Morning', 
+        period: 'Slot 2 (Morning)',
         periodEn: 'Slot 2 (Morning)',
         startTimes: ['08:30']
     },
@@ -337,8 +350,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1000',
         slot: '10h00 – 11h30', 
         label: '10:00 – 11:30', 
-        shift: 'Sáng', 
-        period: 'Ca 3 (Sáng)',
+        shift: 'Morning', 
+        period: 'Slot 3 (Morning)',
         periodEn: 'Slot 3 (Morning)',
         startTimes: ['10:00']
     },
@@ -346,8 +359,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1230',
         slot: '12h30 – 14h00', 
         label: '12:30 – 14:00', 
-        shift: 'Chiều', 
-        period: 'Ca Trưa / Chiều (12h30 - 14h)',
+        shift: 'Afternoon', 
+        period: 'Noon / Early Afternoon (12:30 - 2:00 PM)',
         periodEn: 'Noon / Early Afternoon (12:30 - 2:00 PM)',
         startTimes: ['12:30']
     },
@@ -355,8 +368,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1400',
         slot: '14h00 – 15h30', 
         label: '14:00 – 15:30', 
-        shift: 'Chiều', 
-        period: 'Ca Chiều 1 (2h - 3h30)',
+        shift: 'Afternoon', 
+        period: 'Afternoon 1 (2:00 - 3:30 PM)',
         periodEn: 'Afternoon 1 (2:00 - 3:30 PM)',
         startTimes: ['14:00']
     },
@@ -364,8 +377,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1530',
         slot: '15h30 – 17h00', 
         label: '15:30 – 17:00', 
-        shift: 'Chiều', 
-        period: 'Ca Chiều 2 (3h30 - 5h)',
+        shift: 'Afternoon', 
+        period: 'Afternoon 2 (3:30 - 5:00 PM)',
         periodEn: 'Afternoon 2 (3:30 - 5:00 PM)',
         startTimes: ['15:30']
     },
@@ -373,8 +386,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1700',
         slot: '17h00 – 18h30', 
         label: '17:00 – 18:30', 
-        shift: 'Chiều', 
-        period: 'Ca Chiều (5h - 6h30)',
+        shift: 'Afternoon', 
+        period: 'Afternoon (5:00 - 6:30 PM)',
         periodEn: 'Afternoon (5:00 - 6:30 PM)',
         startTimes: ['16:45', '17:00']
     },
@@ -382,8 +395,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1845',
         slot: '18h45 – 20h15', 
         label: '18:45 – 20:15 / 18:30 – 20:00', 
-        shift: 'Tối', 
-        period: 'Ca Tối (6h45 - 8h15)',
+        shift: 'Evening', 
+        period: 'Evening (6:45 - 8:15 PM)',
         periodEn: 'Evening (6:45 - 8:15 PM)',
         startTimes: ['18:30', '18:45']
     },
@@ -391,8 +404,8 @@ export const TIME_SLOTS_MATRIX = [
         id: 'slot_1930',
         slot: '19h30 – 21h00', 
         label: '19:30 – 21:00', 
-        shift: 'Tối', 
-        period: 'Ca Tối muộn (7h30 - 9h)',
+        shift: 'Evening', 
+        period: 'Late Evening (7:30 - 9:00 PM)',
         periodEn: 'Late Evening (7:30 - 9:00 PM)',
         startTimes: ['19:30']
     }
@@ -523,6 +536,32 @@ export function getLiveScheduleStatus(timetableItems, now = new Date()) {
     }
 
     return { activeClass, nextClass };
+}
+
+// Check if a teaching session's scheduled time has already passed
+export function isSessionPassed(date, endTime, startTime) {
+    if (!date) return false;
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const d = new Date(date);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    if (dateStr < todayStr) return true;
+    if (dateStr > todayStr) return false;
+
+    // Same day: compare current hour/minute to session end time
+    const currentMins = now.getHours() * 60 + now.getMinutes();
+    let endMins = 0;
+    if (endTime && endTime.includes(':')) {
+        const [h, m] = endTime.split(':').map(Number);
+        endMins = h * 60 + m;
+    } else if (startTime && startTime.includes(':')) {
+        const [h, m] = startTime.split(':').map(Number);
+        endMins = h * 60 + m + 90;
+    } else {
+        return false;
+    }
+    return currentMins >= endMins;
 }
 
 // Xuất file Excel từ danh sách TKB
@@ -671,4 +710,65 @@ export function parseUploadedTimetableExcel(fileBuffer) {
     }
 
     return parsedItems.length > 0 ? parsedItems : null;
+}
+
+// Xuất file Excel bảng kê chấm công và tiền dạy học
+export function exportPayrollToExcel(sessions, summary, filename) {
+    const wb = XLSX.utils.book_new();
+    const fname = filename || `Bang_Ke_Thu_Nhap_Day_Hoc_Thang_${summary?.month || 1}_${summary?.year || 2026}.xlsx`;
+
+    const summaryRows = [
+        ['BẢNG TỔNG HỢP CHẤM CÔNG & TIỀN DẠY HỌC'],
+        [`Tháng ${summary?.month || ''} / ${summary?.year || ''}`],
+        [],
+        ['Chỉ số', 'Giá trị', 'Đơn vị tính'],
+        ['Đơn giá chuẩn / ca', (summary?.defaultRate || 60000).toLocaleString('vi-VN') + ' đ', 'VNĐ / ca'],
+        ['Tổng số ca trong tháng', summary?.totalCount || 0, 'Ca'],
+        ['Số ca đã dạy hoàn thành', summary?.completedCount || 0, 'Ca'],
+        ['Số ca dạy bù / tăng cường', summary?.makeupCount || 0, 'Ca'],
+        ['Số ca báo nghỉ / hủy', summary?.cancelledCount || 0, 'Ca'],
+        ['Số ca sắp diễn ra (Pending)', summary?.pendingCount || 0, 'Ca'],
+        ['Tỷ lệ hoàn thành thực dạy', `${summary?.completionRate || 0}%`, 'Phần trăm'],
+        ['TỔNG TIỀN THỰC NHẬN (Đã dạy + Bù)', (summary?.totalEarnings || 0).toLocaleString('vi-VN') + ' đ', 'VNĐ'],
+        ['Thu nhập dự kiến toàn bộ tháng', (summary?.expectedEarnings || 0).toLocaleString('vi-VN') + ' đ', 'VNĐ'],
+        []
+    ];
+
+    const detailRows = [
+        ['DANH SÁCH CHI TIẾT CÁC CA DẠY'],
+        [],
+        ['STT', 'Ngày', 'Thứ', 'Khung giờ', 'Tên lớp', 'Khối', 'Cơ sở', 'Trạng thái', 'Đơn giá (đ)', 'Thành tiền (đ)', 'Ghi chú']
+    ];
+
+    sessions.forEach((s, idx) => {
+        const dateStr = new Date(s.date).toLocaleDateString('vi-VN');
+        const isPaid = s.status === 'COMPLETED' || s.status === 'MAKE_UP';
+        const amount = isPaid ? (s.rate || 60000) : 0;
+        let statusText = 'Scheduled';
+        if (s.status === 'COMPLETED') statusText = 'Taught';
+        else if (s.status === 'CANCELLED') statusText = 'Cancelled';
+        else if (s.status === 'MAKE_UP') statusText = 'Make-up';
+
+        detailRows.push([
+            idx + 1,
+            dateStr,
+            s.dayOfWeek || '',
+            s.timeRange || `${s.startTime} - ${s.endTime}`,
+            s.className || '',
+            s.grade ? `Khối ${s.grade}` : '',
+            s.location || '',
+            statusText,
+            s.rate || 60000,
+            amount,
+            s.note || ''
+        ]);
+    });
+
+    const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
+    const wsDetail = XLSX.utils.aoa_to_sheet(detailRows);
+
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Tổng Hợp Thu Nhập');
+    XLSX.utils.book_append_sheet(wb, wsDetail, 'Chi Tiết Ca Dạy');
+
+    XLSX.writeFile(wb, fname);
 }

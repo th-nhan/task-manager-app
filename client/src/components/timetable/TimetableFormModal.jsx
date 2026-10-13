@@ -3,17 +3,17 @@ import { X, Calendar, Clock, MapPin, GraduationCap, BookOpen, Tag, Save, AlertCi
 import { DAYS_OF_WEEK } from '../../data/timetableData';
 
 const COMMON_TIME_PRESETS = [
-    { label: '07:00 – 08:30 (Morning)', start: '07:00', end: '08:30', shift: 'Sáng' },
-    { label: '08:30 – 10:00 (Morning)', start: '08:30', end: '10:00', shift: 'Sáng' },
-    { label: '10:00 – 11:30 (Morning)', start: '10:00', end: '11:30', shift: 'Sáng' },
-    { label: '12:30 – 14:00 (Afternoon)', start: '12:30', end: '14:00', shift: 'Chiều' },
-    { label: '14:00 – 15:30 (Afternoon)', start: '14:00', end: '15:30', shift: 'Chiều' },
-    { label: '15:30 – 17:00 (Afternoon)', start: '15:30', end: '17:00', shift: 'Chiều' },
-    { label: '16:45 – 18:15 (Afternoon)', start: '16:45', end: '18:15', shift: 'Chiều' },
-    { label: '17:00 – 18:30 (Afternoon)', start: '17:00', end: '18:30', shift: 'Chiều' },
-    { label: '18:30 – 20:00 (Evening)', start: '18:30', end: '20:00', shift: 'Tối' },
-    { label: '18:45 – 20:15 (Evening)', start: '18:45', end: '20:15', shift: 'Tối' },
-    { label: '19:30 – 21:00 (Evening)', start: '19:30', end: '21:00', shift: 'Tối' },
+    { label: '07:00 – 08:30 (Morning)', start: '07:00', end: '08:30', shift: 'Morning' },
+    { label: '08:30 – 10:00 (Morning)', start: '08:30', end: '10:00', shift: 'Morning' },
+    { label: '10:00 – 11:30 (Morning)', start: '10:00', end: '11:30', shift: 'Morning' },
+    { label: '12:30 – 14:00 (Afternoon)', start: '12:30', end: '14:00', shift: 'Afternoon' },
+    { label: '14:00 – 15:30 (Afternoon)', start: '14:00', end: '15:30', shift: 'Afternoon' },
+    { label: '15:30 – 17:00 (Afternoon)', start: '15:30', end: '17:00', shift: 'Afternoon' },
+    { label: '16:45 – 18:15 (Afternoon)', start: '16:45', end: '18:15', shift: 'Afternoon' },
+    { label: '17:00 – 18:30 (Afternoon)', start: '17:00', end: '18:30', shift: 'Afternoon' },
+    { label: '18:30 – 20:00 (Evening)', start: '18:30', end: '20:00', shift: 'Evening' },
+    { label: '18:45 – 20:15 (Evening)', start: '18:45', end: '20:15', shift: 'Evening' },
+    { label: '19:30 – 21:00 (Evening)', start: '19:30', end: '21:00', shift: 'Evening' },
 ];
 
 export const TimetableFormModal = ({
@@ -26,37 +26,37 @@ export const TimetableFormModal = ({
 
     const [className, setClassName] = useState('');
     const [originalCode, setOriginalCode] = useState('');
-    const [dayOfWeek, setDayOfWeek] = useState('Thứ 2');
+    const [dayOfWeek, setDayOfWeek] = useState('Monday');
     const [startTime, setStartTime] = useState('17:00');
     const [endTime, setEndTime] = useState('18:30');
     const [grade, setGrade] = useState(10);
     const [location, setLocation] = useState('Long Thượng');
-    const [level, setLevel] = useState('Cơ bản');
-    const [shift, setShift] = useState('Chiều');
+    const [level, setLevel] = useState('Basic');
+    const [shift, setShift] = useState('Afternoon');
     const [error, setError] = useState('');
 
     useEffect(() => {
         if (editingClass) {
             setClassName(editingClass.className || '');
             setOriginalCode(editingClass.originalCode || '');
-            setDayOfWeek(editingClass.dayOfWeek || 'Thứ 2');
+            setDayOfWeek(editingClass.dayOfWeek || 'Monday');
             setStartTime(editingClass.startTime || '17:00');
             setEndTime(editingClass.endTime || '18:30');
             setGrade(editingClass.grade || 10);
             setLocation(editingClass.location || 'Long Thượng');
-            setLevel(editingClass.level || 'Cơ bản');
-            setShift(editingClass.shift || 'Chiều');
+            setLevel(editingClass.level || 'Basic');
+            setShift(editingClass.shift || 'Afternoon');
         } else {
             // Reset form for create
             setClassName('');
             setOriginalCode('');
-            setDayOfWeek('Thứ 2');
+            setDayOfWeek('Monday');
             setStartTime('17:00');
             setEndTime('18:30');
             setGrade(10);
             setLocation('Long Thượng');
-            setLevel('Cơ bản');
-            setShift('Chiều');
+            setLevel('Basic');
+            setShift('Afternoon');
         }
         setError('');
     }, [editingClass, isOpen]);
@@ -88,11 +88,11 @@ export const TimetableFormModal = ({
 
         let calculatedShift = shift;
         const startHour = parseInt(startTime.split(':')[0], 10);
-        if (startHour < 12) calculatedShift = 'Sáng';
-        else if (startHour >= 18) calculatedShift = 'Tối';
-        else calculatedShift = 'Chiều';
+        if (startHour < 12) calculatedShift = 'Morning';
+        else if (startHour >= 18) calculatedShift = 'Evening';
+        else calculatedShift = 'Afternoon';
 
-        const timeRange = `${startTime.replace(':', 'h')} – ${endTime.replace(':', 'h')}`;
+        const timeRange = `${startTime} – ${endTime}`;
 
         const payload = {
             id: editingClass ? editingClass.id : Date.now(),
