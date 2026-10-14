@@ -83,8 +83,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         return () => window.removeEventListener('click', handleOutsideClick);
     }, [activeStatusMenuId]);
 
-    // Track auto generation on month change
-    const hasAutoSyncedRef = useRef(false);
+    // Track auto generation per month so changing months can auto-sync without redundant calls
+    const autoSyncedMonthsRef = useRef(new Set());
 
     // Fetch sessions from API
     const fetchMonthData = async (m = selectedMonth, y = selectedYear, triggerAutoSync = true) => {
@@ -104,9 +104,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 setSessions(normalizedSessions);
                 setSummary(res.data.data.summary || null);
 
-                // Auto-sync from weekly grid if database sessions are empty
-                if (fetchedSessions.length === 0 && triggerAutoSync && !hasAutoSyncedRef.current) {
-                    hasAutoSyncedRef.current = true;
+                // Auto-sync from weekly grid if database sessions are empty for this month
+                const monthKey = `${y}-${m}`;
+                if (fetchedSessions.length === 0 && triggerAutoSync && !autoSyncedMonthsRef.current.has(monthKey)) {
+                    autoSyncedMonthsRef.current.add(monthKey);
                     handleAutoGenerateFromTimetable(m, y, false);
                 }
             }
@@ -122,6 +123,15 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         fetchMonthData(selectedMonth, selectedYear, true);
     }, [selectedMonth, selectedYear]);
 
+    // Helper for formatting local Date to YYYY-MM-DD
+    const formatLocalDateKey = (d) => {
+        if (!d) return '';
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     // Calendar Days Generator for the selected month (Monday -> Sunday)
     const monthCalendarDays = useMemo(() => {
         const firstDay = new Date(selectedYear, selectedMonth - 1, 1);
@@ -132,6 +142,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         const startDayOfWeek = firstDay.getDay();
         const padBefore = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
 
+        const todayStr = formatLocalDateKey(new Date());
         const days = [];
         // Prev month padding
         const prevMonthLastDay = new Date(selectedYear, selectedMonth - 1, 0).getDate();
@@ -140,7 +151,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
             days.push({
                 date: d,
                 dayNumber: d.getDate(),
-                dateKey: d.toISOString().slice(0, 10),
+                dateKey: formatLocalDateKey(d),
                 dayOfWeekIndex: d.getDay(),
                 dayName: DAY_NAMES[d.getDay()],
                 isCurrentMonth: false,
@@ -149,10 +160,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         }
 
         // Current month days
-        const todayStr = new Date().toISOString().slice(0, 10);
         for (let day = 1; day <= daysInMonth; day++) {
             const d = new Date(selectedYear, selectedMonth - 1, day, 12, 0, 0);
-            const dateKey = d.toISOString().slice(0, 10);
+            const dateKey = formatLocalDateKey(d);
             days.push({
                 date: d,
                 dayNumber: day,
@@ -173,7 +183,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 days.push({
                     date: d,
                     dayNumber: day,
-                    dateKey: d.toISOString().slice(0, 10),
+                    dateKey: formatLocalDateKey(d),
                     dayOfWeekIndex: d.getDay(),
                     dayName: DAY_NAMES[d.getDay()],
                     isCurrentMonth: false,
@@ -196,7 +206,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
     // Set initial selectedWeekIndex to the week containing today
     useEffect(() => {
-        const todayStr = new Date().toISOString().slice(0, 10);
+        const todayStr = formatLocalDateKey(new Date());
         const foundWeekIdx = monthWeeks.findIndex(w => w.some(d => d.dateKey === todayStr));
         if (foundWeekIdx >= 0) {
             setSelectedWeekIndex(foundWeekIdx);
@@ -220,9 +230,18 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
     const sessionsByDate = useMemo(() => {
         const map = {};
         filteredDbSessions.forEach(s => {
-            const key = new Date(s.date).toISOString().slice(0, 10);
-            if (!map[key]) map[key] = [];
-            map[key].push(s);
+            let key = '';
+            if (typeof s.date === 'string' && s.date.length >= 10) {
+                key = s.date.slice(0, 10);
+            } else if (s.date instanceof Date) {
+                key = formatLocalDateKey(s.date);
+            } else if (s.date) {
+                key = formatLocalDateKey(new Date(s.date));
+            }
+            if (key) {
+                if (!map[key]) map[key] = [];
+                map[key].push(s);
+            }
         });
         return map;
     }, [filteredDbSessions]);
@@ -343,6 +362,38 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWeekDays, sessionsByDate, timetableItems, filterStatus, filterLocation]);
 
+    // All sessions mapped by dateKey across the entire calendar view (combining DB records + Timetable schedule + overrides)
+    const allCalendarSessionsByDate = useMemo(() => {
+        const map = {};
+        monthCalendarDays.forEach(colDay => {
+            const list = [];
+            TIME_SLOTS_MATRIX.forEach(slotItem => {
+                const slotSessions = getSessionsForSlotAndDay(slotItem, colDay);
+                list.push(...slotSessions);
+            });
+            list.sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
+            map[colDay.dateKey] = list;
+        });
+        return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [monthCalendarDays, sessionsByDate, timetableItems, statusOverrides, filterStatus, filterLocation]);
+
+    // All sessions belonging to the current selected month (excluding previous/next month padding days)
+    const allCurrentMonthSessions = useMemo(() => {
+        const list = [];
+        monthCalendarDays.forEach(colDay => {
+            if (!colDay.isCurrentMonth) return;
+            const dayList = allCalendarSessionsByDate[colDay.dateKey] || [];
+            list.push(...dayList);
+        });
+        return list;
+    }, [monthCalendarDays, allCalendarSessionsByDate]);
+
+    // Sessions for detailed list view (falls back to filteredDbSessions if computed list is empty)
+    const displayListSessions = useMemo(() => {
+        return allCurrentMonthSessions.length > 0 ? allCurrentMonthSessions : filteredDbSessions;
+    }, [allCurrentMonthSessions, filteredDbSessions]);
+
     // Week stats calculation
     const weekStats = useMemo(() => {
         let earned = 0;
@@ -399,30 +450,27 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 makeup: summary.makeupCount || 0,
                 cancelled: summary.cancelledCount || 0,
                 pending: summary.pendingCount || 0,
-                expected: summary.expectedEarnings || summary.totalEarnings
+                expected: summary.expectedEarnings || summary.totalEarnings,
+                month: selectedMonth,
+                year: selectedYear,
+                totalCount: summary.totalCount || 0
             };
         }
 
-        // Otherwise compute live from all days in month
-        monthCalendarDays.forEach(colDay => {
-            if (!colDay.isCurrentMonth) return;
-            TIME_SLOTS_MATRIX.forEach(slotItem => {
-                const slotSessions = getSessionsForSlotAndDay(slotItem, colDay);
-                slotSessions.forEach(s => {
-                    const rate = s.rate || 60000;
-                    if (s.status === 'COMPLETED') {
-                        completed++;
-                        earned += rate;
-                    } else if (s.status === 'MAKE_UP') {
-                        makeup++;
-                        earned += rate;
-                    } else if (s.status === 'CANCELLED') {
-                        cancelled++;
-                    } else if (s.status === 'PENDING') {
-                        pending++;
-                    }
-                });
-            });
+        // Otherwise compute live from all sessions of the current month
+        allCurrentMonthSessions.forEach(s => {
+            const rate = s.rate || 60000;
+            if (s.status === 'COMPLETED') {
+                completed++;
+                earned += rate;
+            } else if (s.status === 'MAKE_UP') {
+                makeup++;
+                earned += rate;
+            } else if (s.status === 'CANCELLED') {
+                cancelled++;
+            } else if (s.status === 'PENDING') {
+                pending++;
+            }
         });
 
         return {
@@ -432,10 +480,12 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
             makeup,
             cancelled,
             pending,
-            expected: earned + (pending * 60000)
+            expected: earned + (pending * 60000),
+            month: selectedMonth,
+            year: selectedYear,
+            totalCount: allCurrentMonthSessions.length
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [summary, monthCalendarDays, sessionsByDate, timetableItems, statusOverrides]);
+    }, [summary, allCurrentMonthSessions, statusOverrides, selectedMonth, selectedYear]);
 
     // Auto-generate / Sync from Timetable
     const handleAutoGenerateFromTimetable = async (m = selectedMonth, y = selectedYear, overwrite = false) => {
@@ -466,7 +516,6 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
     // Handle Month change
     const handlePrevMonth = () => {
-        hasAutoSyncedRef.current = false;
         if (selectedMonth === 1) {
             setSelectedMonth(12);
             setSelectedYear(prev => prev - 1);
@@ -477,7 +526,6 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
     };
 
     const handleNextMonth = () => {
-        hasAutoSyncedRef.current = false;
         if (selectedMonth === 12) {
             setSelectedMonth(1);
             setSelectedYear(prev => prev + 1);
@@ -713,11 +761,12 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
     // Export Excel
     const handleExportExcel = () => {
-        if (sessions.length === 0 && timetableItems.length === 0) {
+        const exportList = allCurrentMonthSessions.length > 0 ? allCurrentMonthSessions : sessions;
+        if (exportList.length === 0 && timetableItems.length === 0) {
             toast?.warning("No session data to export");
             return;
         }
-        exportPayrollToExcel(sessions, summary);
+        exportPayrollToExcel(exportList, monthStats || summary);
         toast?.success("Teaching payroll Excel downloaded!");
     };
 
@@ -768,6 +817,19 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             >
                                 <ChevronRight className="w-4 h-4" />
                             </button>
+                            {(selectedMonth !== (today.getMonth() + 1) || selectedYear !== today.getFullYear()) && (
+                                <button
+                                    onClick={() => {
+                                        setSelectedMonth(today.getMonth() + 1);
+                                        setSelectedYear(today.getFullYear());
+                                        setSelectedWeekIndex(0);
+                                    }}
+                                    className="ml-1 px-2 py-0.5 text-[10px] font-bold rounded-lg bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer border border-white/20"
+                                    title="Back to current month"
+                                >
+                                    Current
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -942,7 +1004,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         }`}
                     >
                         <ListFilter className="w-4 h-4" />
-                        <span>Detailed Records ({sessions.length})</span>
+                        <span>Detailed Records ({displayListSessions.length})</span>
                     </button>
                 </div>
 
@@ -1400,7 +1462,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
                                 <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
                                     {monthCalendarDays.map((item) => {
-                                        const daySessions = sessionsByDate[item.dateKey] || [];
+                                        const daySessions = allCalendarSessionsByDate[item.dateKey] || [];
                                         const dayEarned = daySessions.reduce((sum, s) => {
                                             return sum + ((s.status === 'COMPLETED' || s.status === 'MAKE_UP') ? (s.rate || 60000) : 0);
                                         }, 0);
@@ -1429,24 +1491,28 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                     </div>
 
                                                     <div className="space-y-1">
-                                                        {daySessions.slice(0, 3).map(s => (
+                                                        {daySessions.slice(0, 4).map(s => (
                                                             <div
                                                                 key={s.id}
                                                                 onClick={() => handleCycleStatus(s)}
-                                                                className={`p-1 rounded-lg text-[10px] font-bold truncate cursor-pointer transition-transform hover:scale-[1.02] flex items-center justify-between ${
-                                                                    s.status === 'COMPLETED' ? 'bg-pink-100 text-pink-800' :
-                                                                    s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-800' :
-                                                                    s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' :
-                                                                    'bg-amber-100 text-amber-800'
+                                                                title={`${s.className} (${s.timeRange || `${s.startTime} – ${s.endTime}`}) • ${s.location} • Status: ${s.status === 'COMPLETED' ? 'Taught' : s.status === 'MAKE_UP' ? 'Make-up' : s.status === 'CANCELLED' ? 'Cancelled' : 'Scheduled'}`}
+                                                                className={`p-1 px-1.5 rounded-lg text-[10px] font-bold truncate cursor-pointer transition-all hover:scale-[1.02] flex items-center justify-between gap-1 shadow-2xs ${
+                                                                    s.status === 'COMPLETED' ? 'bg-pink-100 text-pink-800 border border-pink-200/80' :
+                                                                    s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-800 border border-purple-200/80' :
+                                                                    s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through border border-gray-200/80' :
+                                                                    'bg-amber-100 text-amber-800 border border-amber-200/80'
                                                                 }`}
                                                             >
-                                                                <span className="truncate">{s.originalCode || s.className}</span>
-                                                                <span>{s.status === 'COMPLETED' ? '✓' : s.status === 'MAKE_UP' ? '🔄' : s.status === 'CANCELLED' ? '✕' : '⏳'}</span>
+                                                                <div className="flex items-center gap-1 min-w-0 truncate">
+                                                                    <span className="text-[9px] opacity-75 font-mono shrink-0">{s.startTime}</span>
+                                                                    <span className="truncate">{s.originalCode || s.className}</span>
+                                                                </div>
+                                                                <span className="shrink-0">{s.status === 'COMPLETED' ? '✓' : s.status === 'MAKE_UP' ? '🔄' : s.status === 'CANCELLED' ? '✕' : '⏳'}</span>
                                                             </div>
                                                         ))}
-                                                        {daySessions.length > 3 && (
+                                                        {daySessions.length > 4 && (
                                                             <div className="text-[9px] text-gray-500 font-bold text-center">
-                                                                +{daySessions.length - 3} more
+                                                                +{daySessions.length - 4} more
                                                             </div>
                                                         )}
                                                     </div>
@@ -1476,7 +1542,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-pink-100 space-y-4">
                             <div className="flex items-center justify-between pb-3 border-b border-pink-100">
                                 <h3 className="font-bold text-gray-800 text-sm sm:text-base">
-                                    Teaching Records for Month {selectedMonth}/{selectedYear} ({filteredDbSessions.length} slots)
+                                    Teaching Records for Month {selectedMonth}/{selectedYear} ({displayListSessions.length} slots)
                                 </h3>
                                 <button
                                     onClick={handleExportExcel}
@@ -1502,15 +1568,18 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-pink-100/60">
-                                        {filteredDbSessions.map((s) => {
-                                            const d = new Date(s.date);
+                                        {displayListSessions.map((s) => {
+                                            const d = s.date ? new Date(s.date) : new Date();
                                             const isPaid = s.status === 'COMPLETED' || s.status === 'MAKE_UP';
                                             const amount = isPaid ? (s.rate || 60000) : 0;
+                                            const dateDisplay = !isNaN(d.getTime())
+                                                ? `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`
+                                                : (s.dateKey || '');
 
                                             return (
                                                 <tr key={s.id} className="hover:bg-pink-50/20 transition-colors">
                                                     <td className="py-2 px-3 font-bold text-gray-800">
-                                                        {d.getDate().toString().padStart(2, '0')}/{(d.getMonth() + 1).toString().padStart(2, '0')}/{d.getFullYear()}
+                                                        {dateDisplay}
                                                     </td>
                                                     <td className="py-2 px-3 font-semibold text-gray-600">{s.dayOfWeek}</td>
                                                     <td className="py-2 px-3 font-mono font-bold text-pink-600">{s.startTime} - {s.endTime}</td>
