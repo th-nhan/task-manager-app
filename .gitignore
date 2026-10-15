@@ -38,7 +38,7 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
-*.md 
+TASK_SALARY_CALCULATOR.md
 
 # Prisma generated & temp files
 /server/src/generated/prisma
