@@ -1250,12 +1250,14 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                 : 'bg-gradient-to-br from-amber-50/70 to-yellow-50/70 border-amber-200 ring-1 ring-amber-300/30'
                                                                                     }`}
                                                                                 >
-                                                                                    {/* Pill Accent */}
-                                                                                    <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl ${
-                                                                                        isCompleted ? 'bg-pink-500' :
-                                                                                        isMakeup ? 'bg-purple-500' :
-                                                                                        isCancelled ? 'bg-gray-400' : 'bg-amber-400'
-                                                                                    }`} />
+                                                                                    {/* Pill Accent (clipped to card's rounded border) */}
+                                                                                    <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                                                                                        <div className={`absolute left-0 top-0 bottom-0 w-1 ${
+                                                                                            isCompleted ? 'bg-pink-500' :
+                                                                                            isMakeup ? 'bg-purple-500' :
+                                                                                            isCancelled ? 'bg-gray-400' : 'bg-amber-400'
+                                                                                        }`} />
+                                                                                    </div>
 
                                                                                     <div className="pl-1">
                                                                                         {/* Top Badges */}
