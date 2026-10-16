@@ -436,14 +436,14 @@ export const GRADE_CONFIG = {
     },
     12: {
         label: 'Grade 12',
-        badgeBg: 'bg-rose-500/15',
-        badgeText: 'text-rose-700',
-        badgeBorder: 'border-rose-200',
-        cardBg: 'from-rose-50 to-pink-50/50',
-        borderLeft: 'border-l-rose-500',
-        accentColor: '#f43f5e',
-        pillColor: 'bg-rose-500',
-        ringColor: 'ring-rose-400'
+        badgeBg: 'bg-pink-100',
+        badgeText: 'text-pink-700',
+        badgeBorder: 'border-pink-200',
+        cardBg: 'from-pink-50 to-pink-100',
+        borderLeft: 'border-l-pink-500',
+        accentColor: '#ec4899',
+        pillColor: 'bg-pink-500',
+        ringColor: 'ring-pink-400'
     }
 };
 

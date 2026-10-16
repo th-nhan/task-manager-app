@@ -772,47 +772,42 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
     return (
         <div className="space-y-4 sm:space-y-6 pb-16 min-w-0" onClick={() => activeStatusMenuId && setActiveStatusMenuId(null)}>
-            {/* 1. TOTAL EARNINGS & SALARY DASHBOARD (PINK & ROSE THEMED) */}
-            <div className="bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-xl shadow-pink-500/20 relative overflow-hidden border border-pink-400/50">
-                {/* Background watermark */}
-                <div className="absolute right-2 -bottom-6 opacity-10 pointer-events-none select-none">
-                    <DollarSign className="w-48 h-48 sm:w-60 sm:h-60" />
-                </div>
-
+            {/* 1. TOTAL EARNINGS & SALARY DASHBOARD (SOLID PINK THEME - MATCHING TASKS TAB) */}
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xs border border-pink-200 relative overflow-hidden">
                 <div className="relative z-10 flex flex-col gap-4">
                     {/* Header line */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                            <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md shadow-xs shrink-0">
-                                <DollarSign className="w-6 h-6 text-white" />
+                            <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 shrink-0">
+                                <DollarSign className="w-6 h-6" />
                             </span>
                             <div>
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <h2 className="text-base sm:text-lg font-black tracking-tight text-white uppercase">
+                                    <h2 className="text-base sm:text-lg font-black tracking-tight text-pink-600 uppercase">
                                         Teaching Salary & Attendance Tracker
                                     </h2>
                                 </div>
-                                <p className="text-xs text-pink-100 mt-0.5">
+                                <p className="text-xs text-gray-500 mt-0.5">
                                     Month {selectedMonth}/{selectedYear} • Auto-synced from Weekly Schedule matrix
                                 </p>
                             </div>
                         </div>
 
                         {/* Month Selector Buttons */}
-                        <div className="flex items-center gap-1.5 bg-black/20 backdrop-blur-md p-1 rounded-2xl border border-white/20 self-start sm:self-auto">
+                        <div className="flex items-center gap-1.5 bg-pink-50 p-1 rounded-2xl border border-pink-200 self-start sm:self-auto">
                             <button
                                 onClick={handlePrevMonth}
-                                className="p-1.5 rounded-xl hover:bg-white/20 text-white transition-colors cursor-pointer"
+                                className="p-1.5 rounded-xl hover:bg-pink-100 text-pink-600 transition-colors cursor-pointer"
                                 title="Previous Month"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
-                            <span className="px-2 text-xs sm:text-sm font-extrabold text-white whitespace-nowrap">
+                            <span className="px-2 text-xs sm:text-sm font-extrabold text-pink-700 whitespace-nowrap">
                                 Month {selectedMonth} / {selectedYear}
                             </span>
                             <button
                                 onClick={handleNextMonth}
-                                className="p-1.5 rounded-xl hover:bg-white/20 text-white transition-colors cursor-pointer"
+                                className="p-1.5 rounded-xl hover:bg-pink-100 text-pink-600 transition-colors cursor-pointer"
                                 title="Next Month"
                             >
                                 <ChevronRight className="w-4 h-4" />
@@ -824,7 +819,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         setSelectedYear(today.getFullYear());
                                         setSelectedWeekIndex(0);
                                     }}
-                                    className="ml-1 px-2 py-0.5 text-[10px] font-bold rounded-lg bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer border border-white/20"
+                                    className="ml-1 px-2 py-0.5 text-[10px] font-bold rounded-lg bg-pink-500 hover:bg-pink-600 text-white transition-colors cursor-pointer"
                                     title="Back to current month"
                                 >
                                     Current
@@ -836,96 +831,96 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     {/* Prominent Salary Displays: Box 1 (Week) & Box 2 (Month) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 pt-1 items-stretch">
                         {/* BOX 1: Ô TỔNG TIỀN TRONG TUẦN (WEEKLY TOTAL SALARY) */}
-                        <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/25 flex flex-col justify-between hover:bg-white/20 transition-all shadow-sm">
+                        <div className="bg-pink-50 rounded-2xl p-4 sm:p-5 border border-pink-200 flex flex-col justify-between hover:border-pink-300 transition-all shadow-2xs">
                             <div>
                                 <div className="flex items-center justify-between gap-1">
-                                    <span className="text-xs font-black uppercase tracking-wider text-amber-200 flex items-center gap-1">
+                                    <span className="text-xs font-black uppercase tracking-wider text-pink-700 flex items-center gap-1">
                                         <Calendar className="w-3.5 h-3.5" />
                                         Weekly Total Salary
                                     </span>
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-200 text-pink-800">
                                         Week {selectedWeekIndex + 1}
                                     </span>
                                 </div>
-                                <div className="text-xs text-pink-100 font-medium mt-1">
+                                <div className="text-xs text-pink-600 font-semibold mt-1">
                                     {currentWeekDays[0]?.dayNumber}/{currentWeekDays[0]?.date.getMonth() + 1} – {currentWeekDays[6]?.dayNumber}/{currentWeekDays[6]?.date.getMonth() + 1}
                                 </div>
-                                <div className="text-3xl sm:text-4xl font-black text-amber-200 mt-2 drop-shadow-sm tracking-tight">
-                                    {weekStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-white">VND</span>
+                                <div className="text-3xl sm:text-4xl font-black text-pink-600 mt-2 tracking-tight">
+                                    {weekStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-gray-600">VND</span>
                                 </div>
                             </div>
-                            <div className="text-[11px] text-pink-100/95 mt-3 pt-2.5 border-t border-white/15 font-medium flex items-center justify-between">
+                            <div className="text-[11px] text-pink-700 mt-3 pt-2.5 border-t border-pink-200 font-medium flex items-center justify-between">
                                 <span>Completed slots:</span>
-                                <b className="text-white font-bold">{weekStats.paidCount} / {weekStats.total} slots ({weekStats.completed} taught + {weekStats.makeup} make-up)</b>
+                                <b className="text-pink-900 font-bold">{weekStats.paidCount} / {weekStats.total} slots ({weekStats.completed} taught + {weekStats.makeup} make-up)</b>
                             </div>
                         </div>
 
                         {/* BOX 2: Ô TỔNG TIỀN TRONG THÁNG (MONTHLY TOTAL SALARY) */}
-                        <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/25 flex flex-col justify-between hover:bg-white/20 transition-all shadow-sm">
+                        <div className="bg-pink-500 rounded-2xl p-4 sm:p-5 border border-pink-500 text-white flex flex-col justify-between hover:bg-pink-600 transition-all shadow-xs">
                             <div>
                                 <div className="flex items-center justify-between gap-1">
                                     <span className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1">
                                         <TrendingUp className="w-3.5 h-3.5 text-yellow-300" />
                                         Monthly Total Salary
                                     </span>
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400 text-rose-900">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-pink-600">
                                         Actual
                                     </span>
                                 </div>
                                 <div className="text-xs text-pink-100 font-medium mt-1">
                                     Full Month {selectedMonth}/{selectedYear} Earnings
                                 </div>
-                                <div className="text-3xl sm:text-4xl font-black text-white mt-2 drop-shadow-sm tracking-tight">
+                                <div className="text-3xl sm:text-4xl font-black text-white mt-2 tracking-tight">
                                     {monthStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-pink-200">VND</span>
                                 </div>
                             </div>
-                            <div className="text-[11px] text-pink-100/95 mt-3 pt-2.5 border-t border-white/15 font-medium flex items-center justify-between">
+                            <div className="text-[11px] text-pink-100 mt-3 pt-2.5 border-t border-pink-400 font-medium flex items-center justify-between">
                                 <span>Month billable slots:</span>
                                 <b className="text-white font-bold">{monthStats.paidCount} slots ({monthStats.completed} taught + {monthStats.makeup} make-up)</b>
                             </div>
                         </div>
 
                         {/* BOX 3: Weekly Status Breakdown */}
-                        <div className="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 border border-white/25 flex flex-col justify-between gap-2 md:col-span-2 lg:col-span-1 shadow-sm">
-                            <div className="flex items-center justify-between text-xs text-pink-100">
+                        <div className="bg-pink-50 rounded-2xl p-3.5 sm:p-4 border border-pink-200 flex flex-col justify-between gap-2 md:col-span-2 lg:col-span-1 shadow-2xs">
+                            <div className="flex items-center justify-between text-xs text-pink-900">
                                 <span className="font-bold">Weekly Slots Breakdown:</span>
                             </div>
                             <div className="grid grid-cols-2 gap-1.5 text-xs">
-                                <div className="px-2.5 py-1 rounded-xl bg-pink-950/20 border border-white/20 flex items-center justify-between">
-                                    <span className="text-pink-100 font-medium">✅ Taught:</span>
-                                    <b className="text-white font-bold">{weekStats.completed} slots</b>
+                                <div className="px-2.5 py-1.5 rounded-xl bg-white border border-pink-200 flex items-center justify-between">
+                                    <span className="text-pink-700 font-semibold">✅ Taught:</span>
+                                    <b className="text-pink-900 font-bold">{weekStats.completed} slots</b>
                                 </div>
-                                <div className="px-2.5 py-1 rounded-xl bg-purple-950/20 border border-white/20 flex items-center justify-between">
-                                    <span className="text-purple-100 font-medium">🔄 Make-up:</span>
-                                    <b className="text-white font-bold">+{weekStats.makeup} slots</b>
+                                <div className="px-2.5 py-1.5 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-between">
+                                    <span className="text-purple-700 font-semibold">🔄 Make-up:</span>
+                                    <b className="text-purple-900 font-bold">+{weekStats.makeup} slots</b>
                                 </div>
-                                <div className="px-2.5 py-1 rounded-xl bg-rose-950/20 border border-white/20 flex items-center justify-between">
-                                    <span className="text-rose-200 font-medium">❌ Cancelled:</span>
-                                    <b className="text-rose-200 font-bold">{weekStats.cancelled} slots</b>
+                                <div className="px-2.5 py-1.5 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-between">
+                                    <span className="text-gray-600 font-semibold">❌ Cancelled:</span>
+                                    <b className="text-gray-800 font-bold">{weekStats.cancelled} slots</b>
                                 </div>
-                                <div className="px-2.5 py-1 rounded-xl bg-amber-950/20 border border-white/20 flex items-center justify-between">
-                                    <span className="text-amber-200 font-medium">⏳ Scheduled:</span>
-                                    <b className="text-amber-200 font-bold">{weekStats.pending} slots</b>
+                                <div className="px-2.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between">
+                                    <span className="text-amber-800 font-semibold">⏳ Scheduled:</span>
+                                    <b className="text-amber-900 font-bold">{weekStats.pending} slots</b>
                                 </div>
                             </div>
-                            <div className="text-[11px] text-pink-100/90 font-medium pt-1 border-t border-white/15 flex items-center justify-between">
+                            <div className="text-[11px] text-pink-800 font-semibold pt-1 border-t border-pink-200 flex items-center justify-between">
                                 <span>Expected this week:</span>
-                                <b className="text-white font-bold">{weekStats.expected.toLocaleString('en-US')} VND</b>
+                                <b className="text-pink-950 font-bold">{weekStats.expected.toLocaleString('en-US')} VND</b>
                             </div>
                         </div>
                     </div>
 
                     {/* Action Toolbar */}
-                    <div className="pt-2 border-t border-white/20 flex flex-wrap items-center justify-between gap-2.5">
+                    <div className="pt-3 border-t border-pink-100 flex flex-wrap items-center justify-between gap-2.5">
                         <div className="flex items-center gap-2 flex-wrap">
                             {/* Auto Sync from Weekly Grid Button */}
                             <button
                                 onClick={() => handleAutoGenerateFromTimetable(selectedMonth, selectedYear, true)}
                                 disabled={isGenerating || isLoading}
-                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-pink-700 hover:bg-pink-50 font-bold text-xs shadow-sm transition-all cursor-pointer min-h-[36px]"
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-pink-500 text-white hover:bg-pink-600 font-bold text-xs shadow-xs transition-all cursor-pointer min-h-[36px]"
                                 title="Sync all scheduled slots from Weekly Grid into Attendance matrix"
                             >
-                                <Sparkles className="w-3.5 h-3.5 text-pink-600" />
+                                <Sparkles className="w-3.5 h-3.5" />
                                 <span>{isGenerating ? 'Syncing...' : '⚡ Sync from Weekly Grid'}</span>
                             </button>
 
@@ -933,10 +928,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <button
                                 onClick={handleBatchMarkWeekCompleted}
                                 disabled={isLoading}
-                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-white/25"
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-pink-200"
                                 title="Mark all scheduled slots this week as Taught"
                             >
-                                <Check className="w-3.5 h-3.5 text-white" />
+                                <Check className="w-3.5 h-3.5 text-pink-600" />
                                 <span>Mark Week as Completed</span>
                             </button>
 
@@ -948,9 +943,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                     setInitialModalSlot(null);
                                     setIsFormModalOpen(true);
                                 }}
-                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-white/25"
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-pink-200"
                             >
-                                <Plus className="w-3.5 h-3.5" />
+                                <Plus className="w-3.5 h-3.5 text-pink-600" />
                                 <span>Add Extra / Make-up Slot</span>
                             </button>
                         </div>
@@ -958,9 +953,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         {/* Export Excel Button */}
                         <button
                             onClick={handleExportExcel}
-                            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-950/60 text-white font-bold text-xs transition-colors cursor-pointer border border-white/20 min-h-[36px]"
+                            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
                         >
-                            <Download className="w-3.5 h-3.5 text-pink-200" />
+                            <Download className="w-3.5 h-3.5 text-pink-600" />
                             <span>Export Payroll Excel</span>
                         </button>
                     </div>
@@ -970,13 +965,13 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
             {/* 2. TOOLBAR: VIEW SWITCHER & WEEK NAVIGATOR */}
             <div className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-xs border border-pink-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
                 {/* View Mode Switcher */}
-                <div className="flex items-center gap-1 bg-pink-50/80 p-1 rounded-2xl border border-pink-100/80 overflow-x-auto shrink-0">
+                <div className="flex items-center gap-1 bg-pink-50 p-1 rounded-2xl border border-pink-200 overflow-x-auto shrink-0">
                     <button
                         onClick={() => setLayoutMode('weekly-grid')}
                         className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                             layoutMode === 'weekly-grid'
                                 ? 'bg-pink-500 text-white shadow-xs'
-                                : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-100'
                         }`}
                     >
                         <LayoutGrid className="w-4 h-4" />
@@ -988,7 +983,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                             layoutMode === 'month'
                                 ? 'bg-pink-500 text-white shadow-xs'
-                                : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-100'
                         }`}
                     >
                         <CalendarDays className="w-4 h-4" />
@@ -1000,7 +995,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                             layoutMode === 'list'
                                 ? 'bg-pink-500 text-white shadow-xs'
-                                : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-100'
                         }`}
                     >
                         <ListFilter className="w-4 h-4" />
@@ -1011,11 +1006,11 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 {/* Week Navigator for Weekly Grid View */}
                 {layoutMode === 'weekly-grid' && (
                     <div className="flex items-center justify-between lg:justify-end gap-2 flex-wrap">
-                        <div className="flex items-center gap-1 bg-pink-50/60 p-1 rounded-xl border border-pink-200/80">
+                        <div className="flex items-center gap-1 bg-pink-50 p-1 rounded-xl border border-pink-200">
                             <button
                                 disabled={selectedWeekIndex <= 0}
                                 onClick={() => setSelectedWeekIndex(prev => Math.max(0, prev - 1))}
-                                className="px-2.5 py-1.5 rounded-lg bg-white text-gray-700 font-bold text-xs hover:text-pink-600 disabled:opacity-40 cursor-pointer shadow-2xs"
+                                className="px-2.5 py-1.5 rounded-lg bg-white text-gray-700 font-bold text-xs hover:text-pink-600 disabled:opacity-40 cursor-pointer shadow-2xs border border-pink-100"
                                 title="Previous Week"
                             >
                                 ← Prev Week
@@ -1041,7 +1036,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <button
                                 disabled={selectedWeekIndex >= monthWeeks.length - 1}
                                 onClick={() => setSelectedWeekIndex(prev => Math.min(monthWeeks.length - 1, prev + 1))}
-                                className="px-2.5 py-1.5 rounded-lg bg-white text-gray-700 font-bold text-xs hover:text-pink-600 disabled:opacity-40 cursor-pointer shadow-2xs"
+                                className="px-2.5 py-1.5 rounded-lg bg-white text-gray-700 font-bold text-xs hover:text-pink-600 disabled:opacity-40 cursor-pointer shadow-2xs border border-pink-100"
                                 title="Next Week"
                             >
                                 Next Week →
@@ -1088,7 +1083,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     {layoutMode === 'weekly-grid' && (
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-pink-100 overflow-hidden min-w-0">
                             {/* Matrix Header Banner */}
-                            <div className="p-4 sm:p-5 bg-gradient-to-r from-pink-50/70 via-white to-rose-50/50 border-b border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="p-4 sm:p-5 bg-pink-50 border-b border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
                                     <h3 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2 flex-wrap">
                                         <span>📅 Weekly Attendance & Earnings (Week {selectedWeekIndex + 1})</span>
@@ -1102,7 +1097,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                 </div>
 
                                 <div className="flex items-center gap-2 text-xs flex-wrap">
-                                    <span className="flex items-center gap-1 font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
+                                    <span className="flex items-center gap-1 font-semibold text-pink-700 bg-pink-100 px-2 py-0.5 rounded-md border border-pink-200">
                                         ✅ Taught
                                     </span>
                                     <span className="flex items-center gap-1 font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
@@ -1118,7 +1113,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             </div>
 
                             {/* Mobile swipe hint */}
-                            <div className="md:hidden flex items-center justify-between text-[11px] text-pink-600 bg-pink-50/60 px-4 py-1.5 border-b border-pink-100">
+                            <div className="md:hidden flex items-center justify-between text-[11px] text-pink-600 bg-pink-50 px-4 py-1.5 border-b border-pink-100">
                                 <span>👈 Scroll horizontally to view all 7 days 👉</span>
                             </div>
 
@@ -1126,7 +1121,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <div className="overflow-x-auto pb-2">
                                 <table className="w-full border-collapse text-left min-w-[920px] lg:min-w-[980px]">
                                     <thead>
-                                        <tr className="bg-pink-50/40 border-b border-pink-100">
+                                        <tr className="bg-pink-50 border-b border-pink-100">
                                             <th className="p-3 text-xs font-bold text-gray-600 uppercase tracking-wider w-36 sm:w-40 text-center">
                                                 Time Slot
                                             </th>
@@ -1140,12 +1135,12 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                 return (
                                                     <th
                                                         key={colDay.dateKey}
-                                                        className={`p-2.5 sm:p-3 text-center border-l border-pink-100/60 transition-colors ${
+                                                        className={`p-2.5 sm:p-3 text-center border-l border-pink-100 transition-colors ${
                                                             isToday
-                                                                ? 'bg-pink-100/60 text-pink-900 font-black'
+                                                                ? 'bg-pink-200 text-pink-900 font-black'
                                                                 : colDay.isWeekend
-                                                                    ? 'bg-rose-50/40 text-rose-700'
-                                                                    : 'text-gray-800'
+                                                                    ? 'bg-pink-50 text-pink-700'
+                                                                    : 'bg-white text-gray-800'
                                                         }`}
                                                     >
                                                         <div className="flex flex-col items-center justify-center gap-0.5">
@@ -1162,7 +1157,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                             <span className="text-xs font-black text-gray-800">
                                                                 {colDay.dayNumber}/{colDay.date.getMonth() + 1}
                                                             </span>
-                                                            <span className="text-[10px] font-bold text-pink-700 bg-white/90 px-1.5 py-0.2 rounded-md shadow-2xs border border-pink-200 mt-0.5">
+                                                            <span className="text-[10px] font-bold text-pink-700 bg-white px-1.5 py-0.2 rounded-md shadow-2xs border border-pink-200 mt-0.5">
                                                                 {daySlotSessions.length} slots • {dayEarned.toLocaleString('en-US')} VND
                                                             </span>
                                                         </div>
@@ -1172,7 +1167,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         </tr>
                                     </thead>
 
-                                    <tbody className="divide-y divide-pink-100/60">
+                                    <tbody className="divide-y divide-pink-100">
                                         {TIME_SLOTS_MATRIX.map((slotItem, slotIdx) => {
                                             const isRowHasActiveMenu = currentWeekDays.some(colDay => {
                                                 const sList = getSessionsForSlotAndDay(slotItem, colDay);
@@ -1182,18 +1177,18 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             return (
                                                 <tr
                                                     key={slotItem.id || slotItem.slot}
-                                                    className={`hover:bg-pink-50/20 transition-colors ${
+                                                    className={`hover:bg-pink-50 transition-colors ${
                                                         isRowHasActiveMenu ? 'relative z-50' : 'relative z-0'
                                                     } ${
-                                                        slotIdx % 2 === 0 ? 'bg-white' : 'bg-pink-50/10'
+                                                        slotIdx % 2 === 0 ? 'bg-white' : 'bg-pink-50'
                                                     }`}
                                                 >
                                                     {/* Time Slot Column */}
-                                                    <td className="p-2.5 sm:p-3 text-center border-r border-pink-100/60 bg-gray-50/50 align-middle">
+                                                    <td className="p-2.5 sm:p-3 text-center border-r border-pink-100 bg-gray-50 align-middle">
                                                         <div className="font-extrabold text-xs text-gray-800">
                                                             {slotItem.label}
                                                         </div>
-                                                        <div className="text-[10px] text-pink-500 font-bold mt-0.5">
+                                                        <div className="text-[10px] text-pink-600 font-bold mt-0.5">
                                                             {slotItem.periodEn || slotItem.period}
                                                         </div>
                                                     </td>
@@ -1207,8 +1202,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                         return (
                                                             <td
                                                                 key={`${slotItem.slot}_${colDay.dateKey}`}
-                                                                className={`p-1.5 sm:p-2 border-l border-pink-100/60 align-top transition-colors min-w-[110px] ${
-                                                                    isToday ? 'bg-pink-50/25' : ''
+                                                                className={`p-1.5 sm:p-2 border-l border-pink-100 align-top transition-colors min-w-[110px] ${
+                                                                    isToday ? 'bg-pink-50' : ''
                                                                 } ${isCellHasActiveMenu ? 'relative z-50 overflow-visible' : 'relative'}`}
                                                             >
                                                                 {matchedSessions.length === 0 ? (
@@ -1242,12 +1237,12 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                         isMenuOpen ? 'z-50 ring-2 ring-pink-400 shadow-lg' : 'z-10'
                                                                                     } ${
                                                                                         isCompleted
-                                                                                            ? 'bg-gradient-to-br from-pink-50/90 to-rose-50/70 border-pink-300 ring-1 ring-pink-400/30'
+                                                                                            ? 'bg-pink-50 border-pink-300 ring-1 ring-pink-400'
                                                                                             : isMakeup
-                                                                                                ? 'bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-300 ring-1 ring-purple-400/30'
+                                                                                                ? 'bg-purple-50 border-purple-300 ring-1 ring-purple-400'
                                                                                             : isCancelled
-                                                                                                ? 'bg-gradient-to-br from-gray-50 to-slate-100 border-gray-200 opacity-75'
-                                                                                                : 'bg-gradient-to-br from-amber-50/70 to-yellow-50/70 border-amber-200 ring-1 ring-amber-300/30'
+                                                                                                ? 'bg-gray-100 border-gray-300 opacity-75'
+                                                                                                : 'bg-amber-50 border-amber-300 ring-1 ring-amber-400'
                                                                                     }`}
                                                                                 >
                                                                                     {/* Pill Accent (clipped to card's rounded border) */}
@@ -1265,7 +1260,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                             <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
                                                                                                 G{session.grade}
                                                                                             </span>
-                                                                                            <span className="text-[9px] font-bold text-gray-600 bg-white/80 px-1 rounded shadow-2xs">
+                                                                                            <span className="text-[9px] font-bold text-gray-600 bg-white px-1 rounded shadow-2xs">
                                                                                                 {session.location === 'Long Thượng' ? 'LT' : 'ML'}
                                                                                             </span>
                                                                                         </div>
@@ -1294,7 +1289,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                 title="Click to adjust status: Taught / Make-up / Scheduled / Cancelled"
                                                                                                 className={`w-full py-1 px-1.5 rounded-lg text-[9px] font-extrabold flex items-center justify-center gap-1 cursor-pointer transition-all shadow-2xs hover:scale-[1.02] ${
                                                                                                     isCompleted
-                                                                                                        ? 'bg-rose-500 text-white hover:bg-rose-600'
+                                                                                                        ? 'bg-pink-500 text-white hover:bg-pink-600'
                                                                                                         : isMakeup
                                                                                                             ? 'bg-purple-600 text-white hover:bg-purple-700'
                                                                                                             : isCancelled
@@ -1335,10 +1330,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                             handleSetStatus(session, 'COMPLETED');
                                                                                                         }}
                                                                                                         className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 cursor-pointer ${
-                                                                                                            isCompleted ? 'bg-rose-50 text-rose-700' : 'hover:bg-gray-50 text-gray-700'
+                                                                                                            isCompleted ? 'bg-pink-100 text-pink-700' : 'hover:bg-pink-50 text-gray-700'
                                                                                                         }`}
                                                                                                     >
-                                                                                                        <CheckCircle2 className="w-3 h-3 text-rose-500" />
+                                                                                                        <CheckCircle2 className="w-3 h-3 text-pink-500" />
                                                                                                         <span>Taught</span>
                                                                                                     </button>
                                                                                                     <button
@@ -1405,7 +1400,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                             <button
                                                                                                 onClick={() => handleDeleteSession(session)}
                                                                                                 title="Delete this session"
-                                                                                                className="opacity-0 group-hover/card:opacity-100 p-1 text-gray-400 hover:text-rose-600 rounded transition-opacity cursor-pointer shrink-0"
+                                                                                                className="opacity-0 group-hover/card:opacity-100 p-1 text-gray-400 hover:text-pink-600 rounded transition-opacity cursor-pointer shrink-0"
                                                                                             >
                                                                                                 <Trash2 className="w-3 h-3" />
                                                                                             </button>
@@ -1427,7 +1422,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             </div>
 
                             {/* Table Footer Guide */}
-                            <div className="p-3 sm:p-4 bg-gray-50/80 border-t border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 gap-2">
+                            <div className="p-3 sm:p-4 bg-gray-50 border-t border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 gap-2">
                                 <div className="flex items-center gap-2 flex-wrap">
                                     <span className="font-bold text-gray-700">Salary Policy:</span>
                                     <span>Each Taught or Make-up slot is credited towards your Total Salary</span>
@@ -1453,8 +1448,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             key={index}
                                             className={`py-2 px-1 text-center rounded-xl border ${
                                                 col.isWeekend
-                                                    ? 'bg-rose-50/70 border-rose-200 text-rose-700 font-bold'
-                                                    : 'bg-pink-50/50 border-pink-100 text-gray-700 font-bold'
+                                                    ? 'bg-pink-100 border-pink-200 text-pink-700 font-bold'
+                                                    : 'bg-pink-50 border-pink-100 text-gray-700 font-bold'
                                             }`}
                                         >
                                             <span className="text-xs uppercase">{col.label || col.en}</span>
@@ -1474,10 +1469,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                 key={item.dateKey}
                                                 className={`rounded-2xl p-2 border min-h-[120px] sm:min-h-[140px] flex flex-col justify-between transition-all ${
                                                     item.isToday
-                                                        ? 'bg-pink-50/80 border-pink-400 ring-2 ring-pink-300/40 shadow-xs'
+                                                        ? 'bg-pink-50 border-pink-400 ring-2 ring-pink-300 shadow-xs'
                                                         : item.isCurrentMonth
                                                             ? 'bg-white border-pink-100 hover:border-pink-300'
-                                                            : 'bg-gray-50/50 border-gray-100 opacity-40'
+                                                            : 'bg-gray-50 border-gray-200 opacity-50'
                                                 }`}
                                             >
                                                 <div>
@@ -1499,10 +1494,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                 onClick={() => handleCycleStatus(s)}
                                                                 title={`${s.className} (${s.timeRange || `${s.startTime} – ${s.endTime}`}) • ${s.location} • Status: ${s.status === 'COMPLETED' ? 'Taught' : s.status === 'MAKE_UP' ? 'Make-up' : s.status === 'CANCELLED' ? 'Cancelled' : 'Scheduled'}`}
                                                                 className={`p-1 px-1.5 rounded-lg text-[10px] font-bold truncate cursor-pointer transition-all hover:scale-[1.02] flex items-center justify-between gap-1 shadow-2xs ${
-                                                                    s.status === 'COMPLETED' ? 'bg-pink-100 text-pink-800 border border-pink-200/80' :
-                                                                    s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-800 border border-purple-200/80' :
-                                                                    s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through border border-gray-200/80' :
-                                                                    'bg-amber-100 text-amber-800 border border-amber-200/80'
+                                                                    s.status === 'COMPLETED' ? 'bg-pink-100 text-pink-800 border border-pink-200' :
+                                                                    s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-800 border border-purple-200' :
+                                                                    s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through border border-gray-200' :
+                                                                    'bg-amber-100 text-amber-800 border border-amber-200'
                                                                 }`}
                                                             >
                                                                 <div className="flex items-center gap-1 min-w-0 truncate">
@@ -1558,7 +1553,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <div className="overflow-x-auto">
                                 <table className="w-full border-collapse text-left text-xs">
                                     <thead>
-                                        <tr className="border-b border-pink-100 text-gray-500 uppercase font-bold text-[10px] bg-pink-50/50">
+                                        <tr className="border-b border-pink-100 text-gray-500 uppercase font-bold text-[10px] bg-pink-50">
                                             <th className="py-2.5 px-3">Date</th>
                                             <th className="py-2.5 px-3">Day</th>
                                             <th className="py-2.5 px-3">Time Slot</th>
@@ -1569,7 +1564,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             <th className="py-2.5 px-3 text-center">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-pink-100/60">
+                                    <tbody className="divide-y divide-pink-100">
                                         {displayListSessions.map((s) => {
                                             const d = s.date ? new Date(s.date) : new Date();
                                             const isPaid = s.status === 'COMPLETED' || s.status === 'MAKE_UP';
@@ -1579,7 +1574,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                 : (s.dateKey || '');
 
                                             return (
-                                                <tr key={s.id} className="hover:bg-pink-50/20 transition-colors">
+                                                <tr key={s.id} className="hover:bg-pink-50 transition-colors">
                                                     <td className="py-2 px-3 font-bold text-gray-800">
                                                         {dateDisplay}
                                                     </td>
@@ -1608,7 +1603,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                     <td className="py-2 px-3 text-center">
                                                         <button
                                                             onClick={() => handleDeleteSession(s)}
-                                                            className="p-1 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
+                                                            className="p-1 text-gray-400 hover:text-pink-600 transition-colors cursor-pointer"
                                                             title="Delete"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />

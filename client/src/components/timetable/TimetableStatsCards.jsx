@@ -21,7 +21,7 @@ export const TimetableStatsCards = ({ timetableItems = [], weeklyEarnings = null
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* Card 1: Weekly Total Salary */}
-            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-pink-200/80 flex flex-col justify-between hover:shadow-md hover:border-pink-300 transition-all">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-pink-200 flex flex-col justify-between hover:shadow-md hover:border-pink-300 transition-all">
                 <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-pink-600 uppercase tracking-wider">Weekly Total Salary</span>
                     <div className="w-9 h-9 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600 shadow-2xs shrink-0">
@@ -40,10 +40,10 @@ export const TimetableStatsCards = ({ timetableItems = [], weeklyEarnings = null
             </div>
 
             {/* Card 2: Monthly Total Salary */}
-            <div className="bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white rounded-2xl p-4 sm:p-5 shadow-sm shadow-pink-500/20 flex flex-col justify-between hover:shadow-md hover:scale-[1.01] transition-all">
+            <div className="bg-pink-500 text-white rounded-2xl p-4 sm:p-5 shadow-sm border border-pink-500 flex flex-col justify-between hover:bg-pink-600 hover:shadow-md hover:scale-[1.01] transition-all">
                 <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-pink-100 uppercase tracking-wider">Monthly Total Salary</span>
-                    <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shrink-0 shadow-2xs">
+                    <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-pink-600 shrink-0 shadow-2xs">
                         <TrendingUp className="w-5 h-5" />
                     </div>
                 </div>
@@ -62,7 +62,7 @@ export const TimetableStatsCards = ({ timetableItems = [], weeklyEarnings = null
             </div>
 
             {/* Card 3: Total Schedule & Hours */}
-            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-pink-200/80 flex flex-col justify-between hover:shadow-md hover:border-pink-300 transition-all">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-pink-200 flex flex-col justify-between hover:shadow-md hover:border-pink-300 transition-all">
                 <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Weekly Schedule</span>
                     <div className="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-pink-500 shrink-0">
@@ -82,7 +82,7 @@ export const TimetableStatsCards = ({ timetableItems = [], weeklyEarnings = null
             </div>
 
             {/* Card 4: Distribution & Weekend Focus */}
-            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-pink-200/80 flex flex-col justify-between hover:shadow-md hover:border-pink-300 transition-all">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-pink-200 flex flex-col justify-between hover:shadow-md hover:border-pink-300 transition-all">
                 <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Grades & Locations</span>
                     <div className="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-pink-500 shrink-0">
@@ -97,7 +97,7 @@ export const TimetableStatsCards = ({ timetableItems = [], weeklyEarnings = null
                         <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-purple-100 text-purple-700">
                             G11: {grade11Count}
                         </span>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-rose-100 text-rose-700">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-pink-100 text-pink-700">
                             G12: {grade12Count}
                         </span>
                     </div>

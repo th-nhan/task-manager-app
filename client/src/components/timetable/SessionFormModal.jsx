@@ -68,7 +68,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
             <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-pink-100 animate-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="px-6 py-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white flex items-center justify-between">
+                <div className="px-6 py-4 bg-pink-500 text-white flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <DollarSign className="w-5 h-5 text-pink-100" />
                         <h3 className="text-base sm:text-lg font-bold">
@@ -88,7 +88,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
                     <div className="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                                Date <span className="text-rose-500">*</span>
+                                Date <span className="text-pink-500">*</span>
                             </label>
                             <div className="relative">
                                 <input
@@ -104,7 +104,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
 
                         <div>
                             <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                                Status <span className="text-rose-500">*</span>
+                                Status <span className="text-pink-500">*</span>
                             </label>
                             <select
                                 value={formData.status}
@@ -122,7 +122,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
                     <div className="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                                Start Time <span className="text-rose-500">*</span>
+                                Start Time <span className="text-pink-500">*</span>
                             </label>
                             <input
                                 type="time"
@@ -134,7 +134,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
                         </div>
                         <div>
                             <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                                End Time <span className="text-rose-500">*</span>
+                                End Time <span className="text-pink-500">*</span>
                             </label>
                             <input
                                 type="time"
@@ -148,7 +148,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
 
                     <div>
                         <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                            Class Name <span className="text-rose-500">*</span>
+                            Class Name <span className="text-pink-500">*</span>
                         </label>
                         <div className="relative">
                             <input
@@ -225,7 +225,7 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
                         </button>
                         <button
                             type="submit"
-                            className="px-5 py-2 text-sm font-bold text-white bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 rounded-xl shadow-md shadow-pink-500/20 transition-all cursor-pointer"
+                            className="px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-xs transition-all cursor-pointer"
                         >
                             {sessionData ? 'Save Changes' : 'Create Session'}
                         </button>
