@@ -121,15 +121,21 @@ export const ClassDetailModal = ({
                                 <Calendar className="w-3.5 h-3.5 text-pink-500" />
                                 Teaching Schedule Status
                             </span>
-                            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
-                                currentStatus === 'COMPLETED' ? 'bg-rose-100 text-rose-700 border-rose-300' :
-                                currentStatus === 'MAKE_UP' ? 'bg-purple-100 text-purple-700 border-purple-300' :
+                            <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border inline-flex items-center gap-1 ${
+                                currentStatus === 'COMPLETED' ? 'bg-pink-50 text-pink-700 border-pink-300' :
+                                currentStatus === 'MAKE_UP' ? 'bg-purple-50 text-purple-700 border-purple-300' :
                                 currentStatus === 'CANCELLED' ? 'bg-gray-100 text-gray-600 border-gray-300' :
-                                'bg-amber-100 text-amber-800 border-amber-300'
+                                'bg-amber-50 text-amber-800 border-amber-300'
                             }`}>
-                                {currentStatus === 'COMPLETED' ? '✅ Taught' :
-                                 currentStatus === 'MAKE_UP' ? '🔄 Make-up' :
-                                 currentStatus === 'CANCELLED' ? '❌ Cancelled' : '⏳ Scheduled'}
+                                {currentStatus === 'COMPLETED' ? <CheckCircle2 className="w-3 h-3 text-pink-600 shrink-0" /> :
+                                 currentStatus === 'MAKE_UP' ? <RotateCcw className="w-3 h-3 text-purple-600 shrink-0" /> :
+                                 currentStatus === 'CANCELLED' ? <XCircle className="w-3 h-3 text-gray-500 shrink-0" /> :
+                                 <Clock className="w-3 h-3 text-amber-600 shrink-0" />}
+                                <span>
+                                    {currentStatus === 'COMPLETED' ? 'Taught' :
+                                     currentStatus === 'MAKE_UP' ? 'Make-up' :
+                                     currentStatus === 'CANCELLED' ? 'Cancelled' : 'Scheduled'}
+                                </span>
                             </span>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-1">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DAYS_OF_WEEK, TIME_SLOTS_MATRIX, GRADE_CONFIG, LOCATION_CONFIG, isSessionPassed } from '../../data/timetableData';
-import { Clock, MapPin, Sparkles } from 'lucide-react';
+import { Clock, MapPin, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const WeeklyGridView = ({
     timetableItems = [],
@@ -151,8 +151,9 @@ export const WeeklyGridView = ({
                                                                                             </span>
                                                                                             <div className="flex items-center gap-1">
                                                                                                 {isTaught && (
-                                                                                                    <span className="text-[8px] font-extrabold text-rose-600 bg-rose-50 px-1 py-0.2 rounded border border-rose-200">
-                                                                                                        ✓ Taught
+                                                                                                    <span className="text-[8px] font-extrabold text-pink-700 bg-pink-50/90 px-1.5 py-0.2 rounded-full border border-pink-300 inline-flex items-center gap-0.5 shadow-2xs">
+                                                                                                        <CheckCircle2 className="w-2.5 h-2.5 text-pink-600 shrink-0" />
+                                                                                                        <span>Taught</span>
                                                                                                     </span>
                                                                                                 )}
                                                                                                 <span className="text-[9px] font-bold text-gray-600 bg-white/80 px-1 rounded">

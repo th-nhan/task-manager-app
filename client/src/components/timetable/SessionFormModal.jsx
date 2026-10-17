@@ -111,10 +111,10 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                                 className="w-full px-3 py-2 text-sm border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-400 focus:outline-none bg-white font-medium text-gray-700"
                             >
-                                <option value="COMPLETED">✅ Taught</option>
-                                <option value="MAKE_UP">🔄 Make-up</option>
-                                <option value="PENDING">⏳ Scheduled</option>
-                                <option value="CANCELLED">❌ Cancelled</option>
+                                <option value="COMPLETED">Taught</option>
+                                <option value="MAKE_UP">Make-up</option>
+                                <option value="PENDING">Scheduled</option>
+                                <option value="CANCELLED">Cancelled</option>
                             </select>
                         </div>
                     </div>

@@ -887,19 +887,31 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             </div>
                             <div className="grid grid-cols-2 gap-1.5 text-xs">
                                 <div className="px-2.5 py-1.5 rounded-xl bg-white border border-pink-200 flex items-center justify-between">
-                                    <span className="text-pink-700 font-semibold">✅ Taught:</span>
+                                    <span className="text-pink-700 font-semibold flex items-center gap-1.5">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-pink-500" />
+                                        <span>Taught:</span>
+                                    </span>
                                     <b className="text-pink-900 font-bold">{weekStats.completed} slots</b>
                                 </div>
                                 <div className="px-2.5 py-1.5 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-between">
-                                    <span className="text-purple-700 font-semibold">🔄 Make-up:</span>
+                                    <span className="text-purple-700 font-semibold flex items-center gap-1.5">
+                                        <RotateCcw className="w-3.5 h-3.5 text-purple-500" />
+                                        <span>Make-up:</span>
+                                    </span>
                                     <b className="text-purple-900 font-bold">+{weekStats.makeup} slots</b>
                                 </div>
                                 <div className="px-2.5 py-1.5 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-between">
-                                    <span className="text-gray-600 font-semibold">❌ Cancelled:</span>
+                                    <span className="text-gray-600 font-semibold flex items-center gap-1.5">
+                                        <XCircle className="w-3.5 h-3.5 text-gray-500" />
+                                        <span>Cancelled:</span>
+                                    </span>
                                     <b className="text-gray-800 font-bold">{weekStats.cancelled} slots</b>
                                 </div>
                                 <div className="px-2.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between">
-                                    <span className="text-amber-800 font-semibold">⏳ Scheduled:</span>
+                                    <span className="text-amber-800 font-semibold flex items-center gap-1.5">
+                                        <Clock className="w-3.5 h-3.5 text-amber-600" />
+                                        <span>Scheduled:</span>
+                                    </span>
                                     <b className="text-amber-900 font-bold">{weekStats.pending} slots</b>
                                 </div>
                             </div>
@@ -1053,10 +1065,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         className="text-xs px-2.5 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
                     >
                         <option value="ALL">All Statuses</option>
-                        <option value="COMPLETED">✅ Taught</option>
-                        <option value="PENDING">⏳ Scheduled</option>
-                        <option value="MAKE_UP">🔄 Make-up</option>
-                        <option value="CANCELLED">❌ Cancelled</option>
+                        <option value="COMPLETED">Taught</option>
+                        <option value="PENDING">Scheduled</option>
+                        <option value="MAKE_UP">Make-up</option>
+                        <option value="CANCELLED">Cancelled</option>
                     </select>
 
                     <select
@@ -1097,17 +1109,21 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                 </div>
 
                                 <div className="flex items-center gap-2 text-xs flex-wrap">
-                                    <span className="flex items-center gap-1 font-semibold text-pink-700 bg-pink-100 px-2 py-0.5 rounded-md border border-pink-200">
-                                        ✅ Taught
+                                    <span className="flex items-center gap-1 font-semibold text-pink-700 bg-pink-100/80 px-2 py-0.5 rounded-md border border-pink-300">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-pink-600" />
+                                        <span>Taught</span>
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
-                                        🔄 Make-up
+                                    <span className="flex items-center gap-1 font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-300">
+                                        <RotateCcw className="w-3.5 h-3.5 text-purple-600" />
+                                        <span>Make-up</span>
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                                        ⏳ Scheduled
+                                    <span className="flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-300">
+                                        <Clock className="w-3.5 h-3.5 text-amber-700" />
+                                        <span>Scheduled</span>
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-md border border-gray-200">
-                                        ❌ Cancelled
+                                    <span className="flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-md border border-gray-300">
+                                        <XCircle className="w-3.5 h-3.5 text-gray-500" />
+                                        <span>Cancelled</span>
                                     </span>
                                 </div>
                             </div>
@@ -1287,20 +1303,20 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                     setActiveStatusMenuId(isMenuOpen ? null : session.id);
                                                                                                 }}
                                                                                                 title="Click to adjust status: Taught / Make-up / Scheduled / Cancelled"
-                                                                                                className={`w-full py-1 px-1.5 rounded-lg text-[9px] font-extrabold flex items-center justify-center gap-1 cursor-pointer transition-all shadow-2xs hover:scale-[1.02] ${
+                                                                                                className={`w-full py-1 px-1.5 rounded-lg text-[9px] font-extrabold flex items-center justify-center gap-1 cursor-pointer transition-all shadow-2xs hover:scale-[1.02] border ${
                                                                                                     isCompleted
-                                                                                                        ? 'bg-pink-500 text-white hover:bg-pink-600'
+                                                                                                        ? 'bg-pink-50 text-pink-700 border-pink-300 hover:bg-pink-100'
                                                                                                         : isMakeup
-                                                                                                            ? 'bg-purple-600 text-white hover:bg-purple-700'
+                                                                                                            ? 'bg-purple-50 text-purple-700 border-purple-300 hover:bg-purple-100'
                                                                                                             : isCancelled
-                                                                                                                ? 'bg-gray-200 text-gray-600 line-through hover:bg-gray-300'
-                                                                                                                : 'bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200'
+                                                                                                                ? 'bg-gray-100 text-gray-500 border-gray-300 line-through hover:bg-gray-200'
+                                                                                                                : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
                                                                                                 }`}
                                                                                             >
-                                                                                                {isCompleted && <CheckCircle2 className="w-3 h-3 text-white" />}
-                                                                                                {isMakeup && <RotateCcw className="w-3 h-3 text-white" />}
-                                                                                                {isCancelled && <XCircle className="w-3 h-3 text-gray-500" />}
-                                                                                                {isPending && <Clock className="w-3 h-3 text-amber-700" />}
+                                                                                                {isCompleted && <CheckCircle2 className="w-3 h-3 text-pink-600" />}
+                                                                                                {isMakeup && <RotateCcw className="w-3 h-3 text-purple-600" />}
+                                                                                                {isCancelled && <XCircle className="w-3 h-3 text-gray-400" />}
+                                                                                                {isPending && <Clock className="w-3 h-3 text-amber-600" />}
                                                                                                 <span>
                                                                                                     {isCompleted ? (session.autoCompleted ? 'Auto Taught' : 'Taught') :
                                                                                                      isMakeup ? 'Make-up' :
@@ -1504,7 +1520,17 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                     <span className="text-[9px] opacity-75 font-mono shrink-0">{s.startTime}</span>
                                                                     <span className="truncate">{s.originalCode || s.className}</span>
                                                                 </div>
-                                                                <span className="shrink-0">{s.status === 'COMPLETED' ? '✓' : s.status === 'MAKE_UP' ? '🔄' : s.status === 'CANCELLED' ? '✕' : '⏳'}</span>
+                                                                <span className="shrink-0">
+                                                                    {s.status === 'COMPLETED' ? (
+                                                                        <CheckCircle2 className="w-3 h-3 text-pink-600 inline" />
+                                                                    ) : s.status === 'MAKE_UP' ? (
+                                                                        <RotateCcw className="w-3 h-3 text-purple-600 inline" />
+                                                                    ) : s.status === 'CANCELLED' ? (
+                                                                        <XCircle className="w-3 h-3 text-gray-400 inline" />
+                                                                    ) : (
+                                                                        <Clock className="w-3 h-3 text-amber-600 inline" />
+                                                                    )}
+                                                                </span>
                                                             </div>
                                                         ))}
                                                         {daySessions.length > 4 && (
@@ -1585,16 +1611,22 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                     <td className="py-2 px-3 text-center">
                                                         <button
                                                             onClick={() => handleCycleStatus(s)}
-                                                            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer ${
-                                                                s.status === 'COMPLETED' ? 'bg-pink-100 text-pink-800' :
-                                                                s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-800' :
-                                                                s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' :
-                                                                'bg-amber-100 text-amber-800'
+                                                            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer inline-flex items-center gap-1 border transition-all hover:scale-105 ${
+                                                                s.status === 'COMPLETED' ? 'bg-pink-50 text-pink-700 border-pink-300' :
+                                                                s.status === 'MAKE_UP' ? 'bg-purple-50 text-purple-700 border-purple-300' :
+                                                                s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through border-gray-300' :
+                                                                'bg-amber-50 text-amber-800 border-amber-300'
                                                             }`}
                                                         >
-                                                            {s.status === 'COMPLETED' ? '✅ Taught' :
-                                                             s.status === 'MAKE_UP' ? '🔄 Make-up' :
-                                                             s.status === 'CANCELLED' ? '❌ Cancelled' : '⏳ Scheduled'}
+                                                            {s.status === 'COMPLETED' ? <CheckCircle2 className="w-3 h-3 text-pink-600 shrink-0" /> :
+                                                             s.status === 'MAKE_UP' ? <RotateCcw className="w-3 h-3 text-purple-600 shrink-0" /> :
+                                                             s.status === 'CANCELLED' ? <XCircle className="w-3 h-3 text-gray-400 shrink-0" /> :
+                                                             <Clock className="w-3 h-3 text-amber-600 shrink-0" />}
+                                                            <span>
+                                                                {s.status === 'COMPLETED' ? 'Taught' :
+                                                                 s.status === 'MAKE_UP' ? 'Make-up' :
+                                                                 s.status === 'CANCELLED' ? 'Cancelled' : 'Scheduled'}
+                                                            </span>
                                                         </button>
                                                     </td>
                                                     <td className="py-2 px-3 text-right font-black text-pink-600">
