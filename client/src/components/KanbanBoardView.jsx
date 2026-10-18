@@ -11,6 +11,7 @@ import {
 import CustomSelect from './CustomSelect';
 
 export const KanbanBoardView = ({
+    currentDate = new Date(),
     tasks = [],
     filterPriority = 'ALL',
     onFilterPriorityChange,
@@ -25,6 +26,74 @@ export const KanbanBoardView = ({
     const [draggingTaskId, setDraggingTaskId] = useState(null);
     const [dragOverColumn, setDragOverColumn] = useState(null);
     const [mobileActiveColumn, setMobileActiveColumn] = useState('ALL'); // 'ALL' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'MISSING'
+
+    // Compute Monday 00:00:00 to Sunday 23:59:59 of current week
+    const { startOfWeek, endOfWeek, weekLabel } = useMemo(() => {
+        const curr = new Date(currentDate);
+        const dayOfWeek = (curr.getDay() + 6) % 7; // 0 is Monday, ..., 6 is Sunday
+        const monday = new Date(curr);
+        monday.setDate(curr.getDate() - dayOfWeek);
+        monday.setHours(0, 0, 0, 0);
+
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        sunday.setHours(23, 59, 59, 999);
+
+        const formatShortDate = (d) => {
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            return `${day}/${month}`;
+        };
+
+        return {
+            startOfWeek: monday,
+            endOfWeek: sunday,
+            weekLabel: `Thứ 2 (${formatShortDate(monday)}) - CN (${formatShortDate(sunday)})`,
+        };
+    }, [currentDate]);
+
+    // Filter tasks that belong to the current week (Mon - Sun)
+    const weekTasks = useMemo(() => {
+        const startMs = startOfWeek.getTime();
+        const endMs = endOfWeek.getTime();
+
+        return tasks.filter(task => {
+            // Task completed in current week
+            if (task.status === 'DONE' && task.updatedAt) {
+                const updatedTime = new Date(task.updatedAt).getTime();
+                if (updatedTime >= startMs && updatedTime <= endMs) {
+                    return true;
+                }
+            }
+
+            const hasStart = Boolean(task.startDate);
+            const hasDue = Boolean(task.dueDate);
+
+            if (hasStart && hasDue) {
+                const start = new Date(task.startDate).getTime();
+                const due = new Date(task.dueDate).getTime();
+                // Task range overlaps with current week
+                return start <= endMs && due >= startMs;
+            }
+
+            if (hasDue) {
+                const due = new Date(task.dueDate).getTime();
+                return due >= startMs && due <= endMs;
+            }
+
+            if (hasStart) {
+                const start = new Date(task.startDate).getTime();
+                return start >= startMs && start <= endMs;
+            }
+
+            if (task.createdAt) {
+                const created = new Date(task.createdAt).getTime();
+                return created >= startMs && created <= endMs;
+            }
+
+            return false;
+        });
+    }, [tasks, startOfWeek, endOfWeek]);
 
     const kanbanColumns = useMemo(() => [
         {
@@ -74,9 +143,7 @@ export const KanbanBoardView = ({
     ], []);
 
     const getColumnTasks = useCallback((columnKey) => {
-        const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-
-        return tasks
+        return weekTasks
             .filter(task => {
                 if (filterPriority !== 'ALL' && task.priority !== filterPriority) {
                     return false;
@@ -89,9 +156,7 @@ export const KanbanBoardView = ({
                     return isMissing;
                 }
                 if (columnKey === 'DONE') {
-                    if (!isDone) return false;
-                    const doneDate = new Date(task.updatedAt || task.dueDate || task.createdAt);
-                    return doneDate >= oneWeekAgo;
+                    return isDone;
                 }
                 if (columnKey === 'IN_PROGRESS') {
                     return !isMissing && task.status === 'IN_PROGRESS';
@@ -110,7 +175,7 @@ export const KanbanBoardView = ({
                 const timeB = new Date(b.startDate || b.createdAt).getTime();
                 return timeA - timeB;
             });
-    }, [tasks, filterPriority]);
+    }, [weekTasks, filterPriority]);
 
     const handleInternalDrop = (targetColumnKey) => {
         if (!draggingTaskId) return;
@@ -131,7 +196,13 @@ export const KanbanBoardView = ({
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm min-h-[500px] border border-pink-100/60 min-w-0">
             {/* Header & Filter */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-                <span className="text-sm font-bold text-gray-800">Kanban Board</span>
+                <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="text-sm font-bold text-gray-800">Kanban Board</span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-pink-50 text-pink-700 border border-pink-200/80 shadow-xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
+                        <span>{weekLabel}</span>
+                    </span>
+                </div>
 
                 <div className="w-full sm:w-44">
                     <CustomSelect
@@ -152,7 +223,7 @@ export const KanbanBoardView = ({
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                 >
-                    All ({tasks.length})
+                    All ({weekTasks.length})
                 </button>
                 {kanbanColumns.map(col => {
                     const count = getColumnTasks(col.key).length;
@@ -225,8 +296,8 @@ export const KanbanBoardView = ({
                                     />
                                     <span className="truncate">{col.title}</span>
                                     {col.key === 'DONE' && (
-                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60 shrink-0" title="Tasks completed in last 7 days">
-                                            ≤ 7d
+                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60 shrink-0" title="Tasks completed in current week">
+                                            Tuần này
                                         </span>
                                     )}
                                 </div>

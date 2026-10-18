@@ -225,22 +225,37 @@ const Dashboard = () => {
             if (task.status === 'IN_PROGRESS' && !isCurrentlyMissing) return;
             updateData = { status: 'IN_PROGRESS' };
             if (isCurrentlyMissing) {
-                updateData.dueDate = null;
+                const endOfToday = new Date();
+                endOfToday.setHours(23, 59, 59, 999);
+                updateData.dueDate = endOfToday.toISOString();
             }
         } else if (targetColumnKey === 'TODO') {
             const isCurrentlyMissing = task.status !== 'DONE' && Boolean(task.dueDate && new Date(task.dueDate) < new Date());
             if (task.status === 'TODO' && !isCurrentlyMissing) return;
             updateData = { status: 'TODO' };
             if (isCurrentlyMissing) {
-                updateData.dueDate = null;
+                const endOfToday = new Date();
+                endOfToday.setHours(23, 59, 59, 999);
+                updateData.dueDate = endOfToday.toISOString();
             }
         } else if (targetColumnKey === 'MISSING') {
             const isCurrentlyMissing = task.status !== 'DONE' && Boolean(task.dueDate && new Date(task.dueDate) < new Date());
             if (isCurrentlyMissing) return;
-            const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+            // Ensure overdue dueDate stays within the current week (from Monday 00:00:00)
+            const curr = new Date(currentDate);
+            const dayOfWeek = (curr.getDay() + 6) % 7;
+            const monday = new Date(curr);
+            monday.setDate(curr.getDate() - dayOfWeek);
+            monday.setHours(0, 0, 0, 0);
+
+            let pastTime = new Date(Date.now() - 60 * 60 * 1000);
+            if (pastTime < monday) {
+                pastTime = new Date(monday.getTime() + 60 * 1000);
+            }
             updateData = {
                 status: task.status === 'DONE' ? 'TODO' : task.status,
-                dueDate: yesterday.toISOString()
+                dueDate: pastTime.toISOString()
             };
         }
 
@@ -295,11 +310,11 @@ const Dashboard = () => {
     };
 
     const dateRangeTitle = useMemo(() => {
-        if (viewMode === 'month' || viewMode === 'kanban') {
+        if (viewMode === 'month') {
             const monthNameEn = currentDate.toLocaleDateString('en-US', { month: 'long' });
             return `${monthNameEn}, ${currentDate.getFullYear()}`;
         }
-        if (viewMode === 'week') {
+        if (viewMode === 'week' || viewMode === 'kanban') {
             const curr = new Date(currentDate);
             const dayOfWeek = (curr.getDay() + 6) % 7;
             const monday = new Date(curr);
@@ -375,6 +390,7 @@ const Dashboard = () => {
                     {/* View 3: Kanban Board View */}
                     {viewMode === 'kanban' && (
                         <KanbanBoardView
+                            currentDate={currentDate}
                             tasks={tasks}
                             filterPriority={filterPriority}
                             onFilterPriorityChange={setFilterPriority}
