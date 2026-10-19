@@ -26,9 +26,11 @@ import {
     Upload,
     Link as LinkIcon,
     Trash2,
-    ArrowLeft
+    ArrowLeft,
+    Crop,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import AvatarCropModal from '../components/AvatarCropModal';
 
 const AVATAR_PRESETS = [
     'https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=ffd5dc',
@@ -71,6 +73,10 @@ export const ProfilePage = () => {
     // Avatar modal / picker state
     const [showAvatarPicker, setShowAvatarPicker] = useState(false);
     const [customAvatarUrl, setCustomAvatarUrl] = useState('');
+
+    // Avatar crop & rotation modal state
+    const [showCropModal, setShowCropModal] = useState(false);
+    const [cropImageSrc, setCropImageSrc] = useState('');
 
     // Password form state
     const [passwordData, setPasswordData] = useState({
@@ -153,7 +159,7 @@ export const ProfilePage = () => {
         }
     };
 
-    // Handle Local File Upload & Auto-compression to Base64
+    // Handle Local File Upload & Open Crop Modal
     const handleFileUpload = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -164,47 +170,84 @@ export const ProfilePage = () => {
             return;
         }
 
-        // Limit size to max 5MB before downscaling
-        if (file.size > 5 * 1024 * 1024) {
-            toast.warning('Image is too large! Please choose an image under 5MB');
+        // Limit size to max 10MB
+        if (file.size > 10 * 1024 * 1024) {
+            toast.warning('Image is too large! Please choose an image under 10MB');
             e.target.value = '';
             return;
         }
 
         const reader = new FileReader();
         reader.onload = (event) => {
-            const img = new Image();
-            img.onload = async () => {
-                // Resize image to max 400x400 for crisp & lightweight avatar
-                const canvas = document.createElement('canvas');
-                const maxSize = 400;
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > maxSize) {
-                        height = Math.round((height * maxSize) / width);
-                        width = maxSize;
-                    }
-                } else {
-                    if (height > maxSize) {
-                        width = Math.round((width * maxSize) / height);
-                        height = maxSize;
-                    }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                await saveAvatarDirectly(dataUrl);
-            };
-            img.src = event.target.result;
+            setCropImageSrc(event.target.result);
+            setShowCropModal(true);
+            setShowAvatarPicker(false);
         };
         reader.readAsDataURL(file);
         e.target.value = '';
+    };
+
+    const [isProcessingUrl, setIsProcessingUrl] = useState(false);
+
+    // Safely convert any image URL to a DataURL to avoid CORS tainted canvas
+    const handleOpenCropForUrl = async (url) => {
+        if (!url || !url.trim()) {
+            toast.warning('Please enter a valid image URL');
+            return;
+        }
+
+        const cleanUrl = url.trim();
+
+        if (cleanUrl.startsWith('data:')) {
+            setCropImageSrc(cleanUrl);
+            setShowCropModal(true);
+            setShowAvatarPicker(false);
+            return;
+        }
+
+        setIsProcessingUrl(true);
+        try {
+            // 1. Try direct fetch first
+            try {
+                const response = await fetch(cleanUrl, { mode: 'cors' });
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const dataUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                    setCropImageSrc(dataUrl);
+                    setShowCropModal(true);
+                    setShowAvatarPicker(false);
+                    return;
+                }
+            } catch (directErr) {
+                // Direct fetch blocked by CORS, proceed to backend proxy
+            }
+
+            // 2. Fetch through backend proxy to bypass CORS
+            const proxyRes = await authApi.proxyImage(cleanUrl);
+            if (proxyRes?.dataUrl) {
+                setCropImageSrc(proxyRes.dataUrl);
+                setShowCropModal(true);
+                setShowAvatarPicker(false);
+            } else {
+                throw new Error('Failed to load image data');
+            }
+        } catch (error) {
+            console.error('Failed to load image URL for crop:', error);
+            toast.error('Unable to load this image directly. Please download the image and upload it from your device.');
+        } finally {
+            setIsProcessingUrl(false);
+        }
+    };
+
+    const handleCropComplete = async (croppedDataUrl) => {
+        await saveAvatarDirectly(croppedDataUrl);
+        setShowCropModal(false);
+        setCropImageSrc('');
     };
 
     const handleSelectPresetAvatar = (url) => {
@@ -895,15 +938,28 @@ export const ProfilePage = () => {
                                     </div>
                                     <span className="text-xs font-bold text-gray-700 truncate">Current Photo</span>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={handleRemoveAvatar}
-                                    disabled={isSavingAvatar}
-                                    className="px-2.5 py-1 text-rose-500 hover:bg-rose-50 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                    <span>Remove Photo</span>
-                                </button>
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleOpenCropForUrl(profileData.avatarUrl)}
+                                        disabled={isSavingAvatar || isProcessingUrl}
+                                        className="px-2.5 py-1 text-pink-600 hover:bg-pink-100 font-bold text-xs rounded-xl transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                                        title="Adjust & crop current photo"
+                                    >
+                                        <Crop className="w-3.5 h-3.5" />
+                                        <span>Adjust</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveAvatar}
+                                        disabled={isSavingAvatar || isProcessingUrl}
+                                        className="px-2.5 py-1 text-rose-500 hover:bg-rose-50 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+                                        title="Remove photo"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                        <span>Remove</span>
+                                    </button>
+                                </div>
                             </div>
                         )}
 
@@ -913,7 +969,7 @@ export const ProfilePage = () => {
                                 <button
                                     type="button"
                                     onClick={() => fileInputRef.current?.click()}
-                                    disabled={isSavingAvatar}
+                                    disabled={isSavingAvatar || isProcessingUrl}
                                     className="w-full py-2.5 px-3.5 bg-pink-50 hover:bg-pink-100 active:scale-[0.99] text-pink-700 font-bold text-xs sm:text-sm rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-pink-200/60 disabled:opacity-50 min-h-[38px]"
                                 >
                                     {isSavingAvatar ? (
@@ -921,7 +977,7 @@ export const ProfilePage = () => {
                                     ) : (
                                         <Upload className="w-3.5 h-3.5" />
                                     )}
-                                    <span>Upload from Device (PNG, JPG, WebP)</span>
+                                    <span>Upload from Device (Crop & Rotate)</span>
                                 </button>
                             </div>
 
@@ -936,7 +992,7 @@ export const ProfilePage = () => {
                                             key={idx}
                                             type="button"
                                             onClick={() => handleSelectPresetAvatar(preset)}
-                                            disabled={isSavingAvatar}
+                                            disabled={isSavingAvatar || isProcessingUrl}
                                             className={`group relative p-1 sm:p-1.5 rounded-2xl border-2 transition-all cursor-pointer bg-pink-50/40 hover:bg-pink-100/50 hover:scale-105 active:scale-95 disabled:opacity-50 ${
                                                 profileData.avatarUrl === preset
                                                     ? 'border-pink-500 ring-2 ring-pink-300 shadow-xs'
@@ -974,13 +1030,27 @@ export const ProfilePage = () => {
                                             onChange={(e) => setCustomAvatarUrl(e.target.value)}
                                             placeholder="https://example.com/avatar.png"
                                             className="w-full pl-8 pr-3 py-2 bg-pink-50/30 border border-pink-100 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[36px]"
-                                            disabled={isSavingAvatar}
+                                            disabled={isSavingAvatar || isProcessingUrl}
                                         />
                                     </div>
                                     <button
                                         type="button"
+                                        onClick={() => handleOpenCropForUrl(customAvatarUrl)}
+                                        disabled={isSavingAvatar || isProcessingUrl || !customAvatarUrl.trim()}
+                                        className="px-2.5 py-2 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50 min-h-[36px] flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap"
+                                        title="Crop & adjust this image"
+                                    >
+                                        {isProcessingUrl ? (
+                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                        ) : (
+                                            <Crop className="w-3.5 h-3.5" />
+                                        )}
+                                        <span>{isProcessingUrl ? 'Loading...' : 'Crop'}</span>
+                                    </button>
+                                    <button
+                                        type="button"
                                         onClick={handleApplyCustomUrl}
-                                        disabled={isSavingAvatar || !customAvatarUrl.trim()}
+                                        disabled={isSavingAvatar || isProcessingUrl || !customAvatarUrl.trim()}
                                         className="px-3.5 py-2 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50 min-h-[36px] flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap"
                                     >
                                         {isSavingAvatar ? (
@@ -1008,6 +1078,18 @@ export const ProfilePage = () => {
                     </div>
                 </div>
             )}
+
+            {/* AVATAR CROP & ROTATE MODAL */}
+            <AvatarCropModal
+                isOpen={showCropModal}
+                imageSrc={cropImageSrc}
+                onClose={() => {
+                    setShowCropModal(false);
+                    setCropImageSrc('');
+                }}
+                onCropComplete={handleCropComplete}
+                isSaving={isSavingAvatar}
+            />
         </div>
     );
 };

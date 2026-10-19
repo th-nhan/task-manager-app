@@ -7,6 +7,7 @@ export const authApi = {
     getProfile: () => axiosClient.get('/auth/profile'),
     updateProfile: (data) => axiosClient.put('/auth/profile', data),
     changePassword: (data) => axiosClient.put('/auth/change-password', data),
+    proxyImage: (url) => axiosClient.get(`/auth/proxy-image?url=${encodeURIComponent(url)}`),
 };
 
 

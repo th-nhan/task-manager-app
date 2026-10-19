@@ -285,3 +285,37 @@ export const changePassword = async (req, res) => {
         return res.status(500).json({ message: 'Server error changing password' });
     }
 };
+
+export const proxyImage = async (req, res) => {
+    try {
+        const { url } = req.query;
+        if (!url || typeof url !== 'string') {
+            return res.status(400).json({ message: 'URL is required' });
+        }
+
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return res.status(400).json({ message: 'Invalid URL protocol' });
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
+
+        if (!response.ok) {
+            return res.status(response.status).json({ message: `Failed to fetch image: HTTP ${response.status}` });
+        }
+
+        const contentType = response.headers.get('content-type') || 'image/jpeg';
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64 = buffer.toString('base64');
+        const dataUrl = `data:${contentType};base64,${base64}`;
+
+        res.json({ dataUrl });
+    } catch (error) {
+        console.error('Proxy image error:', error);
+        res.status(500).json({ message: 'Error retrieving image: ' + error.message });
+    }
+};
