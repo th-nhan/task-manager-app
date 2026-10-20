@@ -114,27 +114,29 @@ export const AvatarCropModal = ({
         );
         ctx.restore();
 
-        // 2. Draw Semi-transparent Overlay Mask
+        // 2. Draw Semi-transparent Overlay Mask (darkens only outside the crop area)
         ctx.save();
-        // Create an offscreen path for darkening outside crop area
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.65)'; // Dark slate overlay
-        ctx.fillRect(0, 0, size, size);
-
-        // Punch a hole in the overlay for the crop region
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
         const radius = CROP_DIAMETER / 2;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.35)'; // Light, transparent mask so surrounding area is visible and not too dark
+        ctx.beginPath();
+        ctx.rect(0, 0, size, size);
         if (cropShape === 'circle') {
             ctx.arc(center, center, radius, 0, Math.PI * 2);
         } else {
             const cornerR = 24;
             ctx.roundRect(center - radius, center - radius, CROP_DIAMETER, CROP_DIAMETER, cornerR);
         }
-        ctx.fill();
+        ctx.fill('evenodd');
 
         // 3. Draw border around the crop region
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.beginPath();
+        if (cropShape === 'circle') {
+            ctx.arc(center, center, radius, 0, Math.PI * 2);
+        } else {
+            const cornerR = 24;
+            ctx.roundRect(center - radius, center - radius, CROP_DIAMETER, CROP_DIAMETER, cornerR);
+        }
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.lineWidth = 2;
         ctx.stroke();
 
