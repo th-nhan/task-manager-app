@@ -91,8 +91,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         try {
             setIsLoading(true);
             const res = await teachingSessionApi.getSessions(m, y);
-            if (res.data?.success) {
-                const fetchedSessions = res.data.data.sessions || [];
+            const isSuccess = res?.success || res?.data?.success || res?.sessions || res?.data?.sessions;
+            if (isSuccess) {
+                const fetchedSessions = res?.data?.sessions || res?.sessions || res?.data?.data?.sessions || [];
                 // Check if any fetched sessions are PENDING but passed their time; auto-mark as COMPLETED
                 const normalizedSessions = fetchedSessions.map(s => {
                     if (s.status === 'PENDING' && isSessionPassed(s.date, s.endTime, s.startTime)) {
@@ -102,7 +103,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 });
 
                 setSessions(normalizedSessions);
-                setSummary(res.data.data.summary || null);
+                setSummary(res?.data?.summary || res?.summary || res?.data?.data?.summary || null);
 
                 // Auto-sync from weekly grid if database sessions are empty for this month
                 const monthKey = `${y}-${m}`;
@@ -498,7 +499,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 overwrite,
                 timetableItems: timetableItems.length > 0 ? timetableItems : undefined
             });
-            if (res.data?.success) {
+            if (res?.success || res?.data?.success) {
                 if (overwrite) {
                     toast?.success(`⚡ Auto-synced all schedule sessions to Month ${m}/${y}`);
                 }
@@ -507,7 +508,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         } catch (error) {
             console.error("Error auto-generating schedule:", error);
             if (overwrite) {
-                toast?.error(error.response?.data?.message || "Failed to sync schedule from Weekly Grid");
+                toast?.error(error?.response?.data?.message || error?.message || "Failed to sync schedule from Weekly Grid");
             }
         } finally {
             setIsGenerating(false);
@@ -602,12 +603,14 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     timetableItemId: session.timetableItemId || ''
                 };
                 const res = await teachingSessionApi.createSession(payload);
-                if (res.data?.success && res.data.data) {
-                    const created = res.data.data;
-                    setSessions(prev => {
-                        const filtered = prev.filter(s => s.id !== session.id);
-                        return [...filtered, { ...created, status: targetStatus, autoCompleted: false }];
-                    });
+                if (res?.success || res?.data?.success) {
+                    const created = res?.data || res?.data?.data;
+                    if (created) {
+                        setSessions(prev => {
+                            const filtered = prev.filter(s => s.id !== session.id);
+                            return [...filtered, { ...created, status: targetStatus, autoCompleted: false }];
+                        });
+                    }
                 }
             } catch (err) {
                 console.warn("Background API sync for new session status:", err);
@@ -706,7 +709,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     status: 'CANCELLED',
                     timetableItemId: session.timetableItemId || ''
                 });
-                if (res.data?.success) {
+                if (res?.success || res?.data?.success) {
                     toast?.info("Session marked as cancelled (0 VND)");
                     fetchMonthData(selectedMonth, selectedYear, false);
                 }
@@ -716,7 +719,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         } else {
             try {
                 const res = await teachingSessionApi.deleteSession(session.id);
-                if (res.data?.success) {
+                if (res?.success || res?.data?.success) {
                     toast?.success("Session deleted successfully");
                     setSessions(prev => prev.filter(s => s.id !== session.id));
                     fetchMonthData(selectedMonth, selectedYear, false);
@@ -740,22 +743,27 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         try {
             if (editingSession) {
                 const res = await teachingSessionApi.updateSession(editingSession.id, formData);
-                if (res.data?.success) {
+                if (res?.success || res?.data?.success) {
                     toast?.success("Session updated successfully");
                     setIsFormModalOpen(false);
                     setEditingSession(null);
-                    fetchMonthData(selectedMonth, selectedYear, false);
+                    await fetchMonthData(selectedMonth, selectedYear, false);
+                } else {
+                    toast?.error(res?.message || "Error updating session");
                 }
             } else {
                 const res = await teachingSessionApi.createSession(formData);
-                if (res.data?.success) {
+                if (res?.success || res?.data?.success) {
                     toast?.success("Extra session created successfully!");
                     setIsFormModalOpen(false);
-                    fetchMonthData(selectedMonth, selectedYear, false);
+                    await fetchMonthData(selectedMonth, selectedYear, false);
+                } else {
+                    toast?.error(res?.message || "Error creating session");
                 }
             }
         } catch (error) {
-            toast?.error("Error saving session");
+            console.error("Error saving session:", error);
+            toast?.error(error?.message || error?.response?.data?.message || "Error saving session");
         }
     };
 
@@ -1664,6 +1672,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 onSave={handleSaveSession}
                 sessionData={editingSession}
                 initialDate={initialModalDate}
+                initialSlot={initialModalSlot}
             />
         </div>
     );

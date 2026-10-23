@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, DollarSign, BookOpen, MapPin, FileText } from 'lucide-react';
+import { X, Calendar, Clock, DollarSign, BookOpen, MapPin, FileText, Loader2 } from 'lucide-react';
 
-export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initialDate }) => {
+export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initialDate, initialSlot }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         date: '',
         startTime: '17:00',
@@ -31,24 +32,39 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
             });
         } else {
             const todayStr = initialDate || new Date().toISOString().slice(0, 10);
+            let defaultStart = '17:00';
+            let defaultEnd = '18:30';
+            let defaultShift = 'Afternoon';
+
+            if (initialSlot) {
+                if (initialSlot.startTime) defaultStart = initialSlot.startTime;
+                if (initialSlot.endTime) defaultEnd = initialSlot.endTime;
+                if (!initialSlot.startTime && initialSlot.label) {
+                    const parts = initialSlot.label.split('–').map(s => s.trim().replace('h', ':'));
+                    if (parts[0]) defaultStart = parts[0];
+                    if (parts[1]) defaultEnd = parts[1];
+                }
+                if (initialSlot.shift) defaultShift = initialSlot.shift;
+            }
+
             setFormData({
                 date: todayStr,
-                startTime: '17:00',
-                endTime: '18:30',
+                startTime: defaultStart,
+                endTime: defaultEnd,
                 className: '',
                 grade: 10,
                 location: 'Long Thượng',
-                shift: 'Afternoon',
+                shift: defaultShift,
                 rate: 60000,
                 status: 'MAKE_UP',
                 note: ''
             });
         }
-    }, [sessionData, initialDate, isOpen]);
+    }, [sessionData, initialDate, initialSlot, isOpen]);
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.date || !formData.className || !formData.startTime || !formData.endTime) {
             alert('Please fill in all required fields');
@@ -56,12 +72,17 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
         }
 
         const timeRange = `${formData.startTime} – ${formData.endTime}`;
-        onSave({
-            ...formData,
-            timeRange,
-            rate: parseInt(formData.rate) || 60000,
-            grade: parseInt(formData.grade) || 10
-        });
+        try {
+            setIsSubmitting(true);
+            await onSave({
+                ...formData,
+                timeRange,
+                rate: parseInt(formData.rate) || 60000,
+                grade: parseInt(formData.grade) || 10
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -225,9 +246,11 @@ export const SessionFormModal = ({ isOpen, onClose, onSave, sessionData, initial
                         </button>
                         <button
                             type="submit"
-                            className="px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-xs transition-all cursor-pointer"
+                            disabled={isSubmitting}
+                            className="px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
                         >
-                            {sessionData ? 'Save Changes' : 'Create Session'}
+                            {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                            {sessionData ? (isSubmitting ? 'Saving...' : 'Save Changes') : (isSubmitting ? 'Creating...' : 'Create Session')}
                         </button>
                     </div>
                 </form>

@@ -257,8 +257,16 @@ export const createTeachingSession = async (req, res) => {
             return res.status(400).json({ success: false, message: "Vui lòng nhập đầy đủ ngày học, tên lớp, giờ bắt đầu và giờ kết thúc" });
         }
 
-        const sessionDate = new Date(date);
-        const dayIndex = sessionDate.getDay();
+        let sessionDate;
+        if (typeof date === 'string' && date.includes('T')) {
+            sessionDate = new Date(date);
+        } else if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            const [y, m, d] = date.split('-').map(Number);
+            sessionDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+        } else {
+            sessionDate = new Date(date);
+        }
+        const dayIndex = sessionDate.getUTCDay();
         const calculatedDayOfWeek = dayOfWeek || DAY_NAMES[dayIndex];
         const calculatedTimeRange = timeRange || `${startTime} – ${endTime}`;
 
@@ -286,10 +294,14 @@ export const createTeachingSession = async (req, res) => {
                 data: {
                     status: status || 'MAKE_UP',
                     className: className || existingSession.className,
-                    originalCode: originalCode || existingSession.originalCode,
-                    rate: parseInt(rate) !== undefined ? parseInt(rate) : existingSession.rate,
+                    originalCode: originalCode !== undefined ? originalCode : existingSession.originalCode,
+                    rate: Number.isFinite(parseInt(rate)) ? parseInt(rate) : existingSession.rate,
                     location: location || existingSession.location,
-                    grade: grade ? parseInt(grade) : existingSession.grade
+                    grade: grade ? parseInt(grade) : existingSession.grade,
+                    shift: shift || existingSession.shift,
+                    note: note !== undefined ? note : existingSession.note,
+                    timeRange: calculatedTimeRange,
+                    endTime: endTime || existingSession.endTime
                 }
             });
         } else {
@@ -379,15 +391,16 @@ export const updateTeachingSession = async (req, res) => {
 export const batchUpdateStatus = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { ids, status } = req.body;
+        const { ids, sessionIds, status } = req.body;
+        const targetIds = ids || sessionIds;
 
-        if (!Array.isArray(ids) || ids.length === 0 || !status) {
+        if (!Array.isArray(targetIds) || targetIds.length === 0 || !status) {
             return res.status(400).json({ success: false, message: "Dữ liệu không hợp lệ" });
         }
 
         await prisma.teachingSession.updateMany({
             where: {
-                id: { in: ids },
+                id: { in: targetIds },
                 userId
             },
             data: { status }
@@ -395,7 +408,7 @@ export const batchUpdateStatus = async (req, res) => {
 
         res.json({
             success: true,
-            message: `Đã cập nhật ${ids.length} ca dạy sang trạng thái ${status}`
+            message: `Đã cập nhật ${targetIds.length} ca dạy sang trạng thái ${status}`
         });
     } catch (error) {
         console.error("Error in batchUpdateStatus:", error);
