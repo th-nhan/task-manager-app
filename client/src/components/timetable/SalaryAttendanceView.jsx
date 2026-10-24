@@ -73,6 +73,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
     // Active status menu popup (to directly choose status without cycling multiple times)
     const [activeStatusMenuId, setActiveStatusMenuId] = useState(null);
 
+    // Day detail popup for monthly calendar view (shows all sessions when clicking "+X more")
+    const [dayDetailPopup, setDayDetailPopup] = useState(null); // { dateKey, dateLabel, sessions }
+
     // Close open status menu on outside click
     useEffect(() => {
         if (!activeStatusMenuId) return;
@@ -1542,9 +1545,19 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                             </div>
                                                         ))}
                                                         {daySessions.length > 4 && (
-                                                            <div className="text-[9px] text-gray-500 font-bold text-center">
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setDayDetailPopup({
+                                                                        dateKey: item.dateKey,
+                                                                        dateLabel: item.dateKey,
+                                                                        sessions: daySessions,
+                                                                    });
+                                                                }}
+                                                                className="w-full text-[9px] text-pink-500 font-bold text-center hover:text-pink-700 hover:bg-pink-50 rounded py-0.5 transition-colors cursor-pointer"
+                                                            >
                                                                 +{daySessions.length - 4} more
-                                                            </div>
+                                                            </button>
                                                         )}
                                                     </div>
                                                 </div>
@@ -1658,6 +1671,86 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         </div>
                     )}
                 </>
+            )}
+
+            {/* Day Detail Popup — Monthly Calendar view */}
+            {dayDetailPopup && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}
+                    onClick={() => setDayDetailPopup(null)}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100 bg-gradient-to-r from-pink-50 to-rose-50">
+                            <div>
+                                <p className="text-[10px] text-pink-400 font-bold uppercase tracking-wider">Ngày</p>
+                                <h3 className="font-black text-gray-800 text-base">{dayDetailPopup.dateKey}</h3>
+                            </div>
+                            <button
+                                onClick={() => setDayDetailPopup(null)}
+                                className="p-1.5 rounded-xl text-gray-400 hover:text-pink-600 hover:bg-pink-100 transition-colors cursor-pointer"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        {/* Session list */}
+                        <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto">
+                            {dayDetailPopup.sessions.map(s => {
+                                const statusConfig = {
+                                    COMPLETED: { bg: 'bg-pink-100', text: 'text-pink-800', border: 'border-pink-200', label: 'Đã dạy', icon: <CheckCircle2 className="w-3.5 h-3.5 text-pink-600" /> },
+                                    MAKE_UP:   { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200', label: 'Học bù', icon: <RotateCcw className="w-3.5 h-3.5 text-purple-600" /> },
+                                    CANCELLED: { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-200', label: 'Huỷ', icon: <XCircle className="w-3.5 h-3.5 text-gray-400" /> },
+                                    PENDING:   { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-200', label: 'Lịch học', icon: <Clock className="w-3.5 h-3.5 text-amber-600" /> },
+                                };
+                                const cfg = statusConfig[s.status] || statusConfig.PENDING;
+                                return (
+                                    <div
+                                        key={s.id}
+                                        onClick={() => {
+                                            handleCycleStatus(s);
+                                            // Update popup sessions list to reflect new status
+                                            setDayDetailPopup(prev => ({
+                                                ...prev,
+                                                sessions: prev.sessions.map(ps =>
+                                                    ps.id === s.id
+                                                        ? { ...ps, status: ps.status === 'PENDING' ? 'COMPLETED' : ps.status === 'COMPLETED' ? 'MAKE_UP' : ps.status === 'MAKE_UP' ? 'CANCELLED' : 'PENDING' }
+                                                        : ps
+                                                )
+                                            }));
+                                        }}
+                                        className={`flex items-center gap-3 p-3 rounded-2xl border cursor-pointer transition-all hover:scale-[1.01] hover:shadow-sm ${cfg.bg} ${cfg.border}`}
+                                    >
+                                        <div className="shrink-0">{cfg.icon}</div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className={`font-bold text-sm truncate ${cfg.text}`}>{s.originalCode || s.className}</p>
+                                            <p className="text-[11px] text-gray-500 font-mono">{s.timeRange || `${s.startTime} – ${s.endTime}`}</p>
+                                            {s.location && <p className="text-[10px] text-gray-400 truncate">{s.location}</p>}
+                                        </div>
+                                        <span className={`shrink-0 text-[9px] font-black uppercase px-2 py-0.5 rounded-full border ${cfg.bg} ${cfg.text} ${cfg.border}`}>
+                                            {cfg.label}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-5 py-3 border-t border-pink-100 bg-pink-50/50 flex items-center justify-between">
+                            <span className="text-xs text-gray-500 font-medium">{dayDetailPopup.sessions.length} lịch trong ngày</span>
+                            <button
+                                onClick={() => setDayDetailPopup(null)}
+                                className="px-4 py-1.5 rounded-xl bg-pink-500 text-white text-xs font-bold hover:bg-pink-600 transition-colors cursor-pointer"
+                            >
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Session Form Modal (Create or Edit session) */}
