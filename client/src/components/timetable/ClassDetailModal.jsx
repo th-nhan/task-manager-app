@@ -60,23 +60,23 @@ export const ClassDetailModal = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
             <div
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg max-h-[90dvh] overflow-hidden border border-pink-100 flex flex-col animate-in zoom-in-95 duration-200"
+                className="bg-[var(--bg-card)] rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg max-h-[90dvh] overflow-hidden border border-[var(--border-color)] flex flex-col animate-in zoom-in-95 duration-200"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header Banner with Grade Accent */}
-                <div className={`p-4 sm:p-6 bg-gradient-to-r ${gradeStyle.cardBg} border-b border-pink-100 flex items-start justify-between relative shrink-0`}>
+                <div className={`p-4 sm:p-6 bg-gradient-to-r ${gradeStyle.cardBg} border-b border-[var(--border-color)] flex items-start justify-between relative shrink-0`}>
                     <div className="flex items-center gap-3 min-w-0">
                         <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${gradeStyle.pillColor} text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-md shrink-0`}>
                             G{classItem.grade}
                         </div>
                         <div className="min-w-0">
-                            <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                            <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                                 {classItem.dayOfWeek} • {classItem.shift}
                             </span>
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mt-0.5 truncate">
+                            <h3 className="text-lg sm:text-xl font-bold text-[var(--text-main)] mt-0.5 truncate">
                                 {classItem.className}
                             </h3>
-                            <span className="inline-block mt-1 font-mono text-xs font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md border border-pink-200">
+                            <span className="inline-block mt-1 font-mono text-xs font-bold text-[var(--accent)] bg-[var(--accent-subtle)] px-2 py-0.5 rounded-md border border-[var(--border-color)]">
                                 Code: {classItem.originalCode}
                             </span>
                         </div>
@@ -89,7 +89,7 @@ export const ClassDetailModal = ({
                                     onClose();
                                 }}
                                 title="Edit class slot"
-                                className="text-gray-400 hover:text-pink-600 p-2 rounded-full hover:bg-white/80 transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                className="text-[var(--text-muted)] hover:text-[var(--accent)] p-2 rounded-full hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
                             >
                                 <Edit className="w-4 h-4" />
                             </button>
@@ -98,14 +98,14 @@ export const ClassDetailModal = ({
                             <button
                                 onClick={handleDelete}
                                 title="Delete class slot"
-                                className="text-gray-400 hover:text-rose-600 p-2 rounded-full hover:bg-white/80 transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                className="text-[var(--text-muted)] hover:text-rose-500 p-2 rounded-full hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
                             >
                                 <Trash2 className="w-4 h-4" />
                             </button>
                         )}
                         <button
                             onClick={onClose}
-                            className="text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-white/80 transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+                            className="text-[var(--text-muted)] hover:text-[var(--text-main)] p-2 rounded-full hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -240,7 +240,7 @@ export const ClassDetailModal = ({
                                 Session Notes / Classroom
                             </label>
                             {savedNotice && (
-                                <span className="text-xs text-rose-600 font-medium flex items-center gap-1">
+                                <span className="text-xs text-emerald-500 font-medium flex items-center gap-1">
                                     <Check className="w-3.5 h-3.5" /> Saved
                                 </span>
                             )}
@@ -249,12 +249,12 @@ export const ClassDetailModal = ({
                             value={note}
                             onChange={e => setNote(e.target.value)}
                             placeholder="E.g., Room A102, chapter 3 exercises..."
-                            className="w-full text-sm p-3 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent min-h-[75px] bg-pink-50/30 resize-none"
+                            className="w-full text-sm p-3 rounded-2xl border border-[var(--border-color)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] min-h-[75px] bg-[var(--bg-card)] text-[var(--text-main)] resize-none"
                         />
                         <div className="flex justify-end">
                             <button
                                 onClick={handleSaveNote}
-                                className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors cursor-pointer min-h-[34px]"
+                                className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--accent-subtle)] text-[var(--text-main)] hover:text-[var(--accent)] border border-[var(--border-color)] transition-colors cursor-pointer min-h-[34px]"
                             >
                                 Save Note
                             </button>
@@ -263,7 +263,7 @@ export const ClassDetailModal = ({
                 </div>
 
                 {/* Footer Actions */}
-                <div className="p-3.5 sm:p-4 bg-gray-50/80 border-t border-pink-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
+                <div className="p-3.5 sm:p-4 bg-[var(--bg-card)] border-t border-[var(--border-color)] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
                     <div className="flex items-center gap-2 justify-center sm:justify-start">
                         {onEdit && (
                             <button
@@ -271,16 +271,16 @@ export const ClassDetailModal = ({
                                     onEdit(classItem);
                                     onClose();
                                 }}
-                                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-pink-100/60 rounded-xl transition-colors cursor-pointer min-h-[38px]"
+                                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[var(--text-main)] hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] rounded-xl transition-colors cursor-pointer min-h-[38px]"
                             >
-                                <Edit className="w-3.5 h-3.5 text-pink-500" />
+                                <Edit className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 Edit
                             </button>
                         )}
                         {onDelete && (
                             <button
                                 onClick={handleDelete}
-                                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer min-h-[38px]"
+                                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-500 hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer min-h-[38px]"
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
                                 Delete
@@ -293,7 +293,7 @@ export const ClassDetailModal = ({
                                 onConvertToTask(classItem);
                                 onClose();
                             }}
-                            className="flex items-center justify-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer min-h-[40px]"
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-[var(--accent)] hover:bg-[var(--accent-hover)] rounded-xl shadow-md transition-all cursor-pointer min-h-[40px]"
                         >
                             <PlusCircle className="w-4 h-4" />
                             Create Task from Slot

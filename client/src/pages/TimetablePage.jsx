@@ -249,7 +249,7 @@ export const TimetablePage = () => {
     };
 
     return (
-        <div className="bg-pink-100 min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 overflow-x-hidden">
+        <div className="bg-[var(--bg-main)] min-h-screen min-h-[100dvh] flex flex-col gap-4 sm:gap-6 overflow-x-hidden transition-colors duration-200">
             {/* Navigation Header */}
             <DashboardHeader user={user} logout={logout} activePage="timetable" />
 
@@ -257,35 +257,35 @@ export const TimetablePage = () => {
             <main className="flex-1 flex flex-col gap-4 sm:gap-6 mx-3 sm:mx-6 md:mx-10 lg:mx-16 min-w-0">
                 {/* Live Status Banner */}
                 {(liveStatus.activeClass || liveStatus.nextClass) && (
-                    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xs border border-pink-200/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xs border border-[var(--border-color)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-center gap-3.5 min-w-0">
                             <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
                                 liveStatus.activeClass 
                                     ? 'bg-emerald-500 text-white animate-pulse' 
-                                    : 'bg-pink-100 text-pink-600'
+                                    : 'bg-[var(--accent-subtle)] text-[var(--accent)]'
                             }`}>
                                 <Radio className="w-5 h-5" />
                             </div>
                             <div className="min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-pink-600">
+                                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
                                         {liveStatus.activeClass ? '🔴 In Progress' : '⏰ Next Class'}
                                     </span>
                                     {liveStatus.activeClass ? (
-                                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/30">
                                             ~{liveStatus.activeClass.minutesRemaining}m left
                                         </span>
                                     ) : liveStatus.nextClass?.isToday ? (
-                                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/30">
                                             In {Math.floor(liveStatus.nextClass.minutesUntil / 60)}h {liveStatus.nextClass.minutesUntil % 60}m
                                         </span>
                                     ) : (
-                                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[var(--bg-subtle)] text-[var(--text-muted)] border border-[var(--border-color)]">
                                             {getDayLabelEn(liveStatus.nextClass?.dayOfWeek)}
                                         </span>
                                     )}
                                 </div>
-                                <div className="text-sm md:text-base font-bold text-gray-800 mt-0.5 truncate">
+                                <div className="text-sm md:text-base font-bold text-[var(--text-main)] mt-0.5 truncate">
                                     {liveStatus.activeClass
                                         ? `${liveStatus.activeClass.className} (${liveStatus.activeClass.timeRange})`
                                         : `${getDayLabelEn(liveStatus.nextClass.dayOfWeek)}: ${liveStatus.nextClass.className} (${liveStatus.nextClass.timeRange})`}
@@ -296,7 +296,7 @@ export const TimetablePage = () => {
                         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
                             <button
                                 onClick={() => handleOpenClassDetail(liveStatus.activeClass || liveStatus.nextClass)}
-                                className="w-full md:w-auto px-4 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-600 font-bold text-xs transition-colors cursor-pointer text-center min-h-[36px]"
+                                className="w-full md:w-auto px-4 py-2 rounded-xl bg-[var(--bg-subtle)] hover:bg-[var(--accent-subtle)] text-[var(--accent)] font-bold text-xs border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors cursor-pointer text-center min-h-[36px]"
                             >
                                 View Details
                             </button>
@@ -308,15 +308,15 @@ export const TimetablePage = () => {
                 <TimetableStatsCards timetableItems={timetableItems} />
 
                 {/* Toolbar & View Switcher */}
-                <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-xs border border-pink-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4">
+                <div className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-xs border border-[var(--border-color)] flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4">
                     {/* View Switch Buttons */}
-                    <div className="flex flex-wrap items-center gap-1.5 p-1 bg-pink-50/80 rounded-2xl border border-pink-100/80 overflow-x-auto">
+                    <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[var(--bg-subtle)] rounded-2xl border border-[var(--border-color)] overflow-x-auto">
                         <button
                             onClick={() => setViewMode('grid')}
                             className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'grid'
-                                    ? 'bg-pink-500 text-white shadow-xs'
-                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                                    ? 'bg-[var(--accent)] text-white shadow-xs'
+                                    : 'text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--bg-card)]/60'
                             }`}
                         >
                             <LayoutGrid className="w-4 h-4" />
@@ -327,8 +327,8 @@ export const TimetablePage = () => {
                             onClick={() => setViewMode('grade')}
                             className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'grade'
-                                    ? 'bg-pink-500 text-white shadow-xs'
-                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                                    ? 'bg-[var(--accent)] text-white shadow-xs'
+                                    : 'text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--bg-card)]/60'
                             }`}
                         >
                             <GraduationCap className="w-4 h-4" />
@@ -339,8 +339,8 @@ export const TimetablePage = () => {
                             onClick={() => setViewMode('salary')}
                             className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                                 viewMode === 'salary'
-                                    ? 'bg-pink-500 text-white shadow-xs'
-                                    : 'text-gray-600 hover:text-pink-600 hover:bg-white/60'
+                                    ? 'bg-[var(--accent)] text-white shadow-xs'
+                                    : 'text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--bg-card)]/60'
                             }`}
                         >
                             <DollarSign className="w-4 h-4" />
@@ -354,7 +354,7 @@ export const TimetablePage = () => {
                         <button
                             onClick={handleOpenAddModal}
                             title="Add new class session"
-                            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 text-xs md:text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer min-h-[38px]"
+                            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 text-xs md:text-sm font-bold text-white bg-[var(--accent)] hover:bg-[var(--accent-hover)] rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer min-h-[38px]"
                         >
                             <PlusCircle className="w-4 h-4" />
                             <span>Add Class Slot</span>
@@ -365,7 +365,7 @@ export const TimetablePage = () => {
                                 <select
                                     value={selectedGrade}
                                     onChange={e => setSelectedGrade(e.target.value)}
-                                    className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
+                                    className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] font-medium text-[var(--text-main)] cursor-pointer min-h-[38px]"
                                 >
                                     <option value="ALL">All Grades</option>
                                     <option value="10">Grade 10</option>
@@ -376,7 +376,7 @@ export const TimetablePage = () => {
                                 <select
                                     value={selectedLocation}
                                     onChange={e => setSelectedLocation(e.target.value)}
-                                    className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
+                                    className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] font-medium text-[var(--text-main)] cursor-pointer min-h-[38px]"
                                 >
                                     <option value="ALL">All Locations</option>
                                     <option value="Long Thượng">Long Thượng</option>
@@ -389,9 +389,9 @@ export const TimetablePage = () => {
                         <button
                             onClick={() => setIsUploadModalOpen(true)}
                             title="Upload new Excel file"
-                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer min-h-[38px]"
+                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[var(--text-main)] bg-[var(--bg-subtle)] hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] border border-[var(--border-color)] rounded-xl transition-colors cursor-pointer min-h-[38px]"
                         >
-                            <Upload className="w-3.5 h-3.5 text-pink-500" />
+                            <Upload className="w-3.5 h-3.5 text-[var(--accent)]" />
                             <span className="hidden xs:inline">Import</span>
                         </button>
 
@@ -399,7 +399,7 @@ export const TimetablePage = () => {
                         <button
                             onClick={handleExport}
                             title="Export Excel file"
-                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 rounded-xl transition-colors cursor-pointer min-h-[38px]"
+                            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[var(--accent)] bg-[var(--bg-subtle)] hover:bg-[var(--accent-subtle)] border border-[var(--border-color)] rounded-xl transition-colors cursor-pointer min-h-[38px]"
                         >
                             <Download className="w-3.5 h-3.5" />
                             <span className="hidden xs:inline">Export</span>
@@ -410,7 +410,7 @@ export const TimetablePage = () => {
                             onClick={handlePrint}
                             title="Print timetable"
                             aria-label="Print timetable"
-                            className="p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
+                            className="p-2 rounded-xl bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-color)] transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
                         >
                             <Printer className="w-4 h-4" />
                         </button>

@@ -71,7 +71,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex min-h-screen min-h-[100dvh] flex-col justify-center items-center bg-pink-100/60 p-3 sm:p-4">
+        <div className="flex min-h-screen min-h-[100dvh] flex-col justify-center items-center bg-[var(--bg-main)] p-3 sm:p-4 transition-colors duration-200">
             <div className="w-full max-w-md rounded-3xl bg-white p-5 sm:p-8 shadow-xl shadow-pink-200/30 border border-pink-100">
                 <div className="flex items-center justify-center gap-1 mb-2">
                     <span className="text-2xl sm:text-3xl font-extrabold text-gray-800">Task</span>

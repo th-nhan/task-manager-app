@@ -117,11 +117,11 @@ export const TimetableFormModal = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
             <div
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg max-h-[90dvh] overflow-hidden border border-pink-100 flex flex-col animate-in zoom-in-95 duration-200"
+                className="bg-[var(--bg-card)] rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg max-h-[90dvh] overflow-hidden border border-[var(--border-color)] flex flex-col animate-in zoom-in-95 duration-200"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-4 sm:p-6 bg-gradient-to-r from-pink-500 to-rose-500 text-white flex items-center justify-between shrink-0">
+                <div className="p-4 sm:p-6 bg-[var(--accent)] text-white flex items-center justify-between shrink-0 shadow-sm">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-white font-bold shrink-0">
                             <Calendar className="w-5 h-5" />
@@ -130,7 +130,7 @@ export const TimetableFormModal = ({
                             <h3 className="font-black text-base sm:text-lg">
                                 {isEdit ? 'Edit Class Slot' : 'Add New Class Slot'}
                             </h3>
-                            <p className="text-xs text-pink-100">
+                            <p className="text-xs text-white/80">
                                 {isEdit ? 'Update class slot in Timetable' : 'Add a new teaching session'}
                             </p>
                         </div>
@@ -144,7 +144,7 @@ export const TimetableFormModal = ({
                 </div>
 
                 {/* Form Body */}
-                <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
+                <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 bg-[var(--bg-subtle)]">
                     {error && (
                         <div className="flex items-center gap-2 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
                             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -314,17 +314,17 @@ export const TimetableFormModal = ({
                     </div>
 
                     {/* Action buttons */}
-                    <div className="pt-3 flex items-center justify-end gap-2.5 border-t border-gray-100">
+                    <div className="pt-3 flex items-center justify-end gap-2.5 border-t border-[var(--border-color)]">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer min-h-[40px]"
+                            className="px-4 py-2 text-sm font-medium text-[var(--text-muted)] hover:bg-[var(--bg-card)] hover:text-[var(--text-main)] hover:border-[var(--accent)] border border-[var(--border-color)] rounded-xl transition-colors cursor-pointer min-h-[40px]"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-md shadow-pink-200 hover:shadow-lg transition-all cursor-pointer min-h-[40px]"
+                            className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-[var(--accent)] hover:bg-[var(--accent-hover)] rounded-xl shadow-md transition-all cursor-pointer min-h-[40px]"
                         >
                             <Save className="w-4 h-4" />
                             <span>{isEdit ? 'Save Changes' : 'Add Class Slot'}</span>

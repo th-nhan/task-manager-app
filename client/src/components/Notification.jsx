@@ -99,7 +99,7 @@ export const NotificationItem = ({ notification, onRemove }) => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={isClickable ? handleClick : undefined}
-            className={`w-full max-w-sm bg-white/95 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 shadow-xl shadow-pink-200/40 border ${config.borderColor} relative overflow-hidden transition-all duration-200 flex items-start gap-3 select-none ${
+            className={`w-full max-w-sm bg-[var(--bg-card)]/95 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 shadow-xl border border-[var(--border-color)] relative overflow-hidden transition-all duration-200 flex items-start gap-3 select-none ${
                 isClickable ? 'cursor-pointer hover:shadow-2xl hover:scale-[1.02]' : ''
             } ${
                 isExiting
@@ -116,11 +116,11 @@ export const NotificationItem = ({ notification, onRemove }) => {
             {/* Content */}
             <div className="flex-1 min-w-0 pt-0.5">
                 {displayTitle && (
-                    <h5 className="text-xs sm:text-sm font-bold text-gray-800 leading-tight mb-0.5">
+                    <h5 className="text-xs sm:text-sm font-bold text-[var(--text-main)] leading-tight mb-0.5">
                         {displayTitle}
                     </h5>
                 )}
-                <p className="text-xs text-gray-600 leading-relaxed break-words font-medium">
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed break-words font-medium">
                     {message}
                 </p>
             </div>
@@ -129,7 +129,7 @@ export const NotificationItem = ({ notification, onRemove }) => {
             <button
                 type="button"
                 onClick={handleClose}
-                className="text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-lg p-1 transition-colors cursor-pointer shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center z-10"
+                className="text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-subtle)] rounded-lg p-1 transition-colors cursor-pointer shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center z-10"
                 aria-label="Close notification"
             >
                 <X className="w-4 h-4" />
@@ -137,7 +137,7 @@ export const NotificationItem = ({ notification, onRemove }) => {
 
             {/* Progress Bar */}
             {duration > 0 && (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-pink-100/60 overflow-hidden">
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10 overflow-hidden">
                     <div
                         className={`h-full w-full ${config.progressBarBg} origin-left will-change-transform`}
                         style={{
@@ -157,20 +157,20 @@ export const Alert = ({ type = 'info', title, message, onClose, className = '' }
 
     return (
         <div
-            className={`w-full p-3 sm:p-3.5 bg-pink-50/70 border ${config.borderColor} rounded-xl flex items-start gap-2.5 sm:gap-3 text-pink-500 ${className}`}
+            className={`w-full p-3 sm:p-3.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl flex items-start gap-2.5 sm:gap-3 text-[var(--text-main)] ${className}`}
         >
             <div className={`p-1 rounded-lg ${config.iconBg} shrink-0 mt-0.5`}>
                 <IconComponent className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
-                {title && <div className="text-xs font-bold text-gray-800 mb-0.5">{title}</div>}
-                <div className="text-xs text-gray-700 font-medium leading-relaxed break-words">{message}</div>
+                {title && <div className="text-xs font-bold text-[var(--text-main)] mb-0.5">{title}</div>}
+                <div className="text-xs text-[var(--text-muted)] font-medium leading-relaxed break-words">{message}</div>
             </div>
             {onClose && (
                 <button
                     type="button"
                     onClick={onClose}
-                    className="text-gray-400 hover:text-pink-600 hover:bg-pink-100 rounded-md p-1 transition-colors cursor-pointer shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center"
+                    className="text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-subtle)] rounded-md p-1 transition-colors cursor-pointer shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center"
                 >
                     <X className="w-3.5 h-3.5" />
                 </button>

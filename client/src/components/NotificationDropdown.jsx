@@ -335,14 +335,14 @@ export const NotificationDropdown = ({ user }) => {
             <button
                 type="button"
                 onClick={toggleOpen}
-                className={`relative hover:bg-pink-100 rounded-full p-2 transition-all cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center ${
-                    isOpen ? 'bg-pink-100 text-pink-600 ring-2 ring-pink-200' : 'text-gray-500'
+                className={`relative rounded-full p-2 transition-all cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-card)] ${
+                    isOpen ? 'bg-[var(--accent-subtle)] text-[var(--accent)] ring-2 ring-[var(--accent)]/40' : 'text-[var(--text-muted)]'
                 }`}
                 title="Thông báo"
                 aria-label="Thông báo"
                 aria-expanded={isOpen}
             >
-                <Bell className={`w-5 h-5 text-pink-400 transition-transform duration-200 ${isOpen ? 'scale-110' : 'hover:scale-105'}`} />
+                <Bell className={`w-5 h-5 text-[var(--accent)] transition-transform duration-200 ${isOpen ? 'scale-110' : 'hover:scale-105'}`} />
 
                 {/* Unread Badge Counter */}
                 {unreadCount > 0 && (
@@ -367,10 +367,10 @@ export const NotificationDropdown = ({ user }) => {
             {/* Notification Popover Dropdown */}
             {isOpen && (
                 <div 
-                    className="fixed inset-x-3.5 top-15 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 sm:max-w-sm bg-white rounded-2xl shadow-2xl border border-pink-100 z-50 overflow-hidden flex flex-col max-h-[calc(100dvh-80px)] sm:max-h-[560px] animate-in fade-in zoom-in-95 duration-150 origin-top"
+                    className="fixed inset-x-3.5 top-15 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 sm:max-w-sm bg-[var(--bg-card)] rounded-2xl shadow-2xl border border-[var(--border-color)] z-50 overflow-hidden flex flex-col max-h-[calc(100dvh-80px)] sm:max-h-[560px] animate-in fade-in zoom-in-95 duration-150 origin-top"
                 >
                     {/* Header */}
-                    <div className="px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-400 text-white flex items-center justify-between shadow-xs shrink-0">
+                    <div className="px-4 py-3 bg-[var(--accent)] text-white flex items-center justify-between shadow-xs shrink-0">
                         <div className="flex items-center gap-2 min-w-0">
                             <h3 className="font-extrabold text-sm sm:text-base tracking-tight truncate">Thông báo</h3>
                             {unreadCount > 0 ? (
@@ -409,14 +409,14 @@ export const NotificationDropdown = ({ user }) => {
                     </div>
 
                     {/* Filter Tabs */}
-                    <div className="flex items-center gap-1 p-1.5 bg-pink-50/50 border-b border-pink-100 text-xs font-bold text-gray-600 shrink-0">
+                    <div className="flex items-center gap-1 p-1.5 bg-[var(--bg-subtle)] border-b border-[var(--border-color)] text-xs font-bold text-[var(--text-muted)] shrink-0">
                         <button
                             type="button"
                             onClick={() => setFilter('all')}
                             className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${
                                 filter === 'all' 
-                                    ? 'bg-white text-pink-600 shadow-xs' 
-                                    : 'hover:text-pink-600 hover:bg-white/40'
+                                    ? 'bg-[var(--bg-card)] text-[var(--accent)] shadow-xs' 
+                                    : 'hover:text-[var(--accent)] hover:bg-[var(--bg-card)]/40'
                             }`}
                         >
                             Tất cả ({notifications.length})
@@ -426,8 +426,8 @@ export const NotificationDropdown = ({ user }) => {
                             onClick={() => setFilter('unread')}
                             className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${
                                 filter === 'unread' 
-                                    ? 'bg-white text-pink-600 shadow-xs' 
-                                    : 'hover:text-pink-600 hover:bg-white/40'
+                                    ? 'bg-[var(--bg-card)] text-[var(--accent)] shadow-xs' 
+                                    : 'hover:text-[var(--accent)] hover:bg-[var(--bg-card)]/40'
                             }`}
                         >
                             Chưa đọc ({unreadCount})
@@ -437,8 +437,8 @@ export const NotificationDropdown = ({ user }) => {
                             onClick={() => setFilter('reminders')}
                             className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${
                                 filter === 'reminders' 
-                                    ? 'bg-white text-pink-600 shadow-xs' 
-                                    : 'hover:text-pink-600 hover:bg-white/40'
+                                    ? 'bg-[var(--bg-card)] text-[var(--accent)] shadow-xs' 
+                                    : 'hover:text-[var(--accent)] hover:bg-[var(--bg-card)]/40'
                             }`}
                         >
                             Nhắc việc

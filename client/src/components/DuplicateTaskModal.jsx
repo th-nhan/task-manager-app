@@ -220,11 +220,11 @@ export const DuplicateTaskModal = ({
             onClick={onClose}
         >
             <div
-                className="w-full max-w-[95vw] sm:max-w-lg relative max-h-[92dvh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-white border border-pink-200 animate-in zoom-in-95 duration-200"
+                className="w-full max-w-[95vw] sm:max-w-lg relative max-h-[92dvh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-[var(--bg-card)] border border-[var(--border-color)] animate-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Modal Header */}
-                <div className="bg-pink-500 py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0 shadow-sm">
+                <div className="bg-[var(--accent)] py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0 shadow-sm">
                     <div className="flex items-center gap-2.5">
                         <div className="p-2 rounded-xl bg-white/20 backdrop-blur-xs shadow-inner">
                             <Copy className="w-5 h-5 text-white" />
@@ -233,7 +233,7 @@ export const DuplicateTaskModal = ({
                             <h2 className="text-lg sm:text-xl font-bold leading-tight">
                                 Duplicate Task
                             </h2>
-                            <p className="text-xs text-pink-100 mt-0.5">
+                            <p className="text-xs text-white/80 mt-0.5">
                                 Keep task details & original time, choose a new date
                             </p>
                         </div>
@@ -248,7 +248,7 @@ export const DuplicateTaskModal = ({
                 </div>
 
                 {/* Modal Body */}
-                <div className="p-4 sm:p-6 bg-pink-50/30 overflow-y-auto flex-1 space-y-4">
+                <div className="p-4 sm:p-6 bg-[var(--bg-subtle)] overflow-y-auto flex-1 space-y-4">
                     {error && (
                         <Alert
                             type="error"
@@ -258,10 +258,10 @@ export const DuplicateTaskModal = ({
                     )}
 
                     {/* Original Task Summary Card */}
-                    <div className="p-3.5 rounded-2xl bg-white border border-pink-100 shadow-xs space-y-2">
+                    <div className="p-3.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xs space-y-2">
                         <div className="flex items-center justify-between gap-2 text-xs">
-                            <span className="text-pink-600 font-semibold uppercase tracking-wider flex items-center gap-1">
-                                <Sparkles className="w-3.5 h-3.5 text-pink-500" />
+                            <span className="text-[var(--accent)] font-semibold uppercase tracking-wider flex items-center gap-1">
+                                <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 Copied Properties
                             </span>
                             <div className="flex items-center gap-1.5">
@@ -275,7 +275,7 @@ export const DuplicateTaskModal = ({
                         </div>
 
                         {task.description && (
-                            <p className="text-xs text-gray-500 italic line-clamp-2 bg-pink-50/50 p-2 rounded-xl border border-pink-100/70">
+                            <p className="text-xs text-[var(--text-muted)] italic line-clamp-2 bg-[var(--bg-subtle)] p-2 rounded-xl border border-[var(--border-color)]">
                                 "{task.description}"
                             </p>
                         )}
@@ -351,12 +351,12 @@ export const DuplicateTaskModal = ({
                                         id="dup-startDate"
                                         value={startDate}
                                         onChange={handleStartDateChange}
-                                        className="w-full border border-pink-200 rounded-xl pl-3 pr-9 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 bg-white text-gray-800 text-xs sm:text-sm"
+                                        className="w-full border border-[var(--border-color)] rounded-xl pl-3 pr-9 py-2.5 outline-none focus:ring-2 focus:ring-[var(--accent)] bg-[var(--bg-card)] text-[var(--text-main)] text-xs sm:text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => startDateInputRef.current?.showPicker?.()}
-                                        className="absolute right-2.5 text-pink-400 hover:text-pink-600 cursor-pointer p-1"
+                                        className="absolute right-2.5 text-[var(--accent)] hover:opacity-80 cursor-pointer p-1"
                                         title="Select start date & time"
                                     >
                                         <Clock className="w-4 h-4" />
@@ -365,7 +365,7 @@ export const DuplicateTaskModal = ({
                             </div>
 
                             <div>
-                                <label htmlFor="dup-dueDate" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                <label htmlFor="dup-dueDate" className="block text-xs sm:text-sm font-bold text-[var(--text-main)] mb-1.5">
                                     Due Date & Time
                                 </label>
                                 <div className="relative flex items-center">
@@ -376,12 +376,12 @@ export const DuplicateTaskModal = ({
                                         min={startDate || undefined}
                                         value={dueDate}
                                         onChange={handleDueDateChange}
-                                        className="w-full border border-pink-200 rounded-xl pl-3 pr-9 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 bg-white text-gray-800 text-xs sm:text-sm"
+                                        className="w-full border border-[var(--border-color)] rounded-xl pl-3 pr-9 py-2.5 outline-none focus:ring-2 focus:ring-[var(--accent)] bg-[var(--bg-card)] text-[var(--text-main)] text-xs sm:text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => dueDateInputRef.current?.showPicker?.()}
-                                        className="absolute right-2.5 text-pink-400 hover:text-pink-600 cursor-pointer p-1"
+                                        className="absolute right-2.5 text-[var(--accent)] hover:opacity-80 cursor-pointer p-1"
                                         title="Select due date & time"
                                     >
                                         <Calendar className="w-4 h-4" />
@@ -392,7 +392,7 @@ export const DuplicateTaskModal = ({
 
                         {/* Status for New Duplicated Task */}
                         <div>
-                            <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                            <label className="block text-xs sm:text-sm font-bold text-[var(--text-main)] mb-1.5">
                                 Status
                             </label>
                             <div className="grid grid-cols-3 gap-2">
@@ -407,8 +407,8 @@ export const DuplicateTaskModal = ({
                                         onClick={() => setStatus(opt.value)}
                                         className={`py-2 px-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer text-center ${
                                             status === opt.value
-                                                ? 'bg-pink-500 text-white border-pink-500 shadow-sm shadow-pink-200 hover:bg-pink-600'
-                                                : 'bg-white text-gray-600 border-pink-200 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'
+                                                ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-sm'
+                                                : 'bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-color)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
                                         }`}
                                     >
                                         {opt.label}
@@ -418,18 +418,18 @@ export const DuplicateTaskModal = ({
                         </div>
 
                         {/* Action buttons */}
-                        <div className="flex items-center justify-end gap-3 pt-3 border-t border-pink-100">
+                        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-color)]">
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2.5 border border-pink-200 text-gray-600 rounded-xl hover:bg-pink-50 hover:text-pink-600 cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
+                                className="px-4 py-2.5 border border-[var(--border-color)] text-[var(--text-muted)] rounded-xl hover:bg-[var(--bg-card)] hover:text-[var(--text-main)] hover:border-[var(--accent)] cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="px-5 py-2.5 bg-pink-500 hover:bg-pink-600 active:bg-pink-700 text-white rounded-xl cursor-pointer transition-colors shadow-md shadow-pink-200 disabled:opacity-50 font-bold text-sm min-h-[42px] flex items-center justify-center gap-1.5"
+                                className="px-5 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl cursor-pointer transition-colors shadow-md disabled:opacity-50 font-bold text-sm min-h-[42px] flex items-center justify-center gap-1.5"
                             >
                                 <Copy className="w-4 h-4" />
                                 <span>{loading ? 'Duplicating...' : 'Duplicate Task'}</span>

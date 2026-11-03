@@ -1,5 +1,69 @@
 @import "tailwindcss";
 
+/* ==========================================
+   1. PINK THEME (Mặc định - Tươi sáng, nữ tính)
+   ========================================== */
+:root, :root.pink {
+    --bg-main: #FFF5F7;
+    --bg-card: #FFFFFF;
+    --bg-subtle: #FDF2F8;
+    --text-main: #1F2937;
+    --text-muted: #4B5563;
+    --accent: #EC4899;       /* Hồng chủ đạo */
+    --accent-hover: #DB2777;
+    --accent-subtle: #FCE7F3;
+    --border-color: #FED7E2;
+    --border-input: #F472B6;
+}
+
+/* ==========================================
+   2. GREEN / GITHUB DARK THEME (Coder Style)
+   ========================================== */
+:root.green {
+    --bg-main: #0D1117;
+    --bg-card: #161B22;
+    --bg-subtle: #21262D;
+    --text-main: #F0F6FC;    /* Rất sáng, rõ nét */
+    --text-muted: #C9D1D9;   /* Sáng rõ, không bị chìm */
+    --accent: #2EA043;       /* Xanh lá GitHub */
+    --accent-hover: #3FB950;
+    --accent-subtle: rgba(46, 160, 67, 0.22);
+    --border-color: #30363D;
+    --border-input: #484F58; /* Viền ô input rõ ràng, không trùng màu nền */
+}
+
+/* ==========================================
+   3. DARK THEME (Tối cổ điển, xanh đen dịu mắt)
+   ========================================== */
+:root.dark {
+    --bg-main: #111A24;
+    --bg-card: #1B2634;
+    --bg-subtle: #243346;
+    --text-main: #FFFFFF;    /* Trắng tinh, chữ nổi bật */
+    --text-muted: #CBD5E1;   /* Slate-300: sáng rõ ràng, hoàn toàn không bị chìm */
+    --accent: #38BDF8;       /* Xanh dương tươi sáng làm điểm nhấn sắc nét */
+    --accent-hover: #0EA5E9;
+    --accent-subtle: rgba(56, 189, 248, 0.22);
+    --border-color: #33465C;
+    --border-input: #5A7799; /* Viền ô input tương phản cao, nổi bật rõ trên nền modal/card */
+}
+
+/* ==========================================
+   4. PURPLE THEME (Sang trọng, huyền ảo)
+   ========================================== */
+:root.purple {
+    --bg-main: #FAF5FF;
+    --bg-card: #FFFFFF;
+    --bg-subtle: #F3E8FF;
+    --text-main: #1E1B4B;    /* Tím than đậm, độ tương phản cao */
+    --text-muted: #4B5563;
+    --accent: #7C3AED;       /* Tím chủ đạo rực rỡ */
+    --accent-hover: #6D28D9;
+    --accent-subtle: #EDE9FE;
+    --border-color: #E9D5FF;
+    --border-input: #C084FC;
+}
+
 @layer base {
     html {
         -webkit-tap-highlight-color: transparent;
@@ -12,7 +76,391 @@
         width: 100%;
         min-height: 100vh;
         min-height: 100dvh;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        transition: background-color 0.25s ease, color 0.25s ease;
     }
+}
+
+:root.green, :root.dark {
+    color-scheme: dark;
+}
+
+:root.pink, :root.purple {
+    color-scheme: light;
+}
+
+/* Theme utility classes */
+.bg-theme-main { background-color: var(--bg-main) !important; }
+.bg-theme-card { background-color: var(--bg-card) !important; }
+.bg-theme-subtle { background-color: var(--bg-subtle) !important; }
+.text-theme-main { color: var(--text-main) !important; }
+.text-theme-muted { color: var(--text-muted) !important; }
+.border-theme { border-color: var(--border-color) !important; }
+.text-theme-accent { color: var(--accent) !important; }
+.bg-theme-accent { background-color: var(--accent) !important; }
+.bg-theme-accent-hover:hover { background-color: var(--accent-hover) !important; }
+
+/* Multi-theme automatic adaptations for dark and green themes */
+:root.dark .bg-pink-100,
+:root.green .bg-pink-100,
+:root.purple .bg-pink-100 {
+    background-color: var(--bg-main) !important;
+}
+
+:root.dark .bg-white,
+:root.green .bg-white {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+}
+
+:root.dark .bg-white\/95,
+:root.green .bg-white\/95 {
+    background-color: var(--bg-card) !important;
+}
+
+/* Subtle backgrounds across themes */
+:root.dark [class*="bg-pink-50"],
+:root.green [class*="bg-pink-50"] {
+    background-color: var(--bg-subtle) !important;
+}
+
+:root.purple [class*="bg-pink-50"] {
+    background-color: #F5EEFD !important;
+}
+
+:root.dark [class*="bg-pink-100"],
+:root.dark [class*="bg-pink-200"],
+:root.green [class*="bg-pink-100"],
+:root.green [class*="bg-pink-200"],
+:root.purple [class*="bg-pink-100"],
+:root.purple [class*="bg-pink-200"] {
+    background-color: var(--accent-subtle) !important;
+    color: var(--accent) !important;
+}
+
+/* High-contrast text for dark and green themes so text is never drowned out */
+:root.dark .text-gray-900,
+:root.dark .text-gray-800,
+:root.dark .text-gray-700,
+:root.green .text-gray-900,
+:root.green .text-gray-800,
+:root.green .text-gray-700 {
+    color: var(--text-main) !important;
+}
+
+:root.dark .text-gray-600,
+:root.dark .text-gray-500,
+:root.green .text-gray-600,
+:root.green .text-gray-500 {
+    color: var(--text-muted) !important;
+}
+
+:root.dark .text-gray-400,
+:root.green .text-gray-400 {
+    color: #94A3B8 !important;
+}
+
+/* Border overrides across themes */
+:root.dark [class*="border-pink-"],
+:root.dark [class*="border-gray-100"],
+:root.dark [class*="border-gray-200"],
+:root.dark [class*="divide-pink-"],
+:root.green [class*="border-pink-"],
+:root.green [class*="border-gray-100"],
+:root.green [class*="border-gray-200"],
+:root.green [class*="divide-pink-"],
+:root.purple [class*="border-pink-"],
+:root.purple [class*="divide-pink-"] {
+    border-color: var(--border-color) !important;
+}
+
+/* ========================================================
+   MODALS, POPUPS & INPUT BORDERS
+   ======================================================== */
+:root.dark [role="dialog"],
+:root.green [role="dialog"],
+:root.dark .shadow-2xl.bg-white,
+:root.green .shadow-2xl.bg-white,
+:root.dark .shadow-xl.bg-white,
+:root.green .shadow-xl.bg-white {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-main) !important;
+}
+
+:root.purple .shadow-2xl.bg-white,
+:root.purple .shadow-xl.bg-white {
+    border-color: var(--border-color) !important;
+}
+
+/* Input borders: distinctly visible, crisp contrast on modals and cards */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    border-color: var(--border-input) !important;
+}
+
+:root.dark input:not([type="checkbox"]):not([type="radio"]),
+:root.dark select,
+:root.dark textarea {
+    background-color: #141D27 !important;
+    color: #FFFFFF !important;
+    border: 1.5px solid var(--border-input) !important;
+}
+
+:root.dark input:focus,
+:root.dark select:focus,
+:root.dark textarea:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35) !important;
+}
+
+:root.green input:not([type="checkbox"]):not([type="radio"]),
+:root.green select,
+:root.green textarea {
+    background-color: #0D1117 !important;
+    color: #F0F6FC !important;
+    border: 1.5px solid var(--border-input) !important;
+}
+
+:root.green input:focus,
+:root.green select:focus,
+:root.green textarea:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(46, 160, 67, 0.35) !important;
+}
+
+:root.purple input:not([type="checkbox"]):not([type="radio"]),
+:root.purple select,
+:root.purple textarea {
+    background-color: #FFFFFF !important;
+    color: #1E1B4B !important;
+    border: 1.5px solid var(--border-input) !important;
+}
+
+:root.purple input:focus,
+:root.purple select:focus,
+:root.purple textarea:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3) !important;
+}
+
+:root.dark input::placeholder,
+:root.green input::placeholder,
+:root.dark textarea::placeholder,
+:root.green textarea::placeholder {
+    color: #94A3B8 !important;
+}
+
+/* Modal header gradients */
+:root.green [class*="from-pink-"],
+:root.green [class*="to-rose-"] {
+    background-image: none !important;
+    background-color: var(--accent) !important;
+    color: #FFFFFF !important;
+}
+
+:root.dark [class*="from-pink-"],
+:root.dark [class*="to-rose-"] {
+    background-image: none !important;
+    background-color: var(--accent) !important;
+    color: #FFFFFF !important;
+}
+
+:root.purple [class*="from-pink-"],
+:root.purple [class*="to-rose-"] {
+    background-image: none !important;
+    background-color: var(--accent) !important;
+    color: #FFFFFF !important;
+}
+
+/* ========================================================
+   PRIMARY ACCENT BUTTONS & TEXT BY THEME
+   ======================================================== */
+:root.green .bg-pink-500,
+:root.green .bg-pink-600 {
+    background-color: var(--accent) !important;
+}
+:root.green .hover\:bg-pink-600:hover,
+:root.green .hover\:bg-pink-700:hover {
+    background-color: var(--accent-hover) !important;
+}
+:root.green [class*="text-pink-"] {
+    color: var(--accent) !important;
+}
+
+:root.dark .bg-pink-500,
+:root.dark .bg-pink-600 {
+    background-color: var(--accent) !important;
+}
+:root.dark .hover\:bg-pink-600:hover,
+:root.dark .hover\:bg-pink-700:hover {
+    background-color: var(--accent-hover) !important;
+}
+:root.dark [class*="text-pink-"] {
+    color: var(--accent) !important;
+}
+
+:root.purple .bg-pink-500,
+:root.purple .bg-pink-600 {
+    background-color: var(--accent) !important;
+}
+:root.purple .hover\:bg-pink-600:hover,
+:root.purple .hover\:bg-pink-700:hover {
+    background-color: var(--accent-hover) !important;
+}
+:root.purple [class*="text-pink-"] {
+    color: var(--accent) !important;
+}
+
+/* ========================================================
+   OUTLINE BUTTONS & TEXT HOVER ADAPTATIONS BY THEME
+   (Fixed: covers escaped class selectors so timetable & all components adapt cleanly)
+   ======================================================== */
+
+/* --- GREEN THEME --- */
+:root.green .hover\:text-pink-400:hover,
+:root.green .hover\:text-pink-500:hover,
+:root.green .hover\:text-pink-600:hover,
+:root.green .hover\:text-pink-700:hover,
+:root.green .group:hover .group-hover\:text-pink-600,
+:root.green [class*="hover:text-pink-"]:hover,
+:root.green [class*="group-hover:text-pink-"] {
+    color: var(--accent) !important;
+}
+
+:root.green .hover\:border-pink-100:hover,
+:root.green .hover\:border-pink-200:hover,
+:root.green .hover\:border-pink-300:hover,
+:root.green .hover\:border-pink-400:hover,
+:root.green .hover\:border-pink-500:hover,
+:root.green .hover\:border-gray-100:hover,
+:root.green .hover\:border-gray-200:hover,
+:root.green .hover\:border-gray-300:hover,
+:root.green [class*="hover:border-pink-"]:hover {
+    border-color: var(--accent) !important;
+}
+
+:root.green .hover\:bg-pink-50:hover,
+:root.green .hover\:bg-pink-100:hover,
+:root.green .hover\:bg-pink-200:hover,
+:root.green .hover\:bg-pink-50\/20:hover,
+:root.green .hover\:bg-pink-50\/40:hover,
+:root.green .hover\:bg-pink-100\/50:hover,
+:root.green .hover\:bg-pink-100\/60:hover,
+:root.green [class*="hover:bg-pink-"]:hover {
+    background-color: var(--accent-subtle) !important;
+    color: var(--accent) !important;
+}
+
+:root.green .focus\:ring-pink-200:focus,
+:root.green .focus\:ring-pink-300:focus,
+:root.green .focus\:ring-pink-400:focus,
+:root.green .focus\:border-pink-300:focus,
+:root.green .focus\:border-pink-400:focus,
+:root.green [class*="focus:ring-pink-"]:focus,
+:root.green [class*="focus:border-pink-"]:focus {
+    border-color: var(--accent) !important;
+    outline-color: var(--accent) !important;
+    --tw-ring-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px var(--accent) !important;
+}
+
+/* --- DARK THEME --- */
+:root.dark .hover\:text-pink-400:hover,
+:root.dark .hover\:text-pink-500:hover,
+:root.dark .hover\:text-pink-600:hover,
+:root.dark .hover\:text-pink-700:hover,
+:root.dark .group:hover .group-hover\:text-pink-600,
+:root.dark [class*="hover:text-pink-"]:hover,
+:root.dark [class*="group-hover:text-pink-"] {
+    color: var(--accent) !important;
+}
+
+:root.dark .hover\:border-pink-100:hover,
+:root.dark .hover\:border-pink-200:hover,
+:root.dark .hover\:border-pink-300:hover,
+:root.dark .hover\:border-pink-400:hover,
+:root.dark .hover\:border-pink-500:hover,
+:root.dark .hover\:border-gray-100:hover,
+:root.dark .hover\:border-gray-200:hover,
+:root.dark .hover\:border-gray-300:hover,
+:root.dark [class*="hover:border-pink-"]:hover {
+    border-color: var(--accent) !important;
+}
+
+:root.dark .hover\:bg-pink-50:hover,
+:root.dark .hover\:bg-pink-100:hover,
+:root.dark .hover\:bg-pink-200:hover,
+:root.dark .hover\:bg-pink-50\/20:hover,
+:root.dark .hover\:bg-pink-50\/40:hover,
+:root.dark .hover\:bg-pink-100\/50:hover,
+:root.dark .hover\:bg-pink-100\/60:hover,
+:root.dark [class*="hover:bg-pink-"]:hover {
+    background-color: var(--accent-subtle) !important;
+    color: var(--accent) !important;
+}
+
+:root.dark .focus\:ring-pink-200:focus,
+:root.dark .focus\:ring-pink-300:focus,
+:root.dark .focus\:ring-pink-400:focus,
+:root.dark .focus\:border-pink-300:focus,
+:root.dark .focus\:border-pink-400:focus,
+:root.dark [class*="focus:ring-pink-"]:focus,
+:root.dark [class*="focus:border-pink-"]:focus {
+    border-color: var(--accent) !important;
+    outline-color: var(--accent) !important;
+    --tw-ring-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px var(--accent) !important;
+}
+
+/* --- PURPLE THEME --- */
+:root.purple .hover\:text-pink-400:hover,
+:root.purple .hover\:text-pink-500:hover,
+:root.purple .hover\:text-pink-600:hover,
+:root.purple .hover\:text-pink-700:hover,
+:root.purple .group:hover .group-hover\:text-pink-600,
+:root.purple [class*="hover:text-pink-"]:hover,
+:root.purple [class*="group-hover:text-pink-"] {
+    color: var(--accent) !important;
+}
+
+:root.purple .hover\:border-pink-100:hover,
+:root.purple .hover\:border-pink-200:hover,
+:root.purple .hover\:border-pink-300:hover,
+:root.purple .hover\:border-pink-400:hover,
+:root.purple .hover\:border-pink-500:hover,
+:root.purple .hover\:border-gray-100:hover,
+:root.purple .hover\:border-gray-200:hover,
+:root.purple .hover\:border-gray-300:hover,
+:root.purple [class*="hover:border-pink-"]:hover {
+    border-color: var(--accent) !important;
+}
+
+:root.purple .hover\:bg-pink-50:hover,
+:root.purple .hover\:bg-pink-100:hover,
+:root.purple .hover\:bg-pink-200:hover,
+:root.purple .hover\:bg-pink-50\/20:hover,
+:root.purple .hover\:bg-pink-50\/40:hover,
+:root.purple .hover\:bg-pink-100\/50:hover,
+:root.purple .hover\:bg-pink-100\/60:hover,
+:root.purple [class*="hover:bg-pink-"]:hover {
+    background-color: var(--accent-subtle) !important;
+    color: var(--accent) !important;
+}
+
+:root.purple .focus\:ring-pink-200:focus,
+:root.purple .focus\:ring-pink-300:focus,
+:root.purple .focus\:ring-pink-400:focus,
+:root.purple .focus\:border-pink-300:focus,
+:root.purple .focus\:border-pink-400:focus,
+:root.purple [class*="focus:ring-pink-"]:focus,
+:root.purple [class*="focus:border-pink-"]:focus {
+    border-color: var(--accent) !important;
+    outline-color: var(--accent) !important;
+    --tw-ring-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px var(--accent) !important;
 }
 
 @keyframes progressShrink {
@@ -35,12 +483,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #fbcfe8;
+    background: var(--border-color);
     border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #f472b6;
+    background: var(--accent);
 }
 
 /* Hide scrollbar utility for clean horizontal swipe on mobile */

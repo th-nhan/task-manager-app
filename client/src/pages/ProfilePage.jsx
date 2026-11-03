@@ -372,7 +372,7 @@ export const ProfilePage = () => {
         : 'Recently';
 
     return (
-        <div className="min-h-screen bg-linear-to-b from-pink-50/50 via-white to-pink-50/30 flex flex-col font-sans">
+        <div className="min-h-screen bg-[var(--bg-main)] flex flex-col font-sans transition-colors duration-200">
             {/* Hidden global file input for avatar uploading */}
             <input
                 type="file"

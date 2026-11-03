@@ -139,11 +139,11 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
             onClick={onClose}
         >
             <div 
-                className="w-full max-w-[95vw] sm:max-w-xl relative max-h-[90dvh] sm:max-h-[90vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-white border border-pink-100 animate-in fade-in zoom-in-95 duration-200"
+                className="w-full max-w-[95vw] sm:max-w-xl relative max-h-[90dvh] sm:max-h-[90vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-[var(--bg-card)] border border-[var(--border-color)] animate-in fade-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Modal Header */}
-                <div className="bg-gradient-to-r from-pink-400 to-rose-400 py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0">
+                <div className="bg-[var(--accent)] py-4 sm:py-5 px-4 sm:px-6 relative flex items-center justify-between text-white shrink-0 shadow-sm">
                     <h2 className="text-xl sm:text-2xl font-bold">
                         {isEditMode ? 'Task Details' : 'Create Task'}
                     </h2>
@@ -157,7 +157,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                 </div>
 
                 {/* Modal Body */}
-                <div className="p-4 sm:p-6 bg-pink-50/40 text-pink-500 overflow-y-auto flex-1">
+                <div className="p-4 sm:p-6 bg-[var(--bg-subtle)] text-[var(--text-main)] overflow-y-auto flex-1">
                     {error && (
                         <Alert
                             type="error"
@@ -168,7 +168,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                     )}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label htmlFor="title" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                            <label htmlFor="title" className="block text-xs sm:text-sm font-bold text-[var(--text-main)] mb-1.5">
                                 Title <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -179,14 +179,14 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                 placeholder="Enter task title..."
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
+                                className="w-full border border-[var(--border-color)] rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-[var(--accent)] bg-[var(--bg-card)] text-[var(--text-main)] text-sm"
                             />
                         </div>
 
                         {/* Start Date & Time + Due Date (1 col on mobile, 2 cols on tablet/desktop) */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div className="w-full">
-                                <label htmlFor="startDate" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                <label htmlFor="startDate" className="block text-xs sm:text-sm font-bold text-[var(--text-main)] mb-1.5">
                                     Start Date & Time
                                 </label>
                                 <div className="relative flex items-center">
@@ -197,12 +197,12 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         name="startDate"
                                         value={formData.startDate}
                                         onChange={handleStartDateChange}
-                                        className="w-full border border-gray-200 rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
+                                        className="w-full border border-[var(--border-color)] rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:ring-2 focus:ring-[var(--accent)] bg-[var(--bg-card)] text-[var(--text-main)] text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => startDateInputRef.current?.showPicker?.()}
-                                        className="absolute right-3 text-pink-400 hover:text-pink-600 cursor-pointer p-1"
+                                        className="absolute right-3 text-[var(--accent)] hover:opacity-80 cursor-pointer p-1"
                                         title="Select start date & time"
                                         aria-label="Select start date & time"
                                     >
@@ -212,7 +212,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                             </div>
 
                             <div className="w-full">
-                                <label htmlFor="dueDate" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                <label htmlFor="dueDate" className="block text-xs sm:text-sm font-bold text-[var(--text-main)] mb-1.5">
                                     Due Date & Time
                                 </label>
                                 <div className="relative flex items-center">
@@ -224,12 +224,12 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                         min={formData.startDate || undefined}
                                         value={formData.dueDate}
                                         onChange={handleDueDateChange}
-                                        className="w-full border border-gray-200 rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
+                                        className="w-full border border-[var(--border-color)] rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:ring-2 focus:ring-[var(--accent)] bg-[var(--bg-card)] text-[var(--text-main)] text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => dueDateInputRef.current?.showPicker?.()}
-                                        className="absolute right-3 text-pink-400 hover:text-pink-600 cursor-pointer p-1"
+                                        className="absolute right-3 text-[var(--accent)] hover:opacity-80 cursor-pointer p-1"
                                         title="Select due date & time"
                                         aria-label="Select due date & time"
                                     >
@@ -267,7 +267,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
 
                         {/* Description */}
                         <div>
-                            <label htmlFor="description" className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                            <label htmlFor="description" className="block text-xs sm:text-sm font-bold text-[var(--text-main)] mb-1.5">
                                 Description
                             </label>
                             <textarea
@@ -276,18 +276,18 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                 placeholder="Enter task description..."
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 resize-none h-24 outline-none focus:ring-2 focus:ring-pink-300 bg-white text-gray-800 text-sm"
+                                className="w-full border border-[var(--border-color)] rounded-xl px-3.5 py-2.5 resize-none h-24 outline-none focus:ring-2 focus:ring-[var(--accent)] bg-[var(--bg-card)] text-[var(--text-main)] text-sm"
                             ></textarea>
                         </div>
 
                         {/* Form Action Buttons */}
-                        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-gray-200/60">
+                        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-[var(--border-color)]">
                             <div className="flex flex-wrap items-center gap-2">
                                 {isEditMode && onDelete && (
                                     <button
                                         type="button"
                                         onClick={() => onDelete(task.id)}
-                                        className="w-full sm:w-auto px-3.5 py-2 text-red-600 hover:bg-red-50 border border-red-200 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold min-h-[40px]"
+                                        className="w-full sm:w-auto px-3.5 py-2 text-rose-500 hover:bg-rose-500/10 border border-rose-300 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold min-h-[40px]"
                                         title="Delete this task"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -301,7 +301,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                             onClose();
                                             onDuplicate(task);
                                         }}
-                                        className="w-full sm:w-auto px-3.5 py-2 text-pink-600 hover:bg-pink-50 border border-pink-200 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold min-h-[40px]"
+                                        className="w-full sm:w-auto px-3.5 py-2 text-[var(--accent)] hover:bg-[var(--accent-subtle)] border border-[var(--border-color)] hover:border-[var(--accent)] rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold min-h-[40px]"
                                         title="Duplicate this task (Sao chép)"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -313,14 +313,14 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit, defaultDate, task = null, 
                                 <button 
                                     type="button" 
                                     onClick={onClose} 
-                                    className="flex-1 sm:flex-none px-4 py-2.5 border border-pink-200 text-gray-600 rounded-xl hover:bg-pink-100/60 cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
+                                    className="flex-1 sm:flex-none px-4 py-2.5 border border-[var(--border-color)] text-[var(--text-muted)] rounded-xl hover:bg-[var(--bg-card)] hover:text-[var(--text-main)] hover:border-[var(--accent)] cursor-pointer transition-colors text-sm font-medium min-h-[42px]"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     type="submit" 
                                     disabled={loading} 
-                                    className="flex-1 sm:flex-none px-5 py-2.5 bg-pink-500 text-white rounded-xl hover:bg-pink-600 cursor-pointer transition-colors shadow-md shadow-pink-200 disabled:opacity-50 font-bold text-sm min-h-[42px]"
+                                    className="flex-1 sm:flex-none px-5 py-2.5 bg-[var(--accent)] text-white rounded-xl hover:bg-[var(--accent-hover)] cursor-pointer transition-colors shadow-md disabled:opacity-50 font-bold text-sm min-h-[42px]"
                                 >
                                     {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Task' : 'Create Task')}
                                 </button>

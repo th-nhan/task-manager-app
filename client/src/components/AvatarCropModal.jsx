@@ -342,18 +342,18 @@ export const AvatarCropModal = ({
             />
 
             {/* Modal Dialog */}
-            <div className="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-pink-100 z-10 animate-in zoom-in-95 duration-200 max-h-[96dvh] overflow-y-auto no-scrollbar flex flex-col gap-4">
+            <div className="relative w-full max-w-lg bg-[var(--bg-card)] rounded-3xl p-5 sm:p-6 shadow-2xl border border-[var(--border-color)] z-10 animate-in zoom-in-95 duration-200 max-h-[96dvh] overflow-y-auto no-scrollbar flex flex-col gap-4">
                 {/* Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-pink-100">
+                <div className="flex items-center justify-between pb-3 border-b border-[var(--border-color)]">
                     <div className="flex items-center gap-2">
-                        <div className="p-2 bg-pink-100/70 text-pink-600 rounded-2xl">
+                        <div className="p-2 bg-[var(--accent-subtle)] text-[var(--accent)] rounded-2xl">
                             <Sparkles className="w-4 h-4" />
                         </div>
                         <div>
-                            <h3 className="text-base sm:text-lg font-black text-gray-800">
+                            <h3 className="text-base sm:text-lg font-black text-[var(--text-main)]">
                                 Crop & Adjust Avatar
                             </h3>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-[var(--text-muted)]">
                                 Rotate, zoom, and reposition for the perfect profile picture
                             </p>
                         </div>
@@ -362,7 +362,7 @@ export const AvatarCropModal = ({
                         type="button"
                         onClick={onClose}
                         disabled={isSaving}
-                        className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center disabled:opacity-50"
+                        className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-subtle)] rounded-xl transition-colors cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center disabled:opacity-50"
                         aria-label="Close modal"
                     >
                         <X className="w-5 h-5" />
@@ -419,14 +419,14 @@ export const AvatarCropModal = ({
 
                     {/* Shape Switcher & Mini Live Preview */}
                     <div className="flex items-center justify-between w-full max-w-[320px] mt-2.5 px-1">
-                        <div className="flex items-center gap-1 bg-pink-50/70 p-0.5 rounded-xl border border-pink-100">
+                        <div className="flex items-center gap-1 bg-[var(--bg-subtle)] p-0.5 rounded-xl border border-[var(--border-color)]">
                             <button
                                 type="button"
                                 onClick={() => setCropShape('circle')}
-                                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                                     cropShape === 'circle'
-                                        ? 'bg-pink-500 text-white shadow-xs'
-                                        : 'text-gray-600 hover:text-pink-600'
+                                        ? 'bg-[var(--accent)] text-white shadow-xs'
+                                        : 'text-[var(--text-muted)] hover:text-[var(--accent)]'
                                 }`}
                             >
                                 <Circle className="w-3.5 h-3.5" />
@@ -435,10 +435,10 @@ export const AvatarCropModal = ({
                             <button
                                 type="button"
                                 onClick={() => setCropShape('square')}
-                                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                                     cropShape === 'square'
-                                        ? 'bg-pink-500 text-white shadow-xs'
-                                        : 'text-gray-600 hover:text-pink-600'
+                                        ? 'bg-[var(--accent)] text-white shadow-xs'
+                                        : 'text-[var(--text-muted)] hover:text-[var(--accent)]'
                                 }`}
                             >
                                 <Square className="w-3.5 h-3.5" />
@@ -561,8 +561,8 @@ export const AvatarCropModal = ({
                                 onClick={() => setFlipH(prev => !prev)}
                                 className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
                                     flipH
-                                        ? 'bg-pink-500 text-white border-pink-500 shadow-xs'
-                                        : 'bg-white text-gray-600 hover:bg-pink-50 border-pink-100'
+                                        ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-xs'
+                                        : 'bg-[var(--bg-card)] text-[var(--text-muted)] hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] border-[var(--border-color)]'
                                 }`}
                                 title="Flip horizontally"
                             >
@@ -575,8 +575,8 @@ export const AvatarCropModal = ({
                                 onClick={() => setFlipV(prev => !prev)}
                                 className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
                                     flipV
-                                        ? 'bg-pink-500 text-white border-pink-500 shadow-xs'
-                                        : 'bg-white text-gray-600 hover:bg-pink-50 border-pink-100'
+                                        ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-xs'
+                                        : 'bg-[var(--bg-card)] text-[var(--text-muted)] hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] border-[var(--border-color)]'
                                 }`}
                                 title="Flip vertically"
                             >
@@ -588,7 +588,7 @@ export const AvatarCropModal = ({
                         <button
                             type="button"
                             onClick={handleReset}
-                            className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-all border border-pink-100 flex items-center gap-1 cursor-pointer"
+                            className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-subtle)] transition-all border border-[var(--border-color)] flex items-center gap-1 cursor-pointer"
                             title="Reset all adjustments"
                         >
                             <RefreshCw className="w-3 h-3" />
@@ -598,12 +598,12 @@ export const AvatarCropModal = ({
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-pink-100">
+                <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-[var(--border-color)]">
                     <button
                         type="button"
                         onClick={onClose}
                         disabled={isSaving}
-                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer disabled:opacity-50 min-h-[38px]"
+                        className="px-4 py-2 bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] text-[var(--text-main)] font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer disabled:opacity-50 min-h-[38px]"
                     >
                         Cancel
                     </button>
@@ -612,7 +612,7 @@ export const AvatarCropModal = ({
                         type="button"
                         onClick={handleSaveCrop}
                         disabled={isSaving || !imageElement}
-                        className="px-5 py-2 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer shadow-md shadow-pink-200 hover:shadow-pink-300 disabled:opacity-50 min-h-[38px] flex items-center gap-2"
+                        className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer shadow-md disabled:opacity-50 min-h-[38px] flex items-center gap-2"
                     >
                         {isSaving ? (
                             <>

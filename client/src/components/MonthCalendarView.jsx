@@ -416,10 +416,10 @@ export const MonthCalendarView = ({
                                     }}
                                     className={`min-h-[120px] sm:min-h-[145px] rounded-xl p-1.5 sm:p-2 border transition-all flex flex-col justify-between group relative min-w-0 ${
                                         item.isToday
-                                            ? 'bg-pink-50/40 border-pink-400 ring-2 ring-pink-300/50 shadow-xs'
+                                            ? 'bg-[var(--accent-subtle)] border-[var(--accent)] ring-2 ring-[var(--accent)]/30 shadow-xs'
                                             : item.isCurrentMonth
-                                                ? 'bg-white border-gray-200/80 hover:border-pink-300 hover:shadow-sm'
-                                                : 'bg-gray-50/60 border-gray-100 text-gray-400 opacity-60'
+                                                ? 'bg-[var(--bg-card)] border-[var(--border-color)] hover:border-[var(--accent)] hover:shadow-sm'
+                                                : 'bg-[var(--bg-subtle)] border-[var(--border-color)] text-[var(--text-muted)] opacity-60'
                                     } ${
                                         isDragOver ? 'bg-pink-100/80 border-pink-500 ring-4 ring-pink-300 shadow-md scale-[1.02] z-10' : ''
                                     } ${
@@ -433,10 +433,10 @@ export const MonthCalendarView = ({
                                                 <span
                                                     className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full transition-colors shrink-0 ${
                                                         item.isToday
-                                                            ? 'bg-pink-500 text-white shadow-xs'
+                                                            ? 'bg-[var(--accent)] text-white shadow-xs'
                                                             : item.isCurrentMonth
-                                                                ? item.isWeekend ? 'text-pink-600 bg-pink-50' : 'text-gray-700 hover:bg-gray-100'
-                                                                : 'text-gray-400'
+                                                                ? item.isWeekend ? 'text-[var(--accent)] bg-[var(--accent-subtle)]' : 'text-[var(--text-main)] hover:bg-[var(--bg-subtle)]'
+                                                                : 'text-[var(--text-muted)]'
                                                     }`}
                                                 >
                                                     {item.dayNumber}
@@ -445,8 +445,8 @@ export const MonthCalendarView = ({
                                                     <span
                                                         className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full shrink-0 ${
                                                             item.isToday
-                                                                ? 'bg-pink-200/70 text-pink-800'
-                                                                : 'bg-gray-100 text-gray-600'
+                                                                ? 'bg-[var(--accent-subtle)] text-[var(--accent)]'
+                                                                : 'bg-[var(--bg-subtle)] text-[var(--text-muted)]'
                                                         }`}
                                                     >
                                                         {dayTasks.length}

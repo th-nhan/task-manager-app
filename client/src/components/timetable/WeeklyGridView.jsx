@@ -30,35 +30,35 @@ export const WeeklyGridView = ({
     };
 
     return (
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-pink-100 overflow-hidden min-w-0">
+        <div className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl shadow-sm border border-[var(--border-color)] overflow-hidden min-w-0">
             {/* Header / Caption */}
-            <div className="p-4 sm:p-6 bg-gradient-to-r from-pink-50/70 via-white to-pink-50/50 border-b border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="p-4 sm:p-6 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h2 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2 flex-wrap">
+                    <h2 className="text-base sm:text-lg font-bold text-[var(--text-main)] flex items-center gap-2 flex-wrap">
                         <span>📅 Weekly Timetable Matrix</span>
-                        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-600 border border-pink-200">
+                        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--border-color)]">
                             Updated Sat & Sun
                         </span>
                     </h2>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">
                         Teaching schedule from Monday to Sunday by time slots
                     </p>
                 </div>
                 <div className="flex items-center gap-2.5 sm:gap-3 text-xs flex-wrap">
-                    <span className="flex items-center gap-1 font-medium text-emerald-700">
+                    <span className="flex items-center gap-1 font-medium text-emerald-600">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Grade 10
                     </span>
-                    <span className="flex items-center gap-1 font-medium text-indigo-700">
+                    <span className="flex items-center gap-1 font-medium text-indigo-500">
                         <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span> Grade 11
                     </span>
-                    <span className="flex items-center gap-1 font-medium text-rose-700">
+                    <span className="flex items-center gap-1 font-medium text-rose-500">
                         <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Grade 12
                     </span>
                 </div>
             </div>
 
             {/* Mobile swipe hint */}
-            <div className="md:hidden flex items-center justify-between text-[11px] text-pink-500 bg-pink-50/60 px-4 py-1.5 border-b border-pink-100">
+            <div className="md:hidden flex items-center justify-between text-[11px] text-[var(--accent)] bg-[var(--bg-subtle)] px-4 py-1.5 border-b border-[var(--border-color)]">
                 <span>👈 Swipe table horizontally to view all days 👉</span>
             </div>
 
@@ -66,8 +66,8 @@ export const WeeklyGridView = ({
             <div className="overflow-x-auto pb-2">
                 <table className="w-full border-collapse text-left min-w-[850px] lg:min-w-[900px]">
                     <thead>
-                        <tr className="bg-pink-50/60 border-b border-pink-100">
-                            <th className="p-3 text-xs font-bold text-gray-600 uppercase tracking-wider w-32 sm:w-36 text-center">
+                        <tr className="bg-[var(--bg-subtle)] border-b border-[var(--border-color)]">
+                            <th className="p-3 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider w-32 sm:w-36 text-center">
                                 Time Slot
                             </th>
                             {DAYS_OF_WEEK.map(day => {
@@ -75,18 +75,18 @@ export const WeeklyGridView = ({
                                 return (
                                     <th 
                                         key={day.key} 
-                                        className={`p-3 text-xs font-bold uppercase tracking-wider text-center border-l border-pink-100/60 transition-colors ${
+                                        className={`p-3 text-xs font-bold uppercase tracking-wider text-center border-l border-[var(--border-color)] transition-colors ${
                                             isToday 
-                                                ? 'bg-pink-200/50 text-pink-700 font-extrabold' 
+                                                ? 'bg-[var(--accent-subtle)] text-[var(--accent)] font-extrabold' 
                                                 : day.isWeekend 
-                                                    ? 'bg-pink-100/30 text-rose-600' 
-                                                    : 'text-gray-700'
+                                                    ? 'text-[var(--accent)]' 
+                                                    : 'text-[var(--text-main)]'
                                         }`}
                                     >
                                         <div className="flex items-center justify-center gap-1.5">
                                             <span>{day.labelEn || day.label}</span>
                                             {isToday && (
-                                                <span className="flex items-center text-[10px] px-1.5 py-0.2 rounded-full bg-pink-500 text-white font-normal">
+                                                <span className="flex items-center text-[10px] px-1.5 py-0.2 rounded-full bg-[var(--accent)] text-white font-normal">
                                                     Today
                                                 </span>
                                             )}
@@ -96,19 +96,19 @@ export const WeeklyGridView = ({
                             })}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-pink-100/60">
+                    <tbody className="divide-y divide-[var(--border-color)]">
                         {TIME_SLOTS_MATRIX.map((slotItem, slotIdx) => {
                             return (
                                 <tr 
                                     key={slotItem.slot} 
-                                    className={`hover:bg-pink-50/20 transition-colors ${
-                                        slotIdx % 2 === 0 ? 'bg-white' : 'bg-pink-50/10'
+                                    className={`hover:bg-[var(--accent-subtle)] transition-colors ${
+                                        slotIdx % 2 === 0 ? 'bg-[var(--bg-card)]' : 'bg-[var(--bg-subtle)]/30'
                                     }`}
                                 >
                                     {/* Time Column */}
-                                    <td className="p-2.5 sm:p-3 text-center border-r border-pink-100/60 bg-gray-50/50">
-                                        <div className="font-bold text-xs text-gray-800">{slotItem.label}</div>
-                                        <div className="text-[10px] text-pink-500 font-medium mt-0.5">{slotItem.periodEn || slotItem.period}</div>
+                                    <td className="p-2.5 sm:p-3 text-center border-r border-[var(--border-color)] bg-[var(--bg-subtle)]/40">
+                                        <div className="font-bold text-xs text-[var(--text-main)]">{slotItem.label}</div>
+                                        <div className="text-[10px] text-[var(--accent)] font-medium mt-0.5">{slotItem.periodEn || slotItem.period}</div>
                                     </td>
 
                                     {/* Days Columns */}
@@ -119,12 +119,12 @@ export const WeeklyGridView = ({
                                         return (
                                             <td 
                                                 key={day.key}
-                                                className={`p-1.5 sm:p-2 border-l border-pink-100/60 align-top transition-colors ${
-                                                    isToday ? 'bg-pink-100/20' : ''
+                                                className={`p-1.5 sm:p-2 border-l border-[var(--border-color)] align-top transition-colors ${
+                                                    isToday ? 'bg-[var(--accent-subtle)]/20' : ''
                                                 }`}
                                             >
                                                 {classes.length === 0 ? (
-                                                    <div className="h-12 flex items-center justify-center text-gray-200 text-xs">
+                                                    <div className="h-12 flex items-center justify-center text-[var(--text-muted)] opacity-40 text-xs">
                                                         -
                                                     </div>
                                                 ) : (
@@ -140,7 +140,7 @@ export const WeeklyGridView = ({
                                                                                 <button
                                                                                     key={cls.id}
                                                                                     onClick={() => onSelectClass && onSelectClass(cls)}
-                                                                                    className={`w-full text-left p-2 rounded-2xl bg-gradient-to-br ${gradeStyle.cardBg} border ${isTaught ? 'border-pink-300 ring-1 ring-pink-400/30' : 'border-pink-200/80'} shadow-xs hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden`}
+                                                                                    className={`w-full text-left p-2 rounded-2xl bg-gradient-to-br ${gradeStyle.cardBg} border ${isTaught ? 'border-[var(--accent)] ring-1 ring-[var(--accent)]/40' : 'border-[var(--border-color)]'} shadow-xs hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden`}
                                                                                 >
                                                                                     <div className={`absolute left-0 top-0 bottom-0 w-1 ${gradeStyle.pillColor}`} />
 
@@ -151,23 +151,23 @@ export const WeeklyGridView = ({
                                                                                             </span>
                                                                                             <div className="flex items-center gap-1">
                                                                                                 {isTaught && (
-                                                                                                    <span className="text-[8px] font-extrabold text-pink-700 bg-pink-50/90 px-1.5 py-0.2 rounded-full border border-pink-300 inline-flex items-center gap-0.5 shadow-2xs">
-                                                                                                        <CheckCircle2 className="w-2.5 h-2.5 text-pink-600 shrink-0" />
+                                                                                                    <span className="text-[8px] font-extrabold text-[var(--accent)] bg-[var(--bg-card)] px-1.5 py-0.2 rounded-full border border-[var(--accent)] inline-flex items-center gap-0.5 shadow-2xs">
+                                                                                                        <CheckCircle2 className="w-2.5 h-2.5 text-[var(--accent)] shrink-0" />
                                                                                                         <span>Taught</span>
                                                                                                     </span>
                                                                                                 )}
-                                                                                                <span className="text-[9px] font-bold text-gray-600 bg-white/80 px-1 rounded">
+                                                                                                <span className="text-[9px] font-bold text-[var(--text-main)] bg-[var(--bg-card)]/80 px-1 rounded border border-[var(--border-color)]">
                                                                                                     {cls.location === 'Long Thượng' ? 'LT' : 'ML'}
                                                                                                 </span>
                                                                                             </div>
                                                                                         </div>
 
-                                                                                        <div className="font-bold text-xs text-gray-900 group-hover:text-pink-600 transition-colors leading-tight line-clamp-2">
+                                                                                        <div className="font-bold text-xs text-[var(--text-main)] group-hover:text-[var(--accent)] transition-colors leading-tight line-clamp-2">
                                                                                             {cls.originalCode || cls.className}
                                                                                         </div>
 
-                                                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500">
-                                                                                            <Clock className="w-2.5 h-2.5 text-pink-400" />
+                                                                                        <div className="flex items-center gap-1 text-[9px] text-[var(--text-muted)]">
+                                                                                            <Clock className="w-2.5 h-2.5 text-[var(--accent)]" />
                                                                                             <span>{cls.startTime} - {cls.endTime}</span>
                                                                                         </div>
                                                                                     </div>
@@ -187,9 +187,9 @@ export const WeeklyGridView = ({
             </div>
 
             {/* Footer convention notes */}
-            <div className="p-3.5 sm:p-4 bg-gray-50/80 border-t border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 gap-2">
+            <div className="p-3.5 sm:p-4 bg-[var(--bg-card)] border-t border-[var(--border-color)] flex flex-col sm:flex-row sm:items-center justify-between text-xs text-[var(--text-muted)] gap-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                    <span className="font-semibold text-gray-700">Abbreviations:</span>
+                    <span className="font-semibold text-[var(--text-main)]">Abbreviations:</span>
                     <span>CB: Basic</span>
                     <span>•</span>
                     <span>NC: Advanced</span>
@@ -198,7 +198,7 @@ export const WeeklyGridView = ({
                     <span>•</span>
                     <span>ML: Mỹ Lộc</span>
                 </div>
-                <div className="text-gray-400 text-[11px]">
+                <div className="text-[var(--text-muted)] text-[11px]">
                     Click a class slot to view details
                 </div>
             </div>
