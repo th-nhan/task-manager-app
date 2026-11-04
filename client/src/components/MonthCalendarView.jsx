@@ -520,19 +520,39 @@ export const MonthCalendarView = ({
                                             const isMissing = !isDone && Boolean(task.dueDate && new Date(task.dueDate) < new Date());
                                             const isProgress = !isMissing && task.status === 'IN_PROGRESS';
                                             const isDragging = draggingTaskId === task.id;
-                                            const priorityBorder = task.priority === 'HIGH'
-                                                ? 'border-l-red-500'
+                                            const priorityTheme = task.priority === 'HIGH'
+                                                ? {
+                                                    border: 'border-l-red-500',
+                                                    background: 'bg-red-50/80 text-red-950 border-red-200/80 hover:bg-red-100/80',
+                                                }
                                                 : task.priority === 'MEDIUM'
-                                                    ? 'border-l-amber-500'
-                                                    : 'border-l-emerald-500';
+                                                    ? {
+                                                        border: 'border-l-amber-500',
+                                                        background: 'bg-amber-50/80 text-amber-950 border-amber-200/80 hover:bg-amber-100/80',
+                                                    }
+                                                    : {
+                                                        border: 'border-l-emerald-500',
+                                                        background: 'bg-emerald-50/80 text-emerald-950 border-emerald-200/80 hover:bg-emerald-100/80',
+                                                    };
 
                                             const chipBg = isMissing
                                                 ? 'bg-red-50/90 text-red-900 border-red-200/80'
                                                 : isDone
-                                                    ? 'bg-emerald-50/60 text-gray-500 border-emerald-200/50 line-through opacity-75'
+                                                    ? 'bg-slate-50/80 text-slate-500 border-slate-200/80 line-through opacity-75'
                                                     : isProgress
-                                                        ? 'bg-blue-50/80 text-blue-950 border-blue-200/60'
-                                                        : 'bg-gray-50/90 text-gray-800 border-gray-200/70 hover:bg-pink-50/50';
+                                                        ? 'bg-sky-50/80 text-sky-950 border-sky-200/80 hover:bg-sky-100/80'
+                                                        : priorityTheme.background;
+                                            const timeTheme = isMissing
+                                                ? 'text-red-800'
+                                                : isDone
+                                                    ? 'text-slate-700'
+                                                    : isProgress
+                                                        ? 'text-sky-800'
+                                                        : task.priority === 'HIGH'
+                                                            ? 'text-red-800'
+                                                            : task.priority === 'MEDIUM'
+                                                                ? 'text-amber-800'
+                                                                : 'text-emerald-800';
 
                                             return (
                                                 <div
@@ -548,7 +568,7 @@ export const MonthCalendarView = ({
                                                         setDragOverDateStr(null);
                                                     }}
                                                     onClick={() => onOpenTaskDetail(task)}
-                                                    className={`px-2 py-1.5 rounded-lg border border-l-[3.5px] ${priorityBorder} ${chipBg} transition-all cursor-pointer shadow-2xs group/chip relative text-left select-none min-w-0 ${
+                                                    className={`px-2 py-1.5 rounded-lg border border-l-[3.5px] ${priorityTheme.border} ${chipBg} transition-all cursor-pointer shadow-2xs group/chip relative text-left select-none min-w-0 ${
                                                         isDragging ? 'opacity-30 scale-95 border-dashed border-pink-400' : 'hover:shadow-xs hover:scale-[1.01]'
                                                     }`}
                                                     title={task.title}
@@ -603,7 +623,7 @@ export const MonthCalendarView = ({
                                                                 onDeleteTask(task.id);
                                                             }}
                                                             title="Delete task"
-                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover/chip:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                            className="text-red-700 hover:text-red-500 opacity-0 group-hover/chip:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
                                                         >
                                                             <Trash2 className="w-3 h-3" />
                                                         </button>
@@ -611,9 +631,9 @@ export const MonthCalendarView = ({
 
                                                     {/* Time snippet */}
                                                     {(task.startDate || task.dueDate) && (
-                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500 mt-0.5 min-w-0">
-                                                            <Clock className="w-2.5 h-2.5 text-gray-400 shrink-0" />
-                                                            <span className="truncate">
+                                                        <div className={`flex items-center gap-1 text-[9px] ${timeTheme} mt-0.5 min-w-0`}>
+                                                            <Clock className={`w-2.5 h-2.5 ${timeTheme} shrink-0`} />
+                                                            <span className="truncate font-medium">
                                                                 {task.startDate && new Date(task.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
                                                                 {task.startDate && task.dueDate && ' - '}
                                                                 {task.dueDate && new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
