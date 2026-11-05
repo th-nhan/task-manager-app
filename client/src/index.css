@@ -101,6 +101,62 @@
 .bg-theme-accent { background-color: var(--accent) !important; }
 .bg-theme-accent-hover:hover { background-color: var(--accent-hover) !important; }
 
+/* Keep schedule task cards distinct from the calendar surface in every theme. */
+.week-schedule-task-card {
+    background-color: var(--bg-subtle) !important;
+    border-top-color: var(--border-color) !important;
+    border-right-color: var(--border-color) !important;
+    border-bottom-color: var(--border-color) !important;
+    color: var(--text-main) !important;
+}
+
+.week-schedule-task-card .text-gray-900,
+.week-schedule-task-card .text-gray-800,
+.week-schedule-task-card .text-gray-700 {
+    color: var(--text-main) !important;
+}
+
+.week-schedule-task-card .text-gray-600,
+.week-schedule-task-card .text-gray-500,
+.week-schedule-task-card .text-gray-400 {
+    color: var(--text-muted) !important;
+}
+
+.week-day-button {
+    color: var(--text-main);
+    border-color: transparent;
+}
+
+.week-day-button:hover:not(.week-day-button--selected) {
+    background-color: var(--accent-subtle);
+}
+
+.week-day-button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.week-day-button--selected {
+    background-color: var(--accent-subtle);
+    color: var(--text-main);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-subtle);
+}
+
+.week-day-button--today:not(.week-day-button--selected) {
+    background-color: var(--bg-subtle);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.week-day-label {
+    color: var(--text-muted);
+}
+
+.week-day-label--weekend {
+    color: var(--accent);
+}
+
 /* Multi-theme automatic adaptations for dark and green themes */
 :root.dark .bg-pink-100,
 :root.green .bg-pink-100,
