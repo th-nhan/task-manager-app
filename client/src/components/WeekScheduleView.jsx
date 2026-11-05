@@ -131,21 +131,17 @@ export const WeekScheduleView = ({
                     <button
                         key={index}
                         onClick={() => onSelectDate(item.date)}
-                        className={`py-2 sm:py-2.5 px-1 sm:px-3 rounded-xl border transition-all flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer min-h-[44px] ${
+                        className={`week-day-button py-2 sm:py-2.5 px-1 sm:px-3 rounded-xl border transition-all flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer min-h-[44px] ${
                             item.isSelected
-                                ? 'bg-pink-500 text-white shadow-sm border-pink-500 font-semibold ring-2 ring-pink-300/60'
+                                ? 'week-day-button--selected shadow-sm font-semibold'
                                 : item.isToday
-                                    ? 'bg-pink-50 text-pink-600 border-pink-200 font-semibold'
-                                    : 'border-transparent text-gray-700 hover:bg-pink-50/60 font-medium'
+                                    ? 'week-day-button--today font-semibold'
+                                    : 'font-medium'
                         }`}
                     >
                         <span
-                            className={`text-[10px] sm:text-xs font-semibold uppercase ${
-                                item.isSelected
-                                    ? 'text-pink-100'
-                                    : item.isWeekend
-                                        ? 'text-pink-500'
-                                        : 'text-gray-400'
+                            className={`week-day-label text-[10px] sm:text-xs font-semibold uppercase ${
+                                item.isSelected ? 'week-day-label--selected' : item.isWeekend ? 'week-day-label--weekend' : ''
                             }`}
                         >
                             {item.dayName}
@@ -218,7 +214,7 @@ export const WeekScheduleView = ({
                                     <div
                                         key={task.id}
                                         onClick={() => onOpenTaskDetail(task)}
-                                        className={`p-3.5 rounded-xl border border-l-[6px] ${leftBorderClass} ${cardContainerClass} transition-all cursor-pointer flex flex-col gap-2 shadow-xs`}
+                                        className={`week-schedule-task-card p-3.5 rounded-xl border border-l-[6px] ${leftBorderClass} ${cardContainerClass} transition-all cursor-pointer flex flex-col gap-2 shadow-xs`}
                                     >
                                         <div className="flex items-start justify-between gap-2">
                                             <div className="flex-1 min-w-0">
@@ -250,7 +246,7 @@ export const WeekScheduleView = ({
                                                         e.stopPropagation();
                                                         onDeleteTask(task.id);
                                                     }}
-                                                    className="text-gray-400 hover:text-red-500 p-1 min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer transition-colors"
+                                                    className="text-red-700 hover:text-red-500 p-1 min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer transition-colors"
                                                     title="Delete task"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -352,7 +348,7 @@ export const WeekScheduleView = ({
                                             <div
                                                 key={task.id}
                                                 onClick={() => onOpenTaskDetail(task)}
-                                                className={`p-2.5 sm:p-3 rounded-xl border border-gray-100 border-l-[5px] ${leftBorderClass} ${cardContainerClass} transition-all cursor-pointer flex flex-col gap-2 group relative min-w-0`}
+                                                className={`week-schedule-task-card p-2.5 sm:p-3 rounded-xl border border-gray-100 border-l-[5px] ${leftBorderClass} ${cardContainerClass} transition-all cursor-pointer flex flex-col gap-2 group relative min-w-0`}
                                             >
                                                 <div className="flex items-start justify-between gap-1 min-w-0">
                                                     <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
@@ -389,7 +385,7 @@ export const WeekScheduleView = ({
                                                                 e.stopPropagation();
                                                                 onDeleteTask(task.id);
                                                             }}
-                                                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                            className="text-red-700 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
                                                             title="Delete task"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />
