@@ -22,6 +22,14 @@ import {
     ChevronUp,
 } from 'lucide-react';
 import CustomSelect from './CustomSelect';
+import { useTheme } from '../context/ThemeContext';
+
+const THEME_DOCK_SHADOWS = {
+    pink: 'shadow-[0_10px_25px_-5px_rgba(236,72,153,0.22),0_8px_10px_-6px_rgba(236,72,153,0.15)] hover:shadow-[0_16px_32px_-4px_rgba(236,72,153,0.35),0_8px_16px_-4px_rgba(236,72,153,0.25)]',
+    green: 'shadow-[0_10px_25px_-5px_rgba(0,0,0,0.75),0_0_20px_2px_rgba(46,160,67,0.25)] hover:shadow-[0_16px_35px_-4px_rgba(0,0,0,0.85),0_0_28px_4px_rgba(46,160,67,0.45)]',
+    dark: 'shadow-[0_10px_25px_-5px_rgba(0,0,0,0.75),0_0_20px_2px_rgba(56,189,248,0.25)] hover:shadow-[0_16px_35px_-4px_rgba(0,0,0,0.85),0_0_28px_4px_rgba(56,189,248,0.45)]',
+    purple: 'shadow-[0_10px_25px_-5px_rgba(124,58,237,0.22),0_8px_10px_-6px_rgba(124,58,237,0.15)] hover:shadow-[0_16px_32px_-4px_rgba(124,58,237,0.38),0_8px_16px_-4px_rgba(124,58,237,0.25)]',
+};
 
 
 const WEEK_DAYS_HEADER = [
@@ -107,6 +115,8 @@ export const MonthCalendarView = ({
     onRefreshTasks,
     toast,
 }) => {
+    const { theme } = useTheme();
+    const dockShadowClass = THEME_DOCK_SHADOWS[theme] || THEME_DOCK_SHADOWS.pink;
     const [draggingTaskId, setDraggingTaskId] = useState(null);
     const [draggingStickerId, setDraggingStickerId] = useState(null);
     const [dragOverDateStr, setDragOverDateStr] = useState(null);
@@ -682,7 +692,7 @@ export const MonthCalendarView = ({
 
                 {/* Stamp Mode Active Floating Banner */}
                 {selectedStampStickerId && activeStampSticker && (
-                    <div className="pointer-events-auto flex items-center justify-between gap-2 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white px-3 sm:px-4 py-1.5 rounded-xl sm:rounded-full text-xs font-medium shadow-xl border border-white/20 animate-in fade-in slide-in-from-bottom-2 duration-200 w-full sm:w-auto max-w-[calc(100vw-24px)]">
+                    <div className={`pointer-events-auto flex items-center justify-between gap-2 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white px-3 sm:px-4 py-1.5 rounded-xl sm:rounded-full text-xs font-medium border border-white/20 floating-dock-pill ${dockShadowClass} animate-in fade-in slide-in-from-bottom-2 duration-200 w-full sm:w-auto max-w-[calc(100vw-24px)]`}>
                         <div className="flex items-center gap-1.5 min-w-0">
                             <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/25 shrink-0">
                                 <ActiveStampIcon className="w-3.5 h-3.5 text-white" />
@@ -707,20 +717,20 @@ export const MonthCalendarView = ({
                     <button
                         type="button"
                         onClick={() => setIsToolbarCollapsed(false)}
-                        className="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-pink-200/90 shadow-xl hover:shadow-pink-200/50 text-pink-600 text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                        className={`pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[var(--border-color)] floating-dock-pill ${dockShadowClass} text-[var(--accent)] text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer`}
                         title="Mở thanh dán sticker"
                     >
-                        <Sparkles className="w-3.5 h-3.5 text-pink-500 animate-pulse" />
+                        <Sparkles className="w-3.5 h-3.5 text-[var(--accent)] animate-pulse" />
                         <span>Sticker ({CALENDAR_STICKERS.length})</span>
-                        <ChevronUp className="w-3.5 h-3.5 text-pink-400" />
+                        <ChevronUp className="w-3.5 h-3.5 text-[var(--accent)]" />
                     </button>
                 ) : (
                     /* Floating Dock Pill Toolbar */
-                    <div className="pointer-events-auto flex items-center justify-between sm:justify-start gap-1 sm:gap-2.5 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl sm:rounded-full border border-pink-200/90 shadow-2xl transition-all hover:shadow-pink-200/50 w-full sm:w-auto max-w-full">
+                    <div className={`pointer-events-auto flex items-center justify-between sm:justify-start gap-1 sm:gap-2.5 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl sm:rounded-full border border-[var(--border-color)] floating-dock-pill ${dockShadowClass} transition-all w-full sm:w-auto max-w-full`}>
                         {/* Left Label */}
-                        <div className="text-xs text-pink-600 font-bold select-none flex items-center gap-1 shrink-0 pl-1">
-                            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-500" />
-                            <span className="hidden sm:inline text-xs">Kéo / Dán:</span>
+                        <div className="text-xs text-[var(--accent)] font-bold select-none flex items-center gap-1 shrink-0 pl-1">
+                            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--accent)]" />
+                            <span className="hidden sm:inline text-xs">Drag/Click </span>
                         </div>
 
                         {/* Scrollable Stickers Strip */}
@@ -747,11 +757,11 @@ export const MonthCalendarView = ({
                                         onClick={() => {
                                             setSelectedStampStickerId(prev => (prev === stk.id ? null : stk.id));
                                         }}
-                                        title={`Kéo hoặc nhấp "${stk.label}" để dán`}
+                                        title={`Drag or click "${stk.label}" to spam`}
                                         className={`w-7 h-7 sm:w-8 sm:h-8 min-w-[28px] sm:min-w-[32px] flex items-center justify-center rounded-full border transition-all duration-150 cursor-grab active:cursor-grabbing hover:scale-115 active:scale-95 select-none shrink-0 ${
                                             stk.bg
-                                        } ${isBeingDragged ? 'scale-110 ring-2 ring-pink-400 opacity-60' : ''} ${
-                                            isSelectedStamp ? 'ring-2 ring-pink-500 scale-110 shadow-md animate-bounce' : ''
+                                        } ${isBeingDragged ? 'scale-110 ring-2 ring-[var(--accent)] opacity-60' : ''} ${
+                                            isSelectedStamp ? 'ring-2 ring-[var(--accent)] scale-110 shadow-md animate-bounce' : ''
                                         }`}
                                     >
                                         <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4 pointer-events-none shrink-0" />
@@ -764,7 +774,7 @@ export const MonthCalendarView = ({
                         <button
                             type="button"
                             onClick={() => setIsToolbarCollapsed(true)}
-                            className="p-1 text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-full transition-colors shrink-0 ml-0.5 cursor-pointer"
+                            className="p-1 text-gray-400 hover:text-[var(--accent)] hover:bg-[var(--accent-subtle)] rounded-full transition-colors shrink-0 ml-0.5 cursor-pointer"
                             title="Thu gọn thanh sticker"
                             aria-label="Thu gọn"
                         >

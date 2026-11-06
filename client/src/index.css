@@ -14,6 +14,10 @@
     --accent-subtle: #FCE7F3;
     --border-color: #FED7E2;
     --border-input: #F472B6;
+    --dock-shadow: 0 10px 25px -4px rgba(236, 72, 153, 0.22), 0 8px 10px -6px rgba(236, 72, 153, 0.15);
+    --dock-shadow-hover: 0 16px 35px -2px rgba(236, 72, 153, 0.38), 0 8px 16px -4px rgba(236, 72, 153, 0.25);
+    --card-shadow: 0 20px 30px -8px rgba(236, 72, 153, 0.16), 0 8px 16px -4px rgba(236, 72, 153, 0.08);
+    --btn-shadow: 0 4px 14px 0 rgba(236, 72, 153, 0.35);
 }
 
 /* ==========================================
@@ -30,6 +34,10 @@
     --accent-subtle: rgba(46, 160, 67, 0.22);
     --border-color: #30363D;
     --border-input: #484F58; /* Viền ô input rõ ràng, không trùng màu nền */
+    --dock-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.75), 0 0 20px 2px rgba(46, 160, 67, 0.25);
+    --dock-shadow-hover: 0 16px 35px -2px rgba(0, 0, 0, 0.85), 0 0 28px 4px rgba(46, 160, 67, 0.45);
+    --card-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.75), 0 0 22px 2px rgba(46, 160, 67, 0.18);
+    --btn-shadow: 0 4px 14px 0 rgba(46, 160, 67, 0.38);
 }
 
 /* ==========================================
@@ -46,6 +54,10 @@
     --accent-subtle: rgba(56, 189, 248, 0.22);
     --border-color: #33465C;
     --border-input: #5A7799; /* Viền ô input tương phản cao, nổi bật rõ trên nền modal/card */
+    --dock-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.75), 0 0 20px 2px rgba(56, 189, 248, 0.25);
+    --dock-shadow-hover: 0 16px 35px -4px rgba(0, 0, 0, 0.85), 0 0 28px 4px rgba(56, 189, 248, 0.45);
+    --card-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.75), 0 0 22px 2px rgba(56, 189, 248, 0.18);
+    --btn-shadow: 0 4px 14px 0 rgba(56, 189, 248, 0.38);
 }
 
 /* ==========================================
@@ -62,6 +74,10 @@
     --accent-subtle: #EDE9FE;
     --border-color: #E9D5FF;
     --border-input: #C084FC;
+    --dock-shadow: 0 10px 25px -4px rgba(124, 58, 237, 0.22), 0 8px 10px -6px rgba(124, 58, 237, 0.15);
+    --dock-shadow-hover: 0 16px 35px -2px rgba(124, 58, 237, 0.38), 0 8px 16px -4px rgba(124, 58, 237, 0.25);
+    --card-shadow: 0 20px 30px -8px rgba(124, 58, 237, 0.16), 0 8px 16px -4px rgba(124, 58, 237, 0.08);
+    --btn-shadow: 0 4px 14px 0 rgba(124, 58, 237, 0.35);
 }
 
 @layer base {
@@ -100,6 +116,22 @@
 .text-theme-accent { color: var(--accent) !important; }
 .bg-theme-accent { background-color: var(--accent) !important; }
 .bg-theme-accent-hover:hover { background-color: var(--accent-hover) !important; }
+
+/* Floating Dock Pill Toolbar theme shadow */
+.floating-dock-pill {
+    box-shadow: var(--dock-shadow) !important;
+}
+.floating-dock-pill:hover {
+    box-shadow: var(--dock-shadow-hover) !important;
+}
+
+/* Card & Button theme shadows */
+.card-theme-shadow {
+    box-shadow: var(--card-shadow) !important;
+}
+.btn-theme-shadow {
+    box-shadow: var(--btn-shadow) !important;
+}
 
 /* Keep schedule task cards distinct from the calendar surface in every theme. */
 .week-schedule-task-card {
@@ -300,6 +332,13 @@ textarea {
 :root.purple textarea:focus {
     border-color: var(--accent) !important;
     box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3) !important;
+}
+
+:root.pink input:focus,
+:root.pink select:focus,
+:root.pink textarea:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.25) !important;
 }
 
 :root.dark input::placeholder,
