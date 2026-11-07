@@ -712,63 +712,272 @@ export function parseUploadedTimetableExcel(fileBuffer) {
     return parsedItems.length > 0 ? parsedItems : null;
 }
 
-// Xuất file Excel bảng kê chấm công và tiền dạy học
-export function exportPayrollToExcel(sessions, summary, filename) {
+// Xuất file Excel báo cáo mức lương tổng cả tháng và số ca dạy
+export function exportPayrollToExcel(sessions = [], summary = {}, filename) {
     const wb = XLSX.utils.book_new();
-    const fname = filename || `Bang_Ke_Thu_Nhap_Day_Hoc_Thang_${summary?.month || 1}_${summary?.year || 2026}.xlsx`;
 
-    const summaryRows = [
-        ['BẢNG TỔNG HỢP CHẤM CÔNG & TIỀN DẠY HỌC'],
-        [`Tháng ${summary?.month || ''} / ${summary?.year || ''}`],
+    let month = summary?.month;
+    let year = summary?.year;
+    if (!month || !year) {
+        const validDate = sessions.find(s => s.date)?.date;
+        const d = validDate ? new Date(validDate) : new Date();
+        if (!month) month = d.getMonth() + 1;
+        if (!year) year = d.getFullYear();
+    }
+
+    const completedCount = summary?.completed ?? summary?.completedCount ?? sessions.filter(s => s.status === 'COMPLETED').length;
+    const makeupCount = summary?.makeup ?? summary?.makeupCount ?? sessions.filter(s => s.status === 'MAKE_UP').length;
+    const paidCount = summary?.paidCount ?? summary?.paidSessionsCount ?? (completedCount + makeupCount);
+
+    const totalEarnings = summary?.earned ?? summary?.totalEarnings ?? sessions.reduce((acc, s) => {
+        if (s.status === 'COMPLETED' || s.status === 'MAKE_UP') {
+            return acc + (s.rate || 60000);
+        }
+        return acc;
+    }, 0);
+
+    const fname = filename || `Bao_Cao_Luong_Thang_${month}_${year}.xlsx`;
+
+    const reportRows = [
+        ['BÁO CÁO LƯƠNG GIẢNG DẠY'],
+        [`Tháng ${month} / ${year}`],
         [],
-        ['Chỉ số', 'Giá trị', 'Đơn vị tính'],
-        ['Đơn giá chuẩn / ca', (summary?.defaultRate || 60000).toLocaleString('vi-VN') + ' đ', 'VNĐ / ca'],
-        ['Tổng số ca trong tháng', summary?.totalCount || 0, 'Ca'],
-        ['Số ca đã dạy hoàn thành', summary?.completedCount || 0, 'Ca'],
-        ['Số ca dạy bù / tăng cường', summary?.makeupCount || 0, 'Ca'],
-        ['Số ca báo nghỉ / hủy', summary?.cancelledCount || 0, 'Ca'],
-        ['Số ca sắp diễn ra (Pending)', summary?.pendingCount || 0, 'Ca'],
-        ['Tỷ lệ hoàn thành thực dạy', `${summary?.completionRate || 0}%`, 'Phần trăm'],
-        ['TỔNG TIỀN THỰC NHẬN (Đã dạy + Bù)', (summary?.totalEarnings || 0).toLocaleString('vi-VN') + ' đ', 'VNĐ'],
-        ['Thu nhập dự kiến toàn bộ tháng', (summary?.expectedEarnings || 0).toLocaleString('vi-VN') + ' đ', 'VNĐ'],
-        []
+        ['Thông tin', 'Giá trị', 'Đơn vị tính'],
+        ['Số ca dạy trong tháng', paidCount, 'Ca'],
+        ['Mức lương tổng cả tháng', (totalEarnings || 0).toLocaleString('vi-VN') + ' đ', 'VNĐ']
     ];
 
-    const detailRows = [
-        ['DANH SÁCH CHI TIẾT CÁC CA DẠY'],
-        [],
-        ['STT', 'Ngày', 'Thứ', 'Khung giờ', 'Tên lớp', 'Khối', 'Cơ sở', 'Trạng thái', 'Đơn giá (đ)', 'Thành tiền (đ)', 'Ghi chú']
+    const wsReport = XLSX.utils.aoa_to_sheet(reportRows);
+
+    // Set column widths for readability
+    wsReport['!cols'] = [
+        { wch: 28 },
+        { wch: 22 },
+        { wch: 15 }
     ];
 
-    sessions.forEach((s, idx) => {
-        const dateStr = new Date(s.date).toLocaleDateString('vi-VN');
-        const isPaid = s.status === 'COMPLETED' || s.status === 'MAKE_UP';
-        const amount = isPaid ? (s.rate || 60000) : 0;
-        let statusText = 'Scheduled';
-        if (s.status === 'COMPLETED') statusText = 'Taught';
-        else if (s.status === 'CANCELLED') statusText = 'Cancelled';
-        else if (s.status === 'MAKE_UP') statusText = 'Make-up';
-
-        detailRows.push([
-            idx + 1,
-            dateStr,
-            s.dayOfWeek || '',
-            s.timeRange || `${s.startTime} - ${s.endTime}`,
-            s.className || '',
-            s.grade ? `Khối ${s.grade}` : '',
-            s.location || '',
-            statusText,
-            s.rate || 60000,
-            amount,
-            s.note || ''
-        ]);
-    });
-
-    const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
-    const wsDetail = XLSX.utils.aoa_to_sheet(detailRows);
-
-    XLSX.utils.book_append_sheet(wb, wsSummary, 'Tổng Hợp Thu Nhập');
-    XLSX.utils.book_append_sheet(wb, wsDetail, 'Chi Tiết Ca Dạy');
-
+    XLSX.utils.book_append_sheet(wb, wsReport, 'Báo Cáo Lương');
     XLSX.writeFile(wb, fname);
+}
+
+// Hàm vẽ hình chữ nhật bo góc tương thích mọi trình duyệt
+function drawRoundRect(ctx, x, y, width, height, radius, fill = true, stroke = false) {
+    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(x, y, width, height, radius);
+    } else {
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+    }
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+}
+
+// Xuất thẻ ảnh PNG chất lượng cao cho Tổng Lương và Số ca dạy
+export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
+    let month = summary?.month;
+    let year = summary?.year;
+    if (!month || !year) {
+        const validDate = sessions.find(s => s.date)?.date;
+        const d = validDate ? new Date(validDate) : new Date();
+        if (!month) month = d.getMonth() + 1;
+        if (!year) year = d.getFullYear();
+    }
+
+    const completedCount = summary?.completed ?? summary?.completedCount ?? sessions.filter(s => s.status === 'COMPLETED').length;
+    const makeupCount = summary?.makeup ?? summary?.makeupCount ?? sessions.filter(s => s.status === 'MAKE_UP').length;
+    const paidCount = summary?.paidCount ?? summary?.paidSessionsCount ?? (completedCount + makeupCount);
+
+    const totalEarnings = summary?.earned ?? summary?.totalEarnings ?? sessions.reduce((acc, s) => {
+        if (s.status === 'COMPLETED' || s.status === 'MAKE_UP') {
+            return acc + (s.rate || 60000);
+        }
+        return acc;
+    }, 0);
+
+    const fname = filename || `Tong_Luong_Thang_${month}_${year}.png`;
+
+    const canvas = document.createElement('canvas');
+    const width = 960;
+    const height = 540;
+    const scale = 2; // 2x Retina / Full HD 1920x1080
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.scale(scale, scale);
+
+    // 1. Nền Gradient chuyển sắc hồng đào sang đỏ rượu sang trọng
+    const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+    bgGrad.addColorStop(0, '#f43f5e'); // rose-500
+    bgGrad.addColorStop(0.45, '#e11d48'); // rose-600
+    bgGrad.addColorStop(1, '#9f1239'); // rose-800
+    ctx.fillStyle = bgGrad;
+    drawRoundRect(ctx, 0, 0, width, height, 32, true, false);
+
+    // Họa tiết ánh sáng mềm (ambient glow)
+    const rad1 = ctx.createRadialGradient(820, 90, 10, 820, 90, 260);
+    rad1.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
+    rad1.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = rad1;
+    ctx.beginPath();
+    ctx.arc(820, 90, 260, 0, Math.PI * 2);
+    ctx.fill();
+
+    const rad2 = ctx.createRadialGradient(100, 480, 10, 100, 480, 220);
+    rad2.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+    rad2.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = rad2;
+    ctx.beginPath();
+    ctx.arc(100, 480, 220, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Header
+    // Badge danh mục
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+    drawRoundRect(ctx, 48, 44, 260, 36, 18, true, false);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('✦ BÁO CÁO THU NHẬP DẠY HỌC', 64, 66);
+
+    // Tiêu đề Tháng / Năm
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(`THÁNG ${month} / ${year}`, 330, 69);
+
+    // Ngày xuất
+    const todayStr = new Date().toLocaleDateString('vi-VN');
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(`Ngày xuất: ${todayStr}`, width - 48, 67);
+    ctx.textAlign = 'left';
+
+    // Đường kẻ phân cách
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(48, 100);
+    ctx.lineTo(width - 48, 100);
+    ctx.stroke();
+
+    // 3. Khối Hero: Mức Lương Tổng Cả Tháng
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.lineWidth = 1.5;
+    drawRoundRect(ctx, 48, 122, width - 96, 140, 22, true, true);
+
+    ctx.fillStyle = '#ffe4e6';
+    ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('TỔNG MỨC LƯƠNG CẢ THÁNG (THỰC NHẬN)', 76, 158);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 52px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(`${(totalEarnings || 0).toLocaleString('vi-VN')} đ`, 76, 226);
+
+    // Huy hiệu Xác nhận ở góc phải ô Hero
+    ctx.fillStyle = '#ffffff';
+    drawRoundRect(ctx, width - 212, 168, 136, 36, 18, true, false);
+    ctx.fillStyle = '#e11d48';
+    ctx.font = '800 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('✓ ĐÃ XÁC NHẬN', width - 196, 190);
+
+    // 4. Thẻ Chi Tiết Dưới: Số ca dạy trong tháng (chiếm trọn chiều ngang, cân đối)
+    const cardWidth = width - 96;
+    const cardHeight = 140;
+    const cardY = 284;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.16)';
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetY = 6;
+    drawRoundRect(ctx, 48, cardY, cardWidth, cardHeight, 20, true, false);
+
+    // Reset shadow
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
+    // Tiêu đề & Giá trị Số ca dạy
+    ctx.fillStyle = '#e11d48';
+    ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('SỐ CA DẠY TRONG THÁNG', 76, cardY + 38);
+
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '900 46px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(`${paidCount} Ca`, 76, cardY + 92);
+
+    ctx.fillStyle = '#64748b';
+    ctx.font = '500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const subBreakdown = makeupCount > 0 
+        ? `${completedCount} ca dạy chính + ${makeupCount} ca dạy bù` 
+        : `${completedCount} ca dạy hoàn thành`;
+    ctx.fillText(subBreakdown, 76, cardY + 120);
+
+    // Huy hiệu thống kê bên phải thẻ Số ca dạy
+    if (makeupCount > 0) {
+        // Pill 1: Ca chính
+        ctx.fillStyle = '#fdf2f8';
+        drawRoundRect(ctx, width - 48 - 290, cardY + 38, 130, 64, 14, true, false);
+        ctx.fillStyle = '#9d174d';
+        ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText('CA DẠY CHÍNH', width - 48 - 275, cardY + 58);
+        ctx.fillStyle = '#be185d';
+        ctx.font = '800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText(`${completedCount} Ca`, width - 48 - 275, cardY + 88);
+
+        // Pill 2: Ca bù
+        ctx.fillStyle = '#f5f3ff';
+        drawRoundRect(ctx, width - 48 - 146, cardY + 38, 126, 64, 14, true, false);
+        ctx.fillStyle = '#6b21a8';
+        ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText('CA DẠY BÙ', width - 48 - 131, cardY + 58);
+        ctx.fillStyle = '#7c3aed';
+        ctx.font = '800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText(`+${makeupCount} Ca`, width - 48 - 131, cardY + 88);
+    } else {
+        // Pill: Đã hoàn thành 100%
+        ctx.fillStyle = '#f0fdf4';
+        drawRoundRect(ctx, width - 48 - 220, cardY + 40, 200, 60, 14, true, false);
+        ctx.fillStyle = '#166534';
+        ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText('TRẠNG THÁI CA DẠY', width - 48 - 200, cardY + 60);
+        ctx.fillStyle = '#15803d';
+        ctx.font = '800 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText('✓ Hoàn thành đầy đủ', width - 48 - 200, cardY + 86);
+    }
+
+    // 5. Chân trang Footer
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.font = '500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('Task Manager • Teaching Schedule & Payroll', 48, height - 32);
+
+    ctx.textAlign = 'right';
+    ctx.fillText('Bản tổng kết mức lương chính thức', width - 48, height - 32);
+    ctx.textAlign = 'left';
+
+    // 6. Tải ảnh về máy
+    canvas.toBlob((blob) => {
+        if (!blob) {
+            const link = document.createElement('a');
+            link.download = fname;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = fname;
+        link.href = url;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, 'image/png');
 }

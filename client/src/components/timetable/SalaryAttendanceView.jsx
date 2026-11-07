@@ -26,10 +26,11 @@ import {
     X,
     ChevronDown,
     ChevronUp,
-    RefreshCw
+    RefreshCw,
+    Image as ImageIcon
 } from 'lucide-react';
 import { teachingSessionApi } from '../../api/teachingSessionApi';
-import { exportPayrollToExcel, TIME_SLOTS_MATRIX, DAYS_OF_WEEK, GRADE_CONFIG, LOCATION_CONFIG, isSessionPassed } from '../../data/timetableData';
+import { exportPayrollToExcel, exportSalaryAsImage, TIME_SLOTS_MATRIX, DAYS_OF_WEEK, GRADE_CONFIG, LOCATION_CONFIG, isSessionPassed } from '../../data/timetableData';
 import { SessionFormModal } from './SessionFormModal';
 import { WEEK_DAYS_HEADER, DAY_NAMES } from '../../data/teachingTemplates';
 
@@ -449,6 +450,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         if (summary && summary.totalEarnings > 0 && Object.keys(statusOverrides).length === 0) {
             return {
                 earned: summary.totalEarnings,
+                totalEarnings: summary.totalEarnings,
                 paidCount: summary.paidSessionsCount || 0,
                 completed: summary.completedCount || 0,
                 makeup: summary.makeupCount || 0,
@@ -479,6 +481,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
         return {
             earned,
+            totalEarnings: earned,
             paidCount: completed + makeup,
             completed,
             makeup,
@@ -781,6 +784,17 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
         toast?.success("Teaching payroll Excel downloaded!");
     };
 
+    // Export Salary Image
+    const handleExportSalaryImage = () => {
+        const exportList = allCurrentMonthSessions.length > 0 ? allCurrentMonthSessions : sessions;
+        if (exportList.length === 0 && timetableItems.length === 0) {
+            toast?.warning("No session data to export");
+            return;
+        }
+        exportSalaryAsImage(exportList, monthStats || summary);
+        toast?.success("Đã xuất ảnh Tổng Lương thành công!");
+    };
+
     return (
         <div className="space-y-4 sm:space-y-6 pb-16 min-w-0" onClick={() => activeStatusMenuId && setActiveStatusMenuId(null)}>
             {/* 1. TOTAL EARNINGS & SALARY DASHBOARD (SOLID PINK THEME - MATCHING TASKS TAB) */}
@@ -874,9 +888,20 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         <TrendingUp className="w-3.5 h-3.5 text-yellow-300" />
                                         Monthly Total Salary
                                     </span>
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-pink-600">
-                                        Actual
-                                    </span>
+                                    <div className="flex items-center gap-1.5">
+                                        <button
+                                            type="button"
+                                            onClick={handleExportSalaryImage}
+                                            className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/20 hover:bg-white/35 active:scale-95 text-white font-bold text-[10px] transition-all cursor-pointer border border-white/30"
+                                            title="Xuất ảnh Tổng Lương tháng này"
+                                        >
+                                            <ImageIcon className="w-3 h-3" />
+                                            <span>Xuất ảnh</span>
+                                        </button>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-pink-600">
+                                            Actual
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="text-xs text-pink-100 font-medium mt-1">
                                     Full Month {selectedMonth}/{selectedYear} Earnings
@@ -973,14 +998,28 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             </button>
                         </div>
 
-                        {/* Export Excel Button */}
-                        <button
-                            onClick={handleExportExcel}
-                            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
-                        >
-                            <Download className="w-3.5 h-3.5 text-pink-600" />
-                            <span>Export Payroll Excel</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {/* Export Salary Image Button */}
+                            <button
+                                type="button"
+                                onClick={handleExportSalaryImage}
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
+                                title="Xuất ảnh thẻ Tổng Lương để lưu trữ hoặc chia sẻ"
+                            >
+                                <ImageIcon className="w-3.5 h-3.5 text-pink-600" />
+                                <span>Xuất ảnh Tổng Lương</span>
+                            </button>
+
+                            {/* Export Excel Button */}
+                            <button
+                                type="button"
+                                onClick={handleExportExcel}
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
+                            >
+                                <Download className="w-3.5 h-3.5 text-pink-600" />
+                                <span>Export Payroll Excel</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1588,13 +1627,25 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                 <h3 className="font-bold text-gray-800 text-sm sm:text-base">
                                     Teaching Records for Month {selectedMonth}/{selectedYear} ({displayListSessions.length} slots)
                                 </h3>
-                                <button
-                                    onClick={handleExportExcel}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-500 text-white font-bold text-xs hover:bg-pink-600 transition-colors cursor-pointer shadow-xs"
-                                >
-                                    <Download className="w-3.5 h-3.5" />
-                                    <span>Export Excel</span>
-                                </button>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleExportSalaryImage}
+                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-pink-300 text-pink-700 font-bold text-xs hover:bg-pink-50 transition-colors cursor-pointer shadow-xs"
+                                        title="Xuất ảnh thẻ Tổng Lương"
+                                    >
+                                        <ImageIcon className="w-3.5 h-3.5 text-pink-600" />
+                                        <span>Xuất ảnh</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleExportExcel}
+                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-500 text-white font-bold text-xs hover:bg-pink-600 transition-colors cursor-pointer shadow-xs"
+                                    >
+                                        <Download className="w-3.5 h-3.5" />
+                                        <span>Export Excel</span>
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="overflow-x-auto">
