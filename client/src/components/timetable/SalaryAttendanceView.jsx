@@ -792,7 +792,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
             return;
         }
         exportSalaryAsImage(exportList, monthStats || summary);
-        toast?.success("Đã xuất ảnh Tổng Lương thành công!");
+        toast?.success("Exported Payroll Image!");
     };
 
     return (
@@ -893,7 +893,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             type="button"
                                             onClick={handleExportSalaryImage}
                                             className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/20 hover:bg-white/35 active:scale-95 text-white font-bold text-[10px] transition-all cursor-pointer border border-white/30"
-                                            title="Xuất ảnh Tổng Lương tháng này"
+                                            title="Export Payroll to Image"
                                         >
                                             <ImageIcon className="w-3 h-3" />
                                             <span>Xuất ảnh</span>
@@ -1004,10 +1004,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                 type="button"
                                 onClick={handleExportSalaryImage}
                                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
-                                title="Xuất ảnh thẻ Tổng Lương để lưu trữ hoặc chia sẻ"
+                                title="Export Payroll Image"
                             >
                                 <ImageIcon className="w-3.5 h-3.5 text-pink-600" />
-                                <span>Xuất ảnh Tổng Lương</span>
+                                <span>Export Payroll Image</span>
                             </button>
 
                             {/* Export Excel Button */}
@@ -1632,10 +1632,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         type="button"
                                         onClick={handleExportSalaryImage}
                                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-pink-300 text-pink-700 font-bold text-xs hover:bg-pink-50 transition-colors cursor-pointer shadow-xs"
-                                        title="Xuất ảnh thẻ Tổng Lương"
+                                        title="Export Payroll to Image"
                                     >
                                         <ImageIcon className="w-3.5 h-3.5 text-pink-600" />
-                                        <span>Xuất ảnh</span>
+                                        <span>Export Payroll Image</span>
                                     </button>
                                     <button
                                         type="button"

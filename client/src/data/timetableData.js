@@ -815,17 +815,22 @@ export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
     if (!ctx) return;
     ctx.scale(scale, scale);
 
-    // 1. Nền Gradient chuyển sắc hồng đào sang đỏ rượu sang trọng
+    // 1. Nền đen obsidian sang trọng theo phong cách monochrome chuyên nghiệp
     const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-    bgGrad.addColorStop(0, '#f43f5e'); // rose-500
-    bgGrad.addColorStop(0.45, '#e11d48'); // rose-600
-    bgGrad.addColorStop(1, '#9f1239'); // rose-800
+    bgGrad.addColorStop(0, '#1c1c20'); // Graphite dark zinc
+    bgGrad.addColorStop(0.5, '#111114'); // Deep zinc
+    bgGrad.addColorStop(1, '#09090b'); // Pure obsidian black
     ctx.fillStyle = bgGrad;
     drawRoundRect(ctx, 0, 0, width, height, 32, true, false);
 
-    // Họa tiết ánh sáng mềm (ambient glow)
+    // Viền khung ngoài thanh lịch
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 1.5;
+    drawRoundRect(ctx, 1, 1, width - 2, height - 2, 31, false, true);
+
+    // Họa tiết ánh sáng mềm đơn sắc (ambient glow)
     const rad1 = ctx.createRadialGradient(820, 90, 10, 820, 90, 260);
-    rad1.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
+    rad1.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
     rad1.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = rad1;
     ctx.beginPath();
@@ -833,7 +838,7 @@ export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
     ctx.fill();
 
     const rad2 = ctx.createRadialGradient(100, 480, 10, 100, 480, 220);
-    rad2.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+    rad2.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
     rad2.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = rad2;
     ctx.beginPath();
@@ -842,9 +847,11 @@ export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
 
     // 2. Header
     // Badge danh mục
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-    drawRoundRect(ctx, 48, 44, 260, 36, 18, true, false);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+    ctx.lineWidth = 1;
+    drawRoundRect(ctx, 48, 44, 260, 36, 18, true, true);
+    ctx.fillStyle = '#f4f4f5';
     ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText('✦ BÁO CÁO THU NHẬP DẠY HỌC', 64, 66);
 
@@ -855,27 +862,27 @@ export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
 
     // Ngày xuất
     const todayStr = new Date().toLocaleDateString('vi-VN');
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.fillStyle = '#a1a1aa';
     ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(`Ngày xuất: ${todayStr}`, width - 48, 67);
     ctx.textAlign = 'left';
 
     // Đường kẻ phân cách
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(48, 100);
     ctx.lineTo(width - 48, 100);
     ctx.stroke();
 
-    // 3. Khối Hero: Mức Lương Tổng Cả Tháng
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    // 3. Khối Hero: Mức Lương Tổng Cả Tháng (Dark glassmorphism cao cấp)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
     ctx.lineWidth = 1.5;
     drawRoundRect(ctx, 48, 122, width - 96, 140, 22, true, true);
 
-    ctx.fillStyle = '#ffe4e6';
+    ctx.fillStyle = '#a1a1aa';
     ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText('TỔNG MỨC LƯƠNG CẢ THÁNG (THỰC NHẬN)', 76, 158);
 
@@ -883,22 +890,22 @@ export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
     ctx.font = '900 52px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText(`${(totalEarnings || 0).toLocaleString('vi-VN')} đ`, 76, 226);
 
-    // Huy hiệu Xác nhận ở góc phải ô Hero
+    // Huy hiệu Xác nhận ở góc phải ô Hero: Nền trắng chữ đen tương phản mạnh
     ctx.fillStyle = '#ffffff';
     drawRoundRect(ctx, width - 212, 168, 136, 36, 18, true, false);
-    ctx.fillStyle = '#e11d48';
-    ctx.font = '800 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#09090b';
+    ctx.font = '900 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText('✓ ĐÃ XÁC NHẬN', width - 196, 190);
 
-    // 4. Thẻ Chi Tiết Dưới: Số ca dạy trong tháng (chiếm trọn chiều ngang, cân đối)
+    // 4. Thẻ Chi Tiết Dưới: Số ca dạy trong tháng (Nền trắng tinh khiết, chữ đen bóng bẩy)
     const cardWidth = width - 96;
     const cardHeight = 140;
     const cardY = 284;
 
     ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.16)';
-    ctx.shadowBlur = 18;
-    ctx.shadowOffsetY = 6;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+    ctx.shadowBlur = 22;
+    ctx.shadowOffsetY = 8;
     drawRoundRect(ctx, 48, cardY, cardWidth, cardHeight, 20, true, false);
 
     // Reset shadow
@@ -907,59 +914,64 @@ export function exportSalaryAsImage(sessions = [], summary = {}, filename) {
     ctx.shadowOffsetY = 0;
 
     // Tiêu đề & Giá trị Số ca dạy
-    ctx.fillStyle = '#e11d48';
+    ctx.fillStyle = '#52525b';
     ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText('SỐ CA DẠY TRONG THÁNG', 76, cardY + 38);
 
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = '#09090b';
     ctx.font = '900 46px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText(`${paidCount} Ca`, 76, cardY + 92);
 
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#71717a';
     ctx.font = '500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     const subBreakdown = makeupCount > 0 
         ? `${completedCount} ca dạy chính + ${makeupCount} ca dạy bù` 
         : `${completedCount} ca dạy hoàn thành`;
     ctx.fillText(subBreakdown, 76, cardY + 120);
 
-    // Huy hiệu thống kê bên phải thẻ Số ca dạy
+    // Huy hiệu thống kê bên phải thẻ Số ca dạy (Monochrome)
     if (makeupCount > 0) {
-        // Pill 1: Ca chính
-        ctx.fillStyle = '#fdf2f8';
-        drawRoundRect(ctx, width - 48 - 290, cardY + 38, 130, 64, 14, true, false);
-        ctx.fillStyle = '#9d174d';
+        // Pill 1: Ca chính (Xám nhạt)
+        ctx.fillStyle = '#f4f4f5';
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.lineWidth = 1;
+        drawRoundRect(ctx, width - 48 - 290, cardY + 38, 130, 64, 14, true, true);
+        ctx.fillStyle = '#71717a';
         ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillText('CA DẠY CHÍNH', width - 48 - 275, cardY + 58);
-        ctx.fillStyle = '#be185d';
-        ctx.font = '800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillStyle = '#09090b';
+        ctx.font = '900 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillText(`${completedCount} Ca`, width - 48 - 275, cardY + 88);
 
-        // Pill 2: Ca bù
-        ctx.fillStyle = '#f5f3ff';
+        // Pill 2: Ca bù (Đen tương phản)
+        ctx.fillStyle = '#09090b';
         drawRoundRect(ctx, width - 48 - 146, cardY + 38, 126, 64, 14, true, false);
-        ctx.fillStyle = '#6b21a8';
+        ctx.fillStyle = '#a1a1aa';
         ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillText('CA DẠY BÙ', width - 48 - 131, cardY + 58);
-        ctx.fillStyle = '#7c3aed';
-        ctx.font = '800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillText(`+${makeupCount} Ca`, width - 48 - 131, cardY + 88);
     } else {
-        // Pill: Đã hoàn thành 100%
-        ctx.fillStyle = '#f0fdf4';
-        drawRoundRect(ctx, width - 48 - 220, cardY + 40, 200, 60, 14, true, false);
-        ctx.fillStyle = '#166534';
+        // Pill: Đã hoàn thành 100% (Monochrome tinh giản)
+        ctx.fillStyle = '#f4f4f5';
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.lineWidth = 1;
+        drawRoundRect(ctx, width - 48 - 220, cardY + 40, 200, 60, 14, true, true);
+        ctx.fillStyle = '#71717a';
         ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillText('TRẠNG THÁI CA DẠY', width - 48 - 200, cardY + 60);
-        ctx.fillStyle = '#15803d';
-        ctx.font = '800 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-        ctx.fillText('✓ Hoàn thành đầy đủ', width - 48 - 200, cardY + 86);
+        ctx.fillStyle = '#09090b';
+        ctx.font = '900 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText('✓ Hoàn thành 100%', width - 48 - 200, cardY + 86);
     }
 
     // 5. Chân trang Footer
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.fillStyle = '#71717a';
     ctx.font = '500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.fillText('Task Manager • Teaching Schedule & Payroll', 48, height - 32);
 
+    ctx.fillStyle = '#a1a1aa';
     ctx.textAlign = 'right';
     ctx.fillText('Bản tổng kết mức lương chính thức', width - 48, height - 32);
     ctx.textAlign = 'left';
