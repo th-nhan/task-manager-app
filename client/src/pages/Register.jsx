@@ -4,6 +4,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemeSwitcher } from '../components/ThemeSwitcher';
 import { useToast } from '../context/NotificationContext';
 import { Alert } from '../components/Notification';
 import Footer from '../components/Footer';
@@ -11,6 +13,7 @@ import Footer from '../components/Footer';
 const Register = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { currentThemeConfig } = useTheme();
     const toast = useToast();
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
@@ -70,13 +73,18 @@ const Register = () => {
     };
 
     return (
-        <div className='flex min-h-screen min-h-[100dvh] flex-col items-center justify-center bg-[var(--bg-main)] p-3 sm:p-4 transition-colors duration-200'>
-            <div className='w-full max-w-md rounded-3xl bg-white p-5 sm:p-8 shadow-xl shadow-pink-200/30 border border-pink-100'>
+        <div className='relative flex min-h-screen min-h-[100dvh] flex-col items-center justify-center bg-[var(--bg-main)] p-3 sm:p-4 transition-colors duration-200'>
+            {/* Top theme switcher */}
+            <div className="absolute top-3 right-3 sm:top-5 sm:right-5 z-20">
+                <ThemeSwitcher variant="dropdown" />
+            </div>
+
+            <div className='w-full max-w-md rounded-3xl bg-[var(--bg-card)] p-5 sm:p-8 card-theme-shadow border border-[var(--border-color)] transition-all duration-200'>
                 <div className="flex items-center justify-center gap-1 mb-2">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-gray-800">Task</span>
-                    <span className="text-2xl sm:text-3xl font-extrabold text-pink-500">Note</span>
+                    <span className="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)]">Task</span>
+                    <span className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)]">Note</span>
                 </div>
-                <h1 className='text-lg sm:text-xl text-center font-bold text-gray-600 mb-6 uppercase tracking-wider'>Create Account</h1>
+                <h1 className='text-lg sm:text-xl text-center font-bold text-[var(--text-muted)] mb-6 uppercase tracking-wider'>Create Account</h1>
 
                 {error && (
                     <Alert
@@ -89,7 +97,7 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-xs sm:text-sm font-semibold text-gray-700'>Full Name</label>
+                        <label className='text-xs sm:text-sm font-semibold text-[var(--text-main)]'>Full Name</label>
                         <input
                             type="text"
                             name='name'
@@ -97,10 +105,10 @@ const Register = () => {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder='e.g. John Doe'
-                            className='px-3.5 py-2.5 sm:py-3 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200 min-h-[44px]' />
+                            className='w-full px-3.5 py-2.5 sm:py-3 border border-[var(--border-input)] bg-[var(--bg-subtle)] text-[var(--text-main)] placeholder-[var(--text-muted)]/60 rounded-xl text-sm outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-subtle)] min-h-[44px]' />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-xs sm:text-sm font-semibold text-gray-700'>Email</label>
+                        <label className='text-xs sm:text-sm font-semibold text-[var(--text-main)]'>Email</label>
                         <input
                             type="email"
                             name='email'
@@ -108,10 +116,10 @@ const Register = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder='e.g. john@example.com'
-                            className='px-3.5 py-2.5 sm:py-3 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200 min-h-[44px]' />
+                            className='w-full px-3.5 py-2.5 sm:py-3 border border-[var(--border-input)] bg-[var(--bg-subtle)] text-[var(--text-main)] placeholder-[var(--text-muted)]/60 rounded-xl text-sm outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-subtle)] min-h-[44px]' />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label className='text-xs sm:text-sm font-semibold text-gray-700'>Password</label>
+                        <label className='text-xs sm:text-sm font-semibold text-[var(--text-main)]'>Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -120,11 +128,11 @@ const Register = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 placeholder='At least 6 characters'
-                                className='w-full px-3.5 py-2.5 sm:py-3 pr-11 border border-gray-200 rounded-xl text-sm outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-200 min-h-[44px]' />
+                                className='w-full px-3.5 py-2.5 sm:py-3 pr-11 border border-[var(--border-input)] bg-[var(--bg-subtle)] text-[var(--text-main)] placeholder-[var(--text-muted)]/60 rounded-xl text-sm outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-subtle)] min-h-[44px]' />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 focus:outline-none cursor-pointer p-1 min-w-[32px] min-h-[32px] flex items-center justify-center"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--accent)] focus:outline-none cursor-pointer p-1 min-w-[32px] min-h-[32px] flex items-center justify-center transition-colors"
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -134,23 +142,23 @@ const Register = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="mt-2 rounded-xl bg-pink-500 hover:bg-pink-600 active:bg-pink-700 py-3 font-bold text-white transition cursor-pointer shadow-md shadow-pink-200/50 disabled:cursor-not-allowed disabled:opacity-60 min-h-[44px]"
+                        className="mt-2 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] active:scale-[0.99] py-3 font-bold text-white transition-all cursor-pointer btn-theme-shadow disabled:cursor-not-allowed disabled:opacity-60 min-h-[44px]"
                     >
                         {loading ? 'Processing...' : 'Sign Up'}
                     </button>
                 </form>
-                <p className="mt-4 text-center text-xs sm:text-sm text-gray-500">
+                <p className="mt-4 text-center text-xs sm:text-sm text-[var(--text-muted)]">
                     Already have an account?{' '}
-                    <Link to="/login" className="font-bold text-pink-500 hover:text-pink-600 hover:underline">
+                    <Link to="/login" className="font-bold text-[var(--accent)] hover:opacity-85 hover:underline">
                         Log in now
                     </Link>
                 </p>
                 <div className="relative mt-5">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-200"></div>
+                        <div className="w-full border-t border-[var(--border-color)]"></div>
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-gray-400">Or</span>
+                        <span className="bg-[var(--bg-card)] px-2 text-[var(--text-muted)]">Or</span>
                     </div>
                 </div>
                 <div className="mt-4 flex justify-center w-full overflow-hidden">
@@ -160,10 +168,10 @@ const Register = () => {
                         useProminentStyles
                         size="large"
                         text="signup_with"
-                        theme="outline"
+                        theme={currentThemeConfig?.isDark ? 'filled_black' : 'outline'}
                         shape="rectangular"
                         logo_alignment="center"
-                        />
+                    />
                 </div>
             </div>
             <Footer className="mt-4" />
