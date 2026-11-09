@@ -295,11 +295,6 @@ export const KanbanBoardView = ({
                                         } transition-transform`}
                                     />
                                     <span className="truncate">{col.title}</span>
-                                    {col.key === 'DONE' && (
-                                        <span className="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60 shrink-0" title="Tasks completed in current week">
-                                            Tuần này
-                                        </span>
-                                    )}
                                 </div>
                                 <span
                                     className={`text-xs px-2 py-0.5 rounded-full font-bold border transition-all shrink-0 ${
@@ -414,7 +409,7 @@ export const KanbanBoardView = ({
                                                                     e.stopPropagation();
                                                                     onDeleteTask(task.id);
                                                                 }}
-                                                                className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
+                                                                className="text-red-700 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer min-w-[20px] min-h-[20px] hidden sm:flex items-center justify-center"
                                                                 title="Delete task"
                                                             >
                                                                 <Trash2 className="w-3.5 h-3.5" />
