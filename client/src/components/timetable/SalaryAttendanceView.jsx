@@ -797,42 +797,42 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
     return (
         <div className="space-y-4 sm:space-y-6 pb-16 min-w-0" onClick={() => activeStatusMenuId && setActiveStatusMenuId(null)}>
-            {/* 1. TOTAL EARNINGS & SALARY DASHBOARD (SOLID PINK THEME - MATCHING TASKS TAB) */}
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xs border border-pink-200 relative overflow-hidden">
+            {/* 1. TOTAL EARNINGS & SALARY DASHBOARD (ADAPTS TO CURRENT THEME) */}
+            <div className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xs border border-[var(--border-color)] relative overflow-hidden">
                 <div className="relative z-10 flex flex-col gap-4">
                     {/* Header line */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                            <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 shrink-0">
+                            <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-[var(--accent-subtle)] text-[var(--accent)] shrink-0">
                                 <DollarSign className="w-6 h-6" />
                             </span>
                             <div>
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <h2 className="text-base sm:text-lg font-black tracking-tight text-pink-600 uppercase">
+                                    <h2 className="text-base sm:text-lg font-black tracking-tight text-[var(--accent)] uppercase">
                                         Teaching Salary & Attendance Tracker
                                     </h2>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-0.5">
+                                <p className="text-xs text-[var(--text-muted)] mt-0.5">
                                     Month {selectedMonth}/{selectedYear} • Auto-synced from Weekly Schedule matrix
                                 </p>
                             </div>
                         </div>
 
                         {/* Month Selector Buttons */}
-                        <div className="flex items-center gap-1.5 bg-pink-50 p-1 rounded-2xl border border-pink-200 self-start sm:self-auto">
+                        <div className="flex items-center gap-1.5 bg-[var(--bg-subtle)] p-1 rounded-2xl border border-[var(--border-color)] self-start sm:self-auto">
                             <button
                                 onClick={handlePrevMonth}
-                                className="p-1.5 rounded-xl hover:bg-pink-100 text-pink-600 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-xl hover:bg-[var(--accent-subtle)] text-[var(--accent)] transition-colors cursor-pointer"
                                 title="Previous Month"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
-                            <span className="px-2 text-xs sm:text-sm font-extrabold text-pink-700 whitespace-nowrap">
+                            <span className="px-2 text-xs sm:text-sm font-extrabold text-[var(--text-main)] whitespace-nowrap">
                                 Month {selectedMonth} / {selectedYear}
                             </span>
                             <button
                                 onClick={handleNextMonth}
-                                className="p-1.5 rounded-xl hover:bg-pink-100 text-pink-600 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-xl hover:bg-[var(--accent-subtle)] text-[var(--accent)] transition-colors cursor-pointer"
                                 title="Next Month"
                             >
                                 <ChevronRight className="w-4 h-4" />
@@ -844,7 +844,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         setSelectedYear(today.getFullYear());
                                         setSelectedWeekIndex(0);
                                     }}
-                                    className="ml-1 px-2 py-0.5 text-[10px] font-bold rounded-lg bg-pink-500 hover:bg-pink-600 text-white transition-colors cursor-pointer"
+                                    className="ml-1 px-2 py-0.5 text-[10px] font-bold rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white transition-colors cursor-pointer"
                                     title="Back to current month"
                                 >
                                     Current
@@ -856,32 +856,32 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     {/* Prominent Salary Displays: Box 1 (Week) & Box 2 (Month) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 pt-1 items-stretch">
                         {/* BOX 1: Ô TỔNG TIỀN TRONG TUẦN (WEEKLY TOTAL SALARY) */}
-                        <div className="bg-pink-50 rounded-2xl p-4 sm:p-5 border border-pink-200 flex flex-col justify-between hover:border-pink-300 transition-all shadow-2xs">
+                        <div className="bg-[var(--bg-subtle)]/40 rounded-2xl p-4 sm:p-5 border border-[var(--border-color)] flex flex-col justify-between hover:border-[var(--accent)]/50 transition-all shadow-2xs">
                             <div>
                                 <div className="flex items-center justify-between gap-1">
-                                    <span className="text-xs font-black uppercase tracking-wider text-pink-700 flex items-center gap-1">
+                                    <span className="text-xs font-black uppercase tracking-wider text-[var(--accent)] flex items-center gap-1">
                                         <Calendar className="w-3.5 h-3.5" />
                                         Weekly Total Salary
                                     </span>
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-200 text-pink-800">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--accent-subtle)] text-[var(--accent)]">
                                         Week {selectedWeekIndex + 1}
                                     </span>
                                 </div>
-                                <div className="text-xs text-pink-600 font-semibold mt-1">
+                                <div className="text-xs text-[var(--text-muted)] font-semibold mt-1">
                                     {currentWeekDays[0]?.dayNumber}/{currentWeekDays[0]?.date.getMonth() + 1} – {currentWeekDays[6]?.dayNumber}/{currentWeekDays[6]?.date.getMonth() + 1}
                                 </div>
-                                <div className="text-3xl sm:text-4xl font-black text-pink-600 mt-2 tracking-tight">
-                                    {weekStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-gray-600">VND</span>
+                                <div className="text-3xl sm:text-4xl font-black text-[var(--accent)] mt-2 tracking-tight">
+                                    {weekStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-[var(--text-muted)]">VND</span>
                                 </div>
                             </div>
-                            <div className="text-[11px] text-pink-700 mt-3 pt-2.5 border-t border-pink-200 font-medium flex items-center justify-between">
+                            <div className="text-[11px] text-[var(--text-muted)] mt-3 pt-2.5 border-t border-[var(--border-color)] font-medium flex items-center justify-between">
                                 <span>Completed slots:</span>
-                                <b className="text-pink-900 font-bold">{weekStats.paidCount} / {weekStats.total} slots ({weekStats.completed} taught + {weekStats.makeup} make-up)</b>
+                                <b className="text-[var(--text-main)] font-bold">{weekStats.paidCount} / {weekStats.total} slots ({weekStats.completed} taught + {weekStats.makeup} make-up)</b>
                             </div>
                         </div>
 
                         {/* BOX 2: Ô TỔNG TIỀN TRONG THÁNG (MONTHLY TOTAL SALARY) */}
-                        <div className="bg-pink-500 rounded-2xl p-4 sm:p-5 border border-pink-500 text-white flex flex-col justify-between hover:bg-pink-600 transition-all shadow-xs">
+                        <div className="bg-[var(--accent)] rounded-2xl p-4 sm:p-5 border border-[var(--accent)] text-white flex flex-col justify-between hover:brightness-105 transition-all shadow-xs">
                             <div>
                                 <div className="flex items-center justify-between gap-1">
                                     <span className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1">
@@ -898,74 +898,74 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             <ImageIcon className="w-3 h-3" />
                                             <span>Xuất ảnh</span>
                                         </button>
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-pink-600">
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-[var(--accent)]">
                                             Actual
                                         </span>
                                     </div>
                                 </div>
-                                <div className="text-xs text-pink-100 font-medium mt-1">
+                                <div className="text-xs text-white/80 font-medium mt-1">
                                     Full Month {selectedMonth}/{selectedYear} Earnings
                                 </div>
                                 <div className="text-3xl sm:text-4xl font-black text-white mt-2 tracking-tight">
-                                    {monthStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-pink-200">VND</span>
+                                    {monthStats.earned.toLocaleString('en-US')} <span className="text-lg font-bold text-white/80">VND</span>
                                 </div>
                             </div>
-                            <div className="text-[11px] text-pink-100 mt-3 pt-2.5 border-t border-pink-400 font-medium flex items-center justify-between">
+                            <div className="text-[11px] text-white/90 mt-3 pt-2.5 border-t border-white/30 font-medium flex items-center justify-between">
                                 <span>Month billable slots:</span>
                                 <b className="text-white font-bold">{monthStats.paidCount} slots ({monthStats.completed} taught + {monthStats.makeup} make-up)</b>
                             </div>
                         </div>
 
                         {/* BOX 3: Weekly Status Breakdown */}
-                        <div className="bg-pink-50 rounded-2xl p-3.5 sm:p-4 border border-pink-200 flex flex-col justify-between gap-2 md:col-span-2 lg:col-span-1 shadow-2xs">
-                            <div className="flex items-center justify-between text-xs text-pink-900">
+                        <div className="bg-[var(--bg-subtle)]/40 rounded-2xl p-3.5 sm:p-4 border border-[var(--border-color)] flex flex-col justify-between gap-2 md:col-span-2 lg:col-span-1 shadow-2xs">
+                            <div className="flex items-center justify-between text-xs text-[var(--text-main)]">
                                 <span className="font-bold">Weekly Slots Breakdown:</span>
                             </div>
                             <div className="grid grid-cols-2 gap-1.5 text-xs">
-                                <div className="px-2.5 py-1.5 rounded-xl bg-white border border-pink-200 flex items-center justify-between">
-                                    <span className="text-pink-700 font-semibold flex items-center gap-1.5">
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-pink-500" />
+                                <div className="px-2.5 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-between">
+                                    <span className="text-[var(--accent)] font-semibold flex items-center gap-1.5">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent)]" />
                                         <span>Taught:</span>
                                     </span>
-                                    <b className="text-pink-900 font-bold">{weekStats.completed} slots</b>
+                                    <b className="text-[var(--text-main)] font-bold">{weekStats.completed} slots</b>
                                 </div>
-                                <div className="px-2.5 py-1.5 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-between">
+                                <div className="px-2.5 py-1.5 rounded-xl bg-purple-50/80 session-card-makeup border border-purple-200 flex items-center justify-between">
                                     <span className="text-purple-700 font-semibold flex items-center gap-1.5">
                                         <RotateCcw className="w-3.5 h-3.5 text-purple-500" />
                                         <span>Make-up:</span>
                                     </span>
-                                    <b className="text-purple-900 font-bold">+{weekStats.makeup} slots</b>
+                                    <b className="font-bold">+{weekStats.makeup} slots</b>
                                 </div>
-                                <div className="px-2.5 py-1.5 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-between">
+                                <div className="px-2.5 py-1.5 rounded-xl bg-gray-100/80 session-card-cancelled border border-gray-200 flex items-center justify-between">
                                     <span className="text-gray-600 font-semibold flex items-center gap-1.5">
                                         <XCircle className="w-3.5 h-3.5 text-gray-500" />
                                         <span>Cancelled:</span>
                                     </span>
-                                    <b className="text-gray-800 font-bold">{weekStats.cancelled} slots</b>
+                                    <b className="font-bold">{weekStats.cancelled} slots</b>
                                 </div>
-                                <div className="px-2.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between">
+                                <div className="px-2.5 py-1.5 rounded-xl bg-amber-50/80 session-card-pending border border-amber-200 flex items-center justify-between">
                                     <span className="text-amber-800 font-semibold flex items-center gap-1.5">
                                         <Clock className="w-3.5 h-3.5 text-amber-600" />
                                         <span>Scheduled:</span>
                                     </span>
-                                    <b className="text-amber-900 font-bold">{weekStats.pending} slots</b>
+                                    <b className="font-bold">{weekStats.pending} slots</b>
                                 </div>
                             </div>
-                            <div className="text-[11px] text-pink-800 font-semibold pt-1 border-t border-pink-200 flex items-center justify-between">
+                            <div className="text-[11px] text-[var(--text-muted)] font-semibold pt-1 border-t border-[var(--border-color)] flex items-center justify-between">
                                 <span>Expected this week:</span>
-                                <b className="text-pink-950 font-bold">{weekStats.expected.toLocaleString('en-US')} VND</b>
+                                <b className="text-[var(--text-main)] font-bold">{weekStats.expected.toLocaleString('en-US')} VND</b>
                             </div>
                         </div>
                     </div>
 
                     {/* Action Toolbar */}
-                    <div className="pt-3 border-t border-pink-100 flex flex-wrap items-center justify-between gap-2.5">
+                    <div className="pt-3 border-t border-[var(--border-color)] flex flex-wrap items-center justify-between gap-2.5">
                         <div className="flex items-center gap-2 flex-wrap">
                             {/* Auto Sync from Weekly Grid Button */}
                             <button
                                 onClick={() => handleAutoGenerateFromTimetable(selectedMonth, selectedYear, true)}
                                 disabled={isGenerating || isLoading}
-                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-pink-500 text-white hover:bg-pink-600 font-bold text-xs shadow-xs transition-all cursor-pointer min-h-[36px]"
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--accent)] text-white hover:brightness-110 font-bold text-xs shadow-xs transition-all cursor-pointer min-h-[36px]"
                                 title="Sync all scheduled slots from Weekly Grid into Attendance matrix"
                             >
                                 <Sparkles className="w-3.5 h-3.5" />
@@ -976,10 +976,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <button
                                 onClick={handleBatchMarkWeekCompleted}
                                 disabled={isLoading}
-                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-pink-200"
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--accent-subtle)] hover:brightness-110 text-[var(--accent)] font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-[var(--border-color)]"
                                 title="Mark all scheduled slots this week as Taught"
                             >
-                                <Check className="w-3.5 h-3.5 text-pink-600" />
+                                <Check className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 <span>Mark Week as Completed</span>
                             </button>
 
@@ -991,9 +991,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                     setInitialModalSlot(null);
                                     setIsFormModalOpen(true);
                                 }}
-                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-pink-200"
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--accent-subtle)] hover:brightness-110 text-[var(--accent)] font-bold text-xs transition-colors cursor-pointer min-h-[36px] border border-[var(--border-color)]"
                             >
-                                <Plus className="w-3.5 h-3.5 text-pink-600" />
+                                <Plus className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 <span>Add Extra / Make-up Slot</span>
                             </button>
                         </div>
@@ -1003,10 +1003,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <button
                                 type="button"
                                 onClick={handleExportSalaryImage}
-                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--accent-subtle)] text-[var(--text-main)] font-bold text-xs transition-colors cursor-pointer border border-[var(--border-color)] min-h-[36px]"
                                 title="Export Payroll Image"
                             >
-                                <ImageIcon className="w-3.5 h-3.5 text-pink-600" />
+                                <ImageIcon className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 <span>Export Payroll Image</span>
                             </button>
 
@@ -1014,9 +1014,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <button
                                 type="button"
                                 onClick={handleExportExcel}
-                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-pink-50 text-pink-700 font-bold text-xs transition-colors cursor-pointer border border-pink-300 min-h-[36px]"
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--accent-subtle)] text-[var(--text-main)] font-bold text-xs transition-colors cursor-pointer border border-[var(--border-color)] min-h-[36px]"
                             >
-                                <Download className="w-3.5 h-3.5 text-pink-600" />
+                                <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 <span>Export Payroll Excel</span>
                             </button>
                         </div>
@@ -1025,15 +1025,15 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
             </div>
 
             {/* 2. TOOLBAR: VIEW SWITCHER & WEEK NAVIGATOR */}
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-xs border border-pink-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            <div className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-xs border border-[var(--border-color)] flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
                 {/* View Mode Switcher */}
-                <div className="flex items-center gap-1 bg-pink-50 p-1 rounded-2xl border border-pink-200 overflow-x-auto shrink-0">
+                <div className="flex items-center gap-1 bg-[var(--bg-subtle)] p-1 rounded-2xl border border-[var(--border-color)] overflow-x-auto shrink-0">
                     <button
                         onClick={() => setLayoutMode('weekly-grid')}
                         className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                             layoutMode === 'weekly-grid'
-                                ? 'bg-pink-500 text-white shadow-xs'
-                                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-100'
+                                ? 'bg-[var(--accent)] text-white shadow-xs'
+                                : 'text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-subtle)]'
                         }`}
                     >
                         <LayoutGrid className="w-4 h-4" />
@@ -1044,8 +1044,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         onClick={() => setLayoutMode('month')}
                         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                             layoutMode === 'month'
-                                ? 'bg-pink-500 text-white shadow-xs'
-                                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-100'
+                                ? 'bg-[var(--accent)] text-white shadow-xs'
+                                : 'text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-subtle)]'
                         }`}
                     >
                         <CalendarDays className="w-4 h-4" />
@@ -1056,8 +1056,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         onClick={() => setLayoutMode('list')}
                         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer min-h-[38px] shrink-0 ${
                             layoutMode === 'list'
-                                ? 'bg-pink-500 text-white shadow-xs'
-                                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-100'
+                                ? 'bg-[var(--accent)] text-white shadow-xs'
+                                : 'text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-subtle)]'
                         }`}
                     >
                         <ListFilter className="w-4 h-4" />
@@ -1068,11 +1068,11 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                 {/* Week Navigator for Weekly Grid View */}
                 {layoutMode === 'weekly-grid' && (
                     <div className="flex items-center justify-between lg:justify-end gap-2 flex-wrap">
-                        <div className="flex items-center gap-1 bg-pink-50 p-1 rounded-xl border border-pink-200">
+                        <div className="flex items-center gap-1 bg-[var(--bg-subtle)] p-1 rounded-xl border border-[var(--border-color)]">
                             <button
                                 disabled={selectedWeekIndex <= 0}
                                 onClick={() => setSelectedWeekIndex(prev => Math.max(0, prev - 1))}
-                                className="px-2.5 py-1.5 rounded-lg bg-white text-gray-700 font-bold text-xs hover:text-pink-600 disabled:opacity-40 cursor-pointer shadow-2xs border border-pink-100"
+                                className="px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-main)] font-bold text-xs hover:text-[var(--accent)] disabled:opacity-40 cursor-pointer shadow-2xs border border-[var(--border-color)]"
                                 title="Previous Week"
                             >
                                 ← Prev Week
@@ -1082,7 +1082,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <select
                                 value={selectedWeekIndex}
                                 onChange={(e) => setSelectedWeekIndex(Number(e.target.value))}
-                                className="bg-transparent font-bold text-xs text-gray-800 px-2 py-1 outline-none cursor-pointer"
+                                className="bg-transparent font-bold text-xs text-[var(--text-main)] px-2 py-1 outline-none cursor-pointer"
                             >
                                 {monthWeeks.map((week, idx) => {
                                     const first = week[0];
@@ -1098,7 +1098,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <button
                                 disabled={selectedWeekIndex >= monthWeeks.length - 1}
                                 onClick={() => setSelectedWeekIndex(prev => Math.min(monthWeeks.length - 1, prev + 1))}
-                                className="px-2.5 py-1.5 rounded-lg bg-white text-gray-700 font-bold text-xs hover:text-pink-600 disabled:opacity-40 cursor-pointer shadow-2xs border border-pink-100"
+                                className="px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-main)] font-bold text-xs hover:text-[var(--accent)] disabled:opacity-40 cursor-pointer shadow-2xs border border-[var(--border-color)]"
                                 title="Next Week"
                             >
                                 Next Week →
@@ -1112,7 +1112,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="text-xs px-2.5 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
+                        className="text-xs px-2.5 py-2 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] font-medium text-[var(--text-main)] cursor-pointer min-h-[38px]"
                     >
                         <option value="ALL">All Statuses</option>
                         <option value="COMPLETED">Taught</option>
@@ -1124,7 +1124,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     <select
                         value={filterLocation}
                         onChange={(e) => setFilterLocation(e.target.value)}
-                        className="text-xs px-2.5 py-2 rounded-xl border border-pink-200 bg-white font-medium text-gray-700 cursor-pointer min-h-[38px]"
+                        className="text-xs px-2.5 py-2 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] font-medium text-[var(--text-main)] cursor-pointer min-h-[38px]"
                     >
                         <option value="ALL">All Locations</option>
                         <option value="Long Thượng">Long Thượng</option>
@@ -1135,43 +1135,44 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
             {/* 3. MAIN SCHEDULE VIEWS */}
             {isLoading ? (
-                <div className="py-24 text-center bg-white rounded-3xl border border-pink-100 shadow-sm">
-                    <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-pink-500 border-t-transparent" />
-                    <p className="mt-3 text-sm text-gray-500 font-bold">Loading and syncing teaching salary schedule...</p>
+                <div className="py-24 text-center bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm">
+                    <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-[var(--accent)] border-t-transparent" />
+                    <p className="mt-3 text-sm text-[var(--text-muted)] font-bold">Loading and syncing teaching salary schedule...</p>
                 </div>
             ) : (
                 <>
                     {/* VIEW A: WEEKLY MATRIX (PRIMARY DEFAULT) */}
+                    {/* VIEW A: WEEKLY MATRIX (PRIMARY DEFAULT) */}
                     {layoutMode === 'weekly-grid' && (
-                        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-pink-100 overflow-hidden min-w-0">
+                        <div className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl shadow-sm border border-[var(--border-color)] overflow-hidden min-w-0">
                             {/* Matrix Header Banner */}
-                            <div className="p-4 sm:p-5 bg-pink-50 border-b border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="p-4 sm:p-5 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
-                                    <h3 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2 flex-wrap">
+                                    <h3 className="text-base sm:text-lg font-bold text-[var(--text-main)] flex items-center gap-2 flex-wrap">
                                         <span>📅 Weekly Attendance & Earnings (Week {selectedWeekIndex + 1})</span>
-                                        <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-700 border border-pink-200">
+                                        <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--border-color)]">
                                             {currentWeekDays[0]?.dayNumber}/{currentWeekDays[0]?.date.getMonth() + 1} – {currentWeekDays[6]?.dayNumber}/{currentWeekDays[6]?.date.getMonth() + 1}
                                         </span>
                                     </h3>
-                                    <p className="text-xs text-gray-500 mt-0.5">
+                                    <p className="text-xs text-[var(--text-muted)] mt-0.5">
                                         Auto-updates to "Taught" when time has passed • Click any slot badge to adjust status
                                     </p>
                                 </div>
 
                                 <div className="flex items-center gap-2 text-xs flex-wrap">
-                                    <span className="flex items-center gap-1 font-semibold text-pink-700 bg-pink-100/80 px-2 py-0.5 rounded-md border border-pink-300">
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-pink-600" />
+                                    <span className="flex items-center gap-1 font-semibold text-[var(--accent)] bg-[var(--accent-subtle)] px-2 py-0.5 rounded-md border border-[var(--accent)]/40">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent)]" />
                                         <span>Taught</span>
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-300">
+                                    <span className="flex items-center gap-1 font-semibold text-purple-700 bg-purple-50 session-btn-makeup px-2 py-0.5 rounded-md border border-purple-300">
                                         <RotateCcw className="w-3.5 h-3.5 text-purple-600" />
                                         <span>Make-up</span>
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-300">
+                                    <span className="flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 session-btn-pending px-2 py-0.5 rounded-md border border-amber-300">
                                         <Clock className="w-3.5 h-3.5 text-amber-700" />
                                         <span>Scheduled</span>
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-md border border-gray-300">
+                                    <span className="flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 session-btn-cancelled px-2 py-0.5 rounded-md border border-gray-300">
                                         <XCircle className="w-3.5 h-3.5 text-gray-500" />
                                         <span>Cancelled</span>
                                     </span>
@@ -1179,7 +1180,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             </div>
 
                             {/* Mobile swipe hint */}
-                            <div className="md:hidden flex items-center justify-between text-[11px] text-pink-600 bg-pink-50 px-4 py-1.5 border-b border-pink-100">
+                            <div className="md:hidden flex items-center justify-between text-[11px] text-[var(--accent)] bg-[var(--bg-subtle)] px-4 py-1.5 border-b border-[var(--border-color)]">
                                 <span>👈 Scroll horizontally to view all 7 days 👉</span>
                             </div>
 
@@ -1187,8 +1188,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <div className="overflow-x-auto pb-2">
                                 <table className="w-full border-collapse text-left min-w-[920px] lg:min-w-[980px]">
                                     <thead>
-                                        <tr className="bg-pink-50 border-b border-pink-100">
-                                            <th className="p-3 text-xs font-bold text-gray-600 uppercase tracking-wider w-36 sm:w-40 text-center">
+                                        <tr className="bg-[var(--bg-subtle)] border-b border-[var(--border-color)]">
+                                            <th className="p-3 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider w-36 sm:w-40 text-center">
                                                 Time Slot
                                             </th>
                                             {currentWeekDays.map((colDay, dayIdx) => {
@@ -1201,29 +1202,29 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                 return (
                                                     <th
                                                         key={colDay.dateKey}
-                                                        className={`p-2.5 sm:p-3 text-center border-l border-pink-100 transition-colors ${
+                                                        className={`p-2.5 sm:p-3 text-center border-l border-[var(--border-color)] transition-colors ${
                                                             isToday
-                                                                ? 'bg-pink-200 text-pink-900 font-black'
+                                                                ? 'bg-[var(--accent-subtle)] text-[var(--accent)] font-black'
                                                                 : colDay.isWeekend
-                                                                    ? 'bg-pink-50 text-pink-700'
-                                                                    : 'bg-white text-gray-800'
+                                                                    ? 'bg-[var(--bg-subtle)]/70 text-[var(--accent)]'
+                                                                    : 'bg-[var(--bg-card)] text-[var(--text-main)]'
                                                         }`}
                                                     >
                                                         <div className="flex flex-col items-center justify-center gap-0.5">
                                                             <div className="flex items-center gap-1.5">
-                                                                <span className="text-xs font-extrabold uppercase">
+                                                                <span className={`text-xs font-extrabold uppercase ${isToday ? 'text-[var(--accent)]' : colDay.isWeekend ? 'text-[var(--accent)]' : 'text-[var(--text-main)]'}`}>
                                                                     {DAYS_OF_WEEK[dayIdx]?.labelEn || DAYS_OF_WEEK[dayIdx]?.label || colDay.dayName}
                                                                 </span>
                                                                 {isToday && (
-                                                                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-pink-500 text-white font-normal">
+                                                                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[var(--accent)] text-white font-normal">
                                                                         Today
                                                                     </span>
                                                                 )}
                                                             </div>
-                                                            <span className="text-xs font-black text-gray-800">
+                                                            <span className={`text-xs font-black ${isToday ? 'text-[var(--accent)]' : 'text-[var(--text-main)]'}`}>
                                                                 {colDay.dayNumber}/{colDay.date.getMonth() + 1}
                                                             </span>
-                                                            <span className="text-[10px] font-bold text-pink-700 bg-white px-1.5 py-0.2 rounded-md shadow-2xs border border-pink-200 mt-0.5">
+                                                            <span className="text-[10px] font-bold text-[var(--accent)] bg-[var(--bg-card)] px-1.5 py-0.2 rounded-md shadow-2xs border border-[var(--border-color)] mt-0.5">
                                                                 {daySlotSessions.length} slots • {dayEarned.toLocaleString('en-US')} VND
                                                             </span>
                                                         </div>
@@ -1233,7 +1234,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                         </tr>
                                     </thead>
 
-                                    <tbody className="divide-y divide-pink-100">
+                                    <tbody className="divide-y divide-[var(--border-color)]">
                                         {TIME_SLOTS_MATRIX.map((slotItem, slotIdx) => {
                                             const isRowHasActiveMenu = currentWeekDays.some(colDay => {
                                                 const sList = getSessionsForSlotAndDay(slotItem, colDay);
@@ -1243,18 +1244,18 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             return (
                                                 <tr
                                                     key={slotItem.id || slotItem.slot}
-                                                    className={`hover:bg-pink-50 transition-colors ${
+                                                    className={`hover:bg-[var(--accent-subtle)]/30 transition-colors ${
                                                         isRowHasActiveMenu ? 'relative z-50' : 'relative z-0'
                                                     } ${
-                                                        slotIdx % 2 === 0 ? 'bg-white' : 'bg-pink-50'
+                                                        slotIdx % 2 === 0 ? 'bg-[var(--bg-card)]' : 'bg-[var(--bg-subtle)]/40'
                                                     }`}
                                                 >
                                                     {/* Time Slot Column */}
-                                                    <td className="p-2.5 sm:p-3 text-center border-r border-pink-100 bg-gray-50 align-middle">
-                                                        <div className="font-extrabold text-xs text-gray-800">
+                                                    <td className="p-2.5 sm:p-3 text-center border-r border-[var(--border-color)] bg-[var(--bg-subtle)]/60 align-middle">
+                                                        <div className="font-extrabold text-xs text-[var(--text-main)]">
                                                             {slotItem.label}
                                                         </div>
-                                                        <div className="text-[10px] text-pink-600 font-bold mt-0.5">
+                                                        <div className="text-[10px] text-[var(--accent)] font-bold mt-0.5">
                                                             {slotItem.periodEn || slotItem.period}
                                                         </div>
                                                     </td>
@@ -1268,8 +1269,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                         return (
                                                             <td
                                                                 key={`${slotItem.slot}_${colDay.dateKey}`}
-                                                                className={`p-1.5 sm:p-2 border-l border-pink-100 align-top transition-colors min-w-[110px] ${
-                                                                    isToday ? 'bg-pink-50' : ''
+                                                                className={`p-1.5 sm:p-2 border-l border-[var(--border-color)] align-top transition-colors min-w-[110px] ${
+                                                                    isToday ? 'bg-[var(--accent-subtle)]/15' : ''
                                                                 } ${isCellHasActiveMenu ? 'relative z-50 overflow-visible' : 'relative'}`}
                                                             >
                                                                 {matchedSessions.length === 0 ? (
@@ -1277,12 +1278,12 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                         <button
                                                                             onClick={() => handleAddSessionAtSlot(colDay, slotItem)}
                                                                             title={`Add slot on ${colDay.dayName} ${colDay.dayNumber}/${colDay.date.getMonth() + 1} (${slotItem.label})`}
-                                                                            className="opacity-0 group-hover/empty:opacity-100 text-[10px] font-bold text-pink-600 bg-pink-50 hover:bg-pink-100 px-2 py-1 rounded-lg border border-pink-200 transition-all cursor-pointer flex items-center gap-1"
+                                                                            className="opacity-0 group-hover/empty:opacity-100 text-[10px] font-bold text-[var(--accent)] bg-[var(--accent-subtle)] hover:brightness-110 px-2 py-1 rounded-lg border border-[var(--border-color)] transition-all cursor-pointer flex items-center gap-1"
                                                                         >
                                                                             <Plus className="w-3 h-3" />
                                                                             <span>+ Add</span>
                                                                         </button>
-                                                                        <span className="text-gray-200 text-xs group-hover/empty:hidden">
+                                                                        <span className="text-[var(--text-muted)] opacity-30 text-xs group-hover/empty:hidden">
                                                                             -
                                                                         </span>
                                                                     </div>
@@ -1296,28 +1297,32 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                             const isPending = session.status === 'PENDING';
                                                                             const isMenuOpen = activeStatusMenuId === session.id;
 
+                                                                            const statusCardStyles = isCompleted
+                                                                                ? 'bg-[var(--accent-subtle)] border-[var(--accent)]/60 ring-1 ring-[var(--accent)]/40'
+                                                                                : isMakeup
+                                                                                    ? 'bg-purple-50/90 border-purple-300 ring-1 ring-purple-400 session-card-makeup'
+                                                                                    : isCancelled
+                                                                                        ? 'bg-gray-100/90 border-gray-300 opacity-75 session-card-cancelled'
+                                                                                        : 'bg-amber-50/90 border-amber-300 ring-1 ring-amber-400 session-card-pending';
+
+                                                                            const statusPillColor = isCompleted
+                                                                                ? 'bg-[var(--accent)]'
+                                                                                : isMakeup
+                                                                                    ? 'bg-purple-500'
+                                                                                    : isCancelled
+                                                                                        ? 'bg-gray-400'
+                                                                                        : 'bg-amber-400';
+
                                                                             return (
                                                                                 <div
                                                                                     key={session.id}
                                                                                     className={`w-full text-left p-2 rounded-2xl border shadow-xs transition-all relative overflow-visible group/card ${
-                                                                                        isMenuOpen ? 'z-50 ring-2 ring-pink-400 shadow-lg' : 'z-10'
-                                                                                    } ${
-                                                                                        isCompleted
-                                                                                            ? 'bg-pink-50 border-pink-300 ring-1 ring-pink-400'
-                                                                                            : isMakeup
-                                                                                                ? 'bg-purple-50 border-purple-300 ring-1 ring-purple-400'
-                                                                                            : isCancelled
-                                                                                                ? 'bg-gray-100 border-gray-300 opacity-75'
-                                                                                                : 'bg-amber-50 border-amber-300 ring-1 ring-amber-400'
-                                                                                    }`}
+                                                                                        isMenuOpen ? 'z-50 ring-2 ring-[var(--accent)] shadow-lg' : 'z-10'
+                                                                                    } ${statusCardStyles}`}
                                                                                 >
                                                                                     {/* Pill Accent (clipped to card's rounded border) */}
                                                                                     <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                                                                                        <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                                                                                            isCompleted ? 'bg-pink-500' :
-                                                                                            isMakeup ? 'bg-purple-500' :
-                                                                                            isCancelled ? 'bg-gray-400' : 'bg-amber-400'
-                                                                                        }`} />
+                                                                                        <div className={`absolute left-0 top-0 bottom-0 w-1 ${statusPillColor}`} />
                                                                                     </div>
 
                                                                                     <div className="pl-1">
@@ -1326,26 +1331,26 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                             <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${gradeStyle.badgeBg} ${gradeStyle.badgeText}`}>
                                                                                                 G{session.grade}
                                                                                             </span>
-                                                                                            <span className="text-[9px] font-bold text-gray-600 bg-white px-1 rounded shadow-2xs">
+                                                                                            <span className="text-[9px] font-bold text-[var(--text-muted)] bg-[var(--bg-card)] px-1 rounded shadow-2xs border border-[var(--border-color)]">
                                                                                                 {session.location === 'Long Thượng' ? 'LT' : 'ML'}
                                                                                             </span>
                                                                                         </div>
 
                                                                                         {/* Class Name */}
                                                                                         <div className={`font-bold text-xs leading-tight line-clamp-2 ${
-                                                                                            isCancelled ? 'line-through text-gray-400' : 'text-gray-900'
+                                                                                            isCancelled ? 'line-through text-[var(--text-muted)] opacity-60' : 'text-[var(--text-main)]'
                                                                                         }`}>
                                                                                             {session.originalCode || session.className}
                                                                                         </div>
 
                                                                                         {/* Time */}
-                                                                                        <div className="flex items-center gap-1 text-[9px] text-gray-500 mt-1">
-                                                                                            <Clock className="w-2.5 h-2.5 text-pink-400" />
+                                                                                        <div className="flex items-center gap-1 text-[9px] text-[var(--text-muted)] mt-1">
+                                                                                            <Clock className="w-2.5 h-2.5 text-[var(--accent)] opacity-80" />
                                                                                             <span>{session.startTime} - {session.endTime}</span>
                                                                                         </div>
 
                                                                                         {/* Interactive Status Changer with Dropdown */}
-                                                                                        <div className="mt-1.5 pt-1.5 border-t border-gray-100 flex items-center justify-between gap-1 relative">
+                                                                                        <div className="mt-1.5 pt-1.5 border-t border-[var(--border-color)]/60 flex items-center justify-between gap-1 relative">
                                                                                             <button
                                                                                                 type="button"
                                                                                                 onClick={(e) => {
@@ -1355,15 +1360,15 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                 title="Click to adjust status: Taught / Make-up / Scheduled / Cancelled"
                                                                                                 className={`w-full py-1 px-1.5 rounded-lg text-[9px] font-extrabold flex items-center justify-center gap-1 cursor-pointer transition-all shadow-2xs hover:scale-[1.02] border ${
                                                                                                     isCompleted
-                                                                                                        ? 'bg-pink-50 text-pink-700 border-pink-300 hover:bg-pink-100'
+                                                                                                        ? 'bg-[var(--accent)]/15 text-[var(--accent)] border-[var(--accent)]/40 hover:bg-[var(--accent)]/25'
                                                                                                         : isMakeup
-                                                                                                            ? 'bg-purple-50 text-purple-700 border-purple-300 hover:bg-purple-100'
+                                                                                                            ? 'bg-purple-100/80 text-purple-700 border-purple-300 hover:bg-purple-200 session-btn-makeup'
                                                                                                             : isCancelled
-                                                                                                                ? 'bg-gray-100 text-gray-500 border-gray-300 line-through hover:bg-gray-200'
-                                                                                                                : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+                                                                                                                ? 'bg-gray-100 text-gray-500 border-gray-300 line-through hover:bg-gray-200 session-btn-cancelled'
+                                                                                                                : 'bg-amber-100/80 text-amber-800 border-amber-300 hover:bg-amber-200 session-btn-pending'
                                                                                                 }`}
                                                                                             >
-                                                                                                {isCompleted && <CheckCircle2 className="w-3 h-3 text-pink-600" />}
+                                                                                                {isCompleted && <CheckCircle2 className="w-3 h-3 text-[var(--accent)]" />}
                                                                                                 {isMakeup && <RotateCcw className="w-3 h-3 text-purple-600" />}
                                                                                                 {isCancelled && <XCircle className="w-3 h-3 text-gray-400" />}
                                                                                                 {isPending && <Clock className="w-3 h-3 text-amber-600" />}
@@ -1380,9 +1385,9 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                 <div
                                                                                                     onMouseDown={(e) => e.stopPropagation()}
                                                                                                     onClick={(e) => e.stopPropagation()}
-                                                                                                    className="absolute z-[999] left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-2xl border border-pink-200 p-1.5 space-y-1 text-left animate-in fade-in duration-150 min-w-[135px]"
+                                                                                                    className="absolute z-[999] left-0 right-0 top-full mt-1 bg-[var(--bg-card)] rounded-xl shadow-2xl border border-[var(--border-color)] p-1.5 space-y-1 text-left animate-in fade-in duration-150 min-w-[135px]"
                                                                                                 >
-                                                                                                    <div className="text-[9px] font-bold text-gray-400 px-1.5 py-0.5 uppercase">Set Status:</div>
+                                                                                                    <div className="text-[9px] font-bold text-[var(--text-muted)] px-1.5 py-0.5 uppercase">Set Status:</div>
                                                                                                     <button
                                                                                                         type="button"
                                                                                                         onMouseDown={(e) => {
@@ -1396,10 +1401,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                             handleSetStatus(session, 'COMPLETED');
                                                                                                         }}
                                                                                                         className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 cursor-pointer ${
-                                                                                                            isCompleted ? 'bg-pink-100 text-pink-700' : 'hover:bg-pink-50 text-gray-700'
+                                                                                                            isCompleted ? 'bg-[var(--accent-subtle)] text-[var(--accent)]' : 'hover:bg-[var(--accent-subtle)]/40 text-[var(--text-main)]'
                                                                                                         }`}
                                                                                                     >
-                                                                                                        <CheckCircle2 className="w-3 h-3 text-pink-500" />
+                                                                                                        <CheckCircle2 className="w-3 h-3 text-[var(--accent)]" />
                                                                                                         <span>Taught</span>
                                                                                                     </button>
                                                                                                     <button
@@ -1415,7 +1420,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                             handleSetStatus(session, 'MAKE_UP');
                                                                                                         }}
                                                                                                         className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 cursor-pointer ${
-                                                                                                            isMakeup ? 'bg-purple-50 text-purple-700' : 'hover:bg-gray-50 text-gray-700'
+                                                                                                            isMakeup ? 'bg-purple-100 text-purple-700 session-btn-makeup' : 'hover:bg-[var(--bg-subtle)] text-[var(--text-main)]'
                                                                                                         }`}
                                                                                                     >
                                                                                                         <RotateCcw className="w-3 h-3 text-purple-500" />
@@ -1434,7 +1439,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                             handleSetStatus(session, 'PENDING');
                                                                                                         }}
                                                                                                         className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 cursor-pointer ${
-                                                                                                            isPending ? 'bg-amber-50 text-amber-700' : 'hover:bg-gray-50 text-gray-700'
+                                                                                                            isPending ? 'bg-amber-100 text-amber-800 session-btn-pending' : 'hover:bg-[var(--bg-subtle)] text-[var(--text-main)]'
                                                                                                         }`}
                                                                                                     >
                                                                                                         <Clock className="w-3 h-3 text-amber-500" />
@@ -1453,7 +1458,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                                             handleSetStatus(session, 'CANCELLED');
                                                                                                         }}
                                                                                                         className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 cursor-pointer ${
-                                                                                                            isCancelled ? 'bg-gray-100 text-gray-600' : 'hover:bg-gray-50 text-gray-700'
+                                                                                                            isCancelled ? 'bg-gray-100 text-gray-600 session-btn-cancelled' : 'hover:bg-[var(--bg-subtle)] text-[var(--text-main)]'
                                                                                                         }`}
                                                                                                     >
                                                                                                         <XCircle className="w-3 h-3 text-gray-400" />
@@ -1466,7 +1471,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                                             <button
                                                                                                 onClick={() => handleDeleteSession(session)}
                                                                                                 title="Delete this session"
-                                                                                                className="opacity-0 group-hover/card:opacity-100 p-1 text-gray-400 hover:text-pink-600 rounded transition-opacity cursor-pointer shrink-0"
+                                                                                                className="opacity-0 group-hover/card:opacity-100 p-1 text-[var(--text-muted)] hover:text-red-500 rounded transition-opacity cursor-pointer shrink-0"
                                                                                             >
                                                                                                 <Trash2 className="w-3 h-3" />
                                                                                             </button>
@@ -1488,16 +1493,16 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             </div>
 
                             {/* Table Footer Guide */}
-                            <div className="p-3 sm:p-4 bg-gray-50 border-t border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 gap-2">
+                            <div className="p-3 sm:p-4 bg-[var(--bg-subtle)]/50 border-t border-[var(--border-color)] flex flex-col sm:flex-row sm:items-center justify-between text-xs text-[var(--text-muted)] gap-2">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="font-bold text-gray-700">Salary Policy:</span>
+                                    <span className="font-bold text-[var(--text-main)]">Salary Policy:</span>
                                     <span>Each Taught or Make-up slot is credited towards your Total Salary</span>
                                     <span>•</span>
                                     <span>Cancelled slot is not credited</span>
                                     <span>•</span>
-                                    <span className="text-pink-600 font-semibold">Automatically added to Weekly & Monthly Total Salary</span>
+                                    <span className="text-[var(--accent)] font-semibold">Automatically added to Weekly & Monthly Total Salary</span>
                                 </div>
-                                <div className="text-gray-400 text-[11px]">
+                                <div className="text-[var(--text-muted)] text-[11px] opacity-80">
                                     Click any status badge to adjust session status directly
                                 </div>
                             </div>
@@ -1506,7 +1511,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
                     {/* VIEW B: MONTHLY CALENDAR */}
                     {layoutMode === 'month' && (
-                        <div className="bg-white rounded-3xl p-3 sm:p-5 shadow-sm border border-pink-100 overflow-x-auto">
+                        <div className="bg-[var(--bg-card)] rounded-3xl p-3 sm:p-5 shadow-sm border border-[var(--border-color)] overflow-x-auto">
                             <div className="min-w-[850px] lg:min-w-[900px]">
                                 <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2">
                                     {WEEK_DAYS_HEADER.map((col, index) => (
@@ -1514,8 +1519,8 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             key={index}
                                             className={`py-2 px-1 text-center rounded-xl border ${
                                                 col.isWeekend
-                                                    ? 'bg-pink-100 border-pink-200 text-pink-700 font-bold'
-                                                    : 'bg-pink-50 border-pink-100 text-gray-700 font-bold'
+                                                    ? 'bg-[var(--accent-subtle)] border-[var(--border-color)] text-[var(--accent)] font-bold'
+                                                    : 'bg-[var(--bg-subtle)] border-[var(--border-color)] text-[var(--text-main)] font-bold'
                                             }`}
                                         >
                                             <span className="text-xs uppercase">{col.label || col.en}</span>
@@ -1535,19 +1540,19 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                 key={item.dateKey}
                                                 className={`rounded-2xl p-2 border min-h-[120px] sm:min-h-[140px] flex flex-col justify-between transition-all ${
                                                     item.isToday
-                                                        ? 'bg-pink-50 border-pink-400 ring-2 ring-pink-300 shadow-xs'
+                                                        ? 'bg-[var(--accent-subtle)]/30 border-[var(--accent)] ring-2 ring-[var(--accent)]/30 shadow-xs'
                                                         : item.isCurrentMonth
-                                                            ? 'bg-white border-pink-100 hover:border-pink-300'
-                                                            : 'bg-gray-50 border-gray-200 opacity-50'
+                                                            ? 'bg-[var(--bg-card)] border-[var(--border-color)] hover:border-[var(--accent)]/50'
+                                                            : 'bg-[var(--bg-subtle)]/20 border-[var(--border-color)]/40 opacity-40'
                                                 }`}
                                             >
                                                 <div>
                                                     <div className="flex items-center justify-between mb-1.5">
-                                                        <span className={`text-xs font-black ${item.isToday ? 'text-pink-600' : 'text-gray-800'}`}>
+                                                        <span className={`text-xs font-black ${item.isToday ? 'text-[var(--accent)] font-black' : 'text-[var(--text-main)]'}`}>
                                                             {item.dayNumber}
                                                         </span>
                                                         {daySessions.length > 0 && (
-                                                            <span className="text-[10px] font-bold text-pink-700 bg-pink-50 px-1.5 py-0.2 rounded border border-pink-200">
+                                                            <span className="text-[10px] font-bold text-[var(--accent)] bg-[var(--bg-card)] px-1.5 py-0.2 rounded border border-[var(--border-color)]">
                                                                 {dayEarned.toLocaleString('en-US')} VND
                                                             </span>
                                                         )}
@@ -1560,10 +1565,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                                 onClick={() => handleCycleStatus(s)}
                                                                 title={`${s.className} (${s.timeRange || `${s.startTime} – ${s.endTime}`}) • ${s.location} • Status: ${s.status === 'COMPLETED' ? 'Taught' : s.status === 'MAKE_UP' ? 'Make-up' : s.status === 'CANCELLED' ? 'Cancelled' : 'Scheduled'}`}
                                                                 className={`p-1 px-1.5 rounded-lg text-[10px] font-bold truncate cursor-pointer transition-all hover:scale-[1.02] flex items-center justify-between gap-1 shadow-2xs ${
-                                                                    s.status === 'COMPLETED' ? 'bg-pink-100 text-pink-800 border border-pink-200' :
-                                                                    s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-800 border border-purple-200' :
-                                                                    s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through border border-gray-200' :
-                                                                    'bg-amber-100 text-amber-800 border border-amber-200'
+                                                                    s.status === 'COMPLETED' ? 'bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--accent)]/40' :
+                                                                    s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-700 session-btn-makeup border border-purple-200' :
+                                                                    s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 session-btn-cancelled line-through border border-gray-200' :
+                                                                    'bg-amber-100 text-amber-800 session-btn-pending border border-amber-200'
                                                                 }`}
                                                             >
                                                                 <div className="flex items-center gap-1 min-w-0 truncate">
@@ -1622,16 +1627,16 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
 
                     {/* VIEW C: DETAILED RECORDS */}
                     {layoutMode === 'list' && (
-                        <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-pink-100 space-y-4">
-                            <div className="flex items-center justify-between pb-3 border-b border-pink-100">
-                                <h3 className="font-bold text-gray-800 text-sm sm:text-base">
+                        <div className="bg-[var(--bg-card)] rounded-3xl p-4 sm:p-6 shadow-sm border border-[var(--border-color)] space-y-4">
+                            <div className="flex items-center justify-between pb-3 border-b border-[var(--border-color)]">
+                                <h3 className="font-bold text-[var(--text-main)] text-sm sm:text-base">
                                     Teaching Records for Month {selectedMonth}/{selectedYear} ({displayListSessions.length} slots)
                                 </h3>
                                 <div className="flex items-center gap-2">
                                     <button
                                         type="button"
                                         onClick={handleExportSalaryImage}
-                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-pink-300 text-pink-700 font-bold text-xs hover:bg-pink-50 transition-colors cursor-pointer shadow-xs"
+                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-main)] font-bold text-xs hover:bg-[var(--accent-subtle)] transition-colors cursor-pointer shadow-xs"
                                         title="Export Payroll to Image"
                                     >
                                         <ImageIcon className="w-3.5 h-3.5 text-pink-600" />
@@ -1640,7 +1645,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                     <button
                                         type="button"
                                         onClick={handleExportExcel}
-                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-500 text-white font-bold text-xs hover:bg-pink-600 transition-colors cursor-pointer shadow-xs"
+                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--accent)] text-white font-bold text-xs hover:brightness-110 transition-colors cursor-pointer shadow-xs"
                                     >
                                         <Download className="w-3.5 h-3.5" />
                                         <span>Export Excel</span>
@@ -1651,7 +1656,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                             <div className="overflow-x-auto">
                                 <table className="w-full border-collapse text-left text-xs">
                                     <thead>
-                                        <tr className="border-b border-pink-100 text-gray-500 uppercase font-bold text-[10px] bg-pink-50">
+                                        <tr className="border-b border-[var(--border-color)] text-[var(--text-muted)] uppercase font-bold text-[10px] bg-[var(--bg-subtle)]">
                                             <th className="py-2.5 px-3">Date</th>
                                             <th className="py-2.5 px-3">Day</th>
                                             <th className="py-2.5 px-3">Time Slot</th>
@@ -1662,7 +1667,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                             <th className="py-2.5 px-3 text-center">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-pink-100">
+                                    <tbody className="divide-y divide-[var(--border-color)]">
                                         {displayListSessions.map((s) => {
                                             const d = s.date ? new Date(s.date) : new Date();
                                             const isPaid = s.status === 'COMPLETED' || s.status === 'MAKE_UP';
@@ -1672,22 +1677,22 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                 : (s.dateKey || '');
 
                                             return (
-                                                <tr key={s.id} className="hover:bg-pink-50 transition-colors">
-                                                    <td className="py-2 px-3 font-bold text-gray-800">
+                                                <tr key={s.id} className="hover:bg-[var(--accent-subtle)]/20 transition-colors">
+                                                    <td className="py-2 px-3 font-bold text-[var(--text-main)]">
                                                         {dateDisplay}
                                                     </td>
-                                                    <td className="py-2 px-3 font-semibold text-gray-600">{s.dayOfWeek}</td>
-                                                    <td className="py-2 px-3 font-mono font-bold text-pink-600">{s.startTime} - {s.endTime}</td>
-                                                    <td className="py-2 px-3 font-bold text-gray-800">{s.className}</td>
-                                                    <td className="py-2 px-3 font-medium text-gray-600">{s.location}</td>
+                                                    <td className="py-2 px-3 font-semibold text-[var(--text-muted)]">{s.dayOfWeek}</td>
+                                                    <td className="py-2 px-3 font-mono font-bold text-[var(--accent)]">{s.startTime} - {s.endTime}</td>
+                                                    <td className="py-2 px-3 font-bold text-[var(--text-main)]">{s.className}</td>
+                                                    <td className="py-2 px-3 font-medium text-[var(--text-muted)]">{s.location}</td>
                                                     <td className="py-2 px-3 text-center">
                                                         <button
                                                             onClick={() => handleCycleStatus(s)}
                                                             className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer inline-flex items-center gap-1 border transition-all hover:scale-105 ${
-                                                                s.status === 'COMPLETED' ? 'bg-pink-50 text-pink-700 border-pink-300' :
-                                                                s.status === 'MAKE_UP' ? 'bg-purple-50 text-purple-700 border-purple-300' :
-                                                                s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through border-gray-300' :
-                                                                'bg-amber-50 text-amber-800 border-amber-300'
+                                                                s.status === 'COMPLETED' ? 'bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--accent)]/40' :
+                                                                s.status === 'MAKE_UP' ? 'bg-purple-100 text-purple-700 session-btn-makeup border border-purple-300' :
+                                                                s.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 session-btn-cancelled line-through border border-gray-300' :
+                                                                'bg-amber-100 text-amber-800 session-btn-pending border border-amber-300'
                                                             }`}
                                                         >
                                                             {s.status === 'COMPLETED' ? <CheckCircle2 className="w-3 h-3 text-pink-600 shrink-0" /> :
@@ -1701,7 +1706,7 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                                                             </span>
                                                         </button>
                                                     </td>
-                                                    <td className="py-2 px-3 text-right font-black text-pink-600">
+                                                    <td className="py-2 px-3 text-right font-black text-[var(--accent)]">
                                                         {amount.toLocaleString('en-US')} VND
                                                     </td>
                                                     <td className="py-2 px-3 text-center">
@@ -1732,14 +1737,14 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                     onClick={() => setDayDetailPopup(null)}
                 >
                     <div
-                        className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+                        className="bg-[var(--bg-card)] rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-[var(--border-color)]"
                         onClick={e => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100 bg-gradient-to-r from-pink-50 to-rose-50">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-color)] bg-[var(--bg-subtle)]">
                             <div>
-                                <p className="text-[10px] text-pink-400 font-bold uppercase tracking-wider">Ngày</p>
-                                <h3 className="font-black text-gray-800 text-base">{dayDetailPopup.dateKey}</h3>
+                                <p className="text-[10px] text-[var(--accent)] font-bold uppercase tracking-wider">Ngày</p>
+                                <h3 className="font-black text-[var(--text-main)] text-base">{dayDetailPopup.dateKey}</h3>
                             </div>
                             <button
                                 onClick={() => setDayDetailPopup(null)}
@@ -1753,10 +1758,10 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto">
                             {dayDetailPopup.sessions.map(s => {
                                 const statusConfig = {
-                                    COMPLETED: { bg: 'bg-pink-100', text: 'text-pink-800', border: 'border-pink-200', label: 'Đã dạy', icon: <CheckCircle2 className="w-3.5 h-3.5 text-pink-600" /> },
-                                    MAKE_UP:   { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200', label: 'Học bù', icon: <RotateCcw className="w-3.5 h-3.5 text-purple-600" /> },
-                                    CANCELLED: { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-200', label: 'Huỷ', icon: <XCircle className="w-3.5 h-3.5 text-gray-400" /> },
-                                    PENDING:   { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-200', label: 'Lịch học', icon: <Clock className="w-3.5 h-3.5 text-amber-600" /> },
+                                    COMPLETED: { bg: 'bg-[var(--accent-subtle)]', text: 'text-[var(--accent)] font-black', border: 'border-[var(--accent)]/40', label: 'Đã dạy', icon: <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent)]" /> },
+                                    MAKE_UP:   { bg: 'bg-purple-100 session-btn-makeup', text: 'text-purple-700', border: 'border-purple-200', label: 'Học bù', icon: <RotateCcw className="w-3.5 h-3.5 text-purple-600" /> },
+                                    CANCELLED: { bg: 'bg-gray-100 session-btn-cancelled', text: 'text-gray-500', border: 'border-gray-200', label: 'Huỷ', icon: <XCircle className="w-3.5 h-3.5 text-gray-400" /> },
+                                    PENDING:   { bg: 'bg-amber-100 session-btn-pending', text: 'text-amber-800', border: 'border-amber-200', label: 'Lịch học', icon: <Clock className="w-3.5 h-3.5 text-amber-600" /> },
                                 };
                                 const cfg = statusConfig[s.status] || statusConfig.PENDING;
                                 return (
@@ -1791,11 +1796,11 @@ export const SalaryAttendanceView = ({ toast, timetableItems = [] }) => {
                         </div>
 
                         {/* Footer */}
-                        <div className="px-5 py-3 border-t border-pink-100 bg-pink-50/50 flex items-center justify-between">
+                        <div className="px-5 py-3 border-t border-[var(--border-color)] bg-[var(--bg-subtle)]/50 flex items-center justify-between">
                             <span className="text-xs text-gray-500 font-medium">{dayDetailPopup.sessions.length} lịch trong ngày</span>
                             <button
                                 onClick={() => setDayDetailPopup(null)}
-                                className="px-4 py-1.5 rounded-xl bg-pink-500 text-white text-xs font-bold hover:bg-pink-600 transition-colors cursor-pointer"
+                                className="px-4 py-1.5 rounded-xl bg-[var(--accent)] text-white text-xs font-bold hover:brightness-110 transition-colors cursor-pointer"
                             >
                                 Đóng
                             </button>
