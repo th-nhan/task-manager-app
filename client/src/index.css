@@ -43,7 +43,7 @@
 /* ==========================================
    3. DARK THEME (Tối cổ điển, xanh đen dịu mắt)
    ========================================== */
-:root.dark {
+:root.dark, :root.blue, :root[data-theme="dark"], :root[data-theme="blue"] {
     --bg-main: #111A24;
     --bg-card: #1B2634;
     --bg-subtle: #243346;
@@ -98,7 +98,7 @@
     }
 }
 
-:root.green, :root.dark {
+:root.green, :root.dark, :root.blue {
     color-scheme: dark;
 }
 
@@ -189,26 +189,30 @@
     color: var(--accent);
 }
 
-/* Multi-theme automatic adaptations for dark and green themes */
+/* Multi-theme automatic adaptations for dark, blue and green themes */
 :root.dark .bg-pink-100,
+:root.blue .bg-pink-100,
 :root.green .bg-pink-100,
 :root.purple .bg-pink-100 {
     background-color: var(--bg-main) !important;
 }
 
 :root.dark .bg-white,
+:root.blue .bg-white,
 :root.green .bg-white {
     background-color: var(--bg-card) !important;
     color: var(--text-main) !important;
 }
 
 :root.dark .bg-white\/95,
+:root.blue .bg-white\/95,
 :root.green .bg-white\/95 {
     background-color: var(--bg-card) !important;
 }
 
 /* Subtle backgrounds across themes */
 :root.dark [class*="bg-pink-50"],
+:root.blue [class*="bg-pink-50"],
 :root.green [class*="bg-pink-50"] {
     background-color: var(--bg-subtle) !important;
 }
@@ -219,6 +223,8 @@
 
 :root.dark [class*="bg-pink-100"],
 :root.dark [class*="bg-pink-200"],
+:root.blue [class*="bg-pink-100"],
+:root.blue [class*="bg-pink-200"],
 :root.green [class*="bg-pink-100"],
 :root.green [class*="bg-pink-200"],
 :root.purple [class*="bg-pink-100"],
@@ -227,10 +233,28 @@
     color: var(--accent) !important;
 }
 
-/* High-contrast text for dark and green themes so text is never drowned out */
+/* Gray background overrides for dark, blue, and green themes so table columns don't turn bright white */
+:root.dark .bg-gray-50,
+:root.blue .bg-gray-50,
+:root.green .bg-gray-50 {
+    background-color: var(--bg-subtle) !important;
+    color: var(--text-main) !important;
+}
+
+:root.dark .bg-gray-100,
+:root.blue .bg-gray-100,
+:root.green .bg-gray-100 {
+    background-color: var(--bg-subtle) !important;
+    color: var(--text-main) !important;
+}
+
+/* High-contrast text for dark, blue and green themes so text is never drowned out */
 :root.dark .text-gray-900,
 :root.dark .text-gray-800,
 :root.dark .text-gray-700,
+:root.blue .text-gray-900,
+:root.blue .text-gray-800,
+:root.blue .text-gray-700,
 :root.green .text-gray-900,
 :root.green .text-gray-800,
 :root.green .text-gray-700 {
@@ -239,14 +263,275 @@
 
 :root.dark .text-gray-600,
 :root.dark .text-gray-500,
+:root.blue .text-gray-600,
+:root.blue .text-gray-500,
 :root.green .text-gray-600,
 :root.green .text-gray-500 {
     color: var(--text-muted) !important;
 }
 
 :root.dark .text-gray-400,
+:root.blue .text-gray-400,
 :root.green .text-gray-400 {
     color: #94A3B8 !important;
+}
+
+/* Brighten dark pink text in dark, blue and green themes so headers and highlights stay crisp */
+:root.dark .text-pink-600,
+:root.dark .text-pink-700,
+:root.dark .text-pink-800,
+:root.dark .text-pink-900,
+:root.blue .text-pink-600,
+:root.blue .text-pink-700,
+:root.blue .text-pink-800,
+:root.blue .text-pink-900,
+:root.green .text-pink-600,
+:root.green .text-pink-700,
+:root.green .text-pink-800,
+:root.green .text-pink-900 {
+    color: var(--accent) !important;
+}
+
+/* Status card overrides for dark, blue, and green themes */
+:root.dark .session-card-makeup,
+:root.blue .session-card-makeup,
+:root.green .session-card-makeup {
+    background-color: rgba(88, 28, 135, 0.3) !important;
+    border-color: rgba(168, 85, 247, 0.45) !important;
+    color: #E9D5FF !important;
+}
+
+:root.dark .session-card-pending,
+:root.blue .session-card-pending,
+:root.green .session-card-pending {
+    background-color: rgba(120, 53, 15, 0.3) !important;
+    border-color: rgba(245, 158, 11, 0.45) !important;
+    color: #FDE68A !important;
+}
+
+:root.dark .session-card-cancelled,
+:root.blue .session-card-cancelled,
+:root.green .session-card-cancelled {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+    border-color: rgba(71, 85, 105, 0.45) !important;
+    color: #94A3B8 !important;
+}
+
+:root.dark .session-btn-makeup,
+:root.blue .session-btn-makeup,
+:root.green .session-btn-makeup {
+    background-color: rgba(147, 51, 234, 0.25) !important;
+    color: #D8B4FE !important;
+    border-color: rgba(168, 85, 247, 0.45) !important;
+}
+
+:root.dark .session-btn-pending,
+:root.blue .session-btn-pending,
+:root.green .session-btn-pending {
+    background-color: rgba(217, 119, 6, 0.25) !important;
+    color: #FCD34D !important;
+    border-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+:root.dark .session-btn-cancelled,
+:root.blue .session-btn-cancelled,
+:root.green .session-btn-cancelled {
+    background-color: rgba(51, 65, 85, 0.45) !important;
+    color: #94A3B8 !important;
+    border-color: rgba(71, 85, 105, 0.45) !important;
+}
+
+/* ========================================================
+   WEEKLY GRID – Grade card, badge & legend dark overrides
+   ======================================================== */
+:root.dark .grade-card-10,
+:root.blue .grade-card-10,
+:root.green .grade-card-10 {
+    background: linear-gradient(to bottom right, rgba(6, 78, 59, 0.5), rgba(13, 148, 136, 0.2)) !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
+}
+:root.dark .grade-card-11,
+:root.blue .grade-card-11,
+:root.green .grade-card-11 {
+    background: linear-gradient(to bottom right, rgba(49, 46, 129, 0.5), rgba(99, 102, 241, 0.2)) !important;
+    border-color: rgba(99, 102, 241, 0.35) !important;
+}
+:root.dark .grade-card-12,
+:root.blue .grade-card-12,
+:root.green .grade-card-12 {
+    background: linear-gradient(to bottom right, rgba(136, 19, 55, 0.5), rgba(225, 29, 72, 0.2)) !important;
+    border-color: rgba(244, 63, 94, 0.35) !important;
+}
+
+:root.dark .grade-badge-10,
+:root.blue .grade-badge-10,
+:root.green .grade-badge-10 {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    color: #6EE7B7 !important;
+}
+:root.dark .grade-badge-11,
+:root.blue .grade-badge-11,
+:root.green .grade-badge-11 {
+    background-color: rgba(99, 102, 241, 0.2) !important;
+    color: #A5B4FC !important;
+}
+:root.dark .grade-legend-10,
+:root.blue .grade-legend-10,
+:root.green .grade-legend-10 {
+    color: #6EE7B7 !important;
+}
+:root.dark .grade-legend-11,
+:root.blue .grade-legend-11,
+:root.green .grade-legend-11 {
+    color: #A5B4FC !important;
+}
+:root.dark .grade-legend-12,
+:root.blue .grade-legend-12,
+:root.green .grade-legend-12 {
+    color: #FDA4AF !important;
+}
+
+/* Grade 12 uses a theme-aware accent so its text, marker and badge stay
+   distinct from both the timetable card and the surrounding theme. */
+:root.pink .grade-card-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-card-12 {
+    background: linear-gradient(to bottom right, #FFF7ED, #FFEDD5) !important;
+    border-color: #FDBA74 !important;
+}
+:root.pink .grade-badge-12,
+:root.pink .grade-badge-config-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-badge-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-badge-config-12 {
+    background-color: #FEF3C7 !important;
+    color: #92400E !important;
+    border: 1px solid #FCD34D;
+}
+:root.pink .grade-icon-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-icon-12,
+:root.pink .grade-icon-dot-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-icon-dot-12 {
+    background-color: #D97706 !important;
+}
+:root.pink .grade-legend-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-legend-12 { color: #B45309 !important; }
+
+:root.purple .grade-card-12 {
+    background: linear-gradient(to bottom right, #F5F3FF, #EDE9FE) !important;
+    border-color: #C4B5FD !important;
+}
+:root.purple .grade-badge-12,
+:root.purple .grade-badge-config-12 {
+    background-color: #EDE9FE !important;
+    color: #5B21B6 !important;
+    border: 1px solid #C4B5FD;
+}
+:root.purple .grade-icon-12,
+:root.purple .grade-icon-dot-12 { background-color: #7C3AED !important; }
+:root.purple .grade-legend-12 { color: #6D28D9 !important; }
+
+:root.dark .grade-card-12,
+:root.blue .grade-card-12,
+:root[data-theme="dark"] .grade-card-12,
+:root[data-theme="blue"] .grade-card-12 {
+    background: linear-gradient(to bottom right, rgba(8, 47, 73, 0.82), rgba(14, 116, 144, 0.32)) !important;
+    border-color: rgba(34, 211, 238, 0.5) !important;
+}
+:root.dark .grade-badge-12,
+:root.blue .grade-badge-12,
+:root[data-theme="dark"] .grade-badge-12,
+:root[data-theme="blue"] .grade-badge-12 {
+    background-color: rgba(8, 145, 178, 0.35) !important;
+    color: #A5F3FC !important;
+    border: 1px solid rgba(34, 211, 238, 0.55);
+}
+:root.dark .grade-badge-config-12,
+:root.blue .grade-badge-config-12,
+:root[data-theme="dark"] .grade-badge-config-12,
+:root[data-theme="blue"] .grade-badge-config-12 {
+    background-color: rgba(8, 145, 178, 0.35) !important;
+    color: #A5F3FC !important;
+    border: 1px solid rgba(34, 211, 238, 0.55);
+}
+:root.dark .grade-icon-12,
+:root.blue .grade-icon-12,
+:root[data-theme="dark"] .grade-icon-12,
+:root[data-theme="blue"] .grade-icon-12,
+:root.dark .grade-icon-dot-12,
+:root.blue .grade-icon-dot-12,
+:root[data-theme="dark"] .grade-icon-dot-12,
+:root[data-theme="blue"] .grade-icon-dot-12 { background-color: #0891B2 !important; }
+:root.dark .grade-legend-12,
+:root.blue .grade-legend-12,
+:root[data-theme="dark"] .grade-legend-12,
+:root[data-theme="blue"] .grade-legend-12 { color: #67E8F9 !important; }
+
+:root.green .grade-card-12 {
+    background: linear-gradient(to bottom right, rgba(66, 32, 6, 0.82), rgba(146, 64, 14, 0.34)) !important;
+    border-color: rgba(251, 191, 36, 0.5) !important;
+}
+:root.green .grade-badge-12,
+:root.green .grade-badge-config-12 {
+    background-color: rgba(180, 83, 9, 0.34) !important;
+    color: #FDE68A !important;
+    border: 1px solid rgba(251, 191, 36, 0.5);
+}
+:root.green .grade-icon-12,
+:root.green .grade-icon-dot-12 { background-color: #D97706 !important; }
+:root.green .grade-legend-12 { color: #FCD34D !important; }
+
+:root.pink .grade-time-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-time-12 { color: #7C2D12 !important; }
+:root.pink .grade-time-icon-12,
+:root:not(.dark):not(.blue):not(.green):not(.purple) .grade-time-icon-12 { color: #9A3412 !important; }
+:root.purple .grade-time-12 { color: #4C1D95 !important; }
+:root.purple .grade-time-icon-12 { color: #6D28D9 !important; }
+:root.dark .grade-time-12,
+:root.blue .grade-time-12,
+:root[data-theme="dark"] .grade-time-12,
+:root[data-theme="blue"] .grade-time-12 { color: #CFFAFE !important; }
+:root.dark .grade-time-icon-12,
+:root.blue .grade-time-icon-12,
+:root[data-theme="dark"] .grade-time-icon-12,
+:root[data-theme="blue"] .grade-time-icon-12 { color: #67E8F9 !important; }
+:root.green .grade-time-12 { color: #FEF3C7 !important; }
+:root.green .grade-time-icon-12 { color: #FCD34D !important; }
+
+/* ClassDetailModal – dark theme overrides for info cards & status */
+:root.dark .detail-info-card,
+:root.blue .detail-info-card,
+:root.green .detail-info-card {
+    background-color: var(--bg-subtle) !important;
+    border-color: var(--border-color) !important;
+}
+
+:root.dark .detail-info-icon,
+:root.blue .detail-info-icon,
+:root.green .detail-info-icon {
+    background-color: rgba(56, 189, 248, 0.15) !important;
+    color: var(--accent) !important;
+}
+:root.green .detail-info-icon {
+    background-color: rgba(46, 160, 67, 0.15) !important;
+}
+
+:root.dark .detail-status-section,
+:root.blue .detail-status-section,
+:root.green .detail-status-section {
+    background-color: var(--bg-subtle) !important;
+    border-color: var(--border-color) !important;
+}
+
+:root.dark .detail-status-btn,
+:root.blue .detail-status-btn,
+:root.green .detail-status-btn {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-color) !important;
+}
+:root.dark .detail-status-btn:hover,
+:root.blue .detail-status-btn:hover,
+:root.green .detail-status-btn:hover {
+    background-color: var(--accent-subtle) !important;
 }
 
 /* Border overrides across themes */
@@ -254,6 +539,10 @@
 :root.dark [class*="border-gray-100"],
 :root.dark [class*="border-gray-200"],
 :root.dark [class*="divide-pink-"],
+:root.blue [class*="border-pink-"],
+:root.blue [class*="border-gray-100"],
+:root.blue [class*="border-gray-200"],
+:root.blue [class*="divide-pink-"],
 :root.green [class*="border-pink-"],
 :root.green [class*="border-gray-100"],
 :root.green [class*="border-gray-200"],
