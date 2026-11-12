@@ -64,7 +64,7 @@ export const ClassDetailModal = ({
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header Banner with Grade Accent */}
-                <div className={`p-4 sm:p-6 bg-gradient-to-r ${gradeStyle.cardBg} border-b border-[var(--border-color)] flex items-start justify-between relative shrink-0`}>
+                <div className={`grade-card-${classItem.grade} p-4 sm:p-6 bg-gradient-to-r ${gradeStyle.cardBg} border-b border-[var(--border-color)] flex items-start justify-between relative shrink-0`}>
                     <div className="flex items-center gap-3 min-w-0">
                         <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${gradeStyle.pillColor} text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-md shrink-0`}>
                             G{classItem.grade}
@@ -115,19 +115,19 @@ export const ClassDetailModal = ({
                 {/* Content */}
                 <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
                     {/* Schedule Status Adjustment */}
-                    <div className="p-3.5 bg-pink-50/60 rounded-2xl border border-pink-200 space-y-2">
+                    <div className="detail-status-section p-3.5 bg-pink-50/60 rounded-2xl border border-pink-200 space-y-2">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
-                                <Calendar className="w-3.5 h-3.5 text-pink-500" />
+                            <span className="text-xs font-bold text-[var(--text-main)] uppercase tracking-wider flex items-center gap-1.5">
+                                <Calendar className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 Teaching Schedule Status
                             </span>
                             <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border inline-flex items-center gap-1 ${
-                                currentStatus === 'COMPLETED' ? 'bg-pink-50 text-pink-700 border-pink-300' :
+                                currentStatus === 'COMPLETED' ? 'bg-[var(--accent-subtle)] text-[var(--accent)] border-[var(--accent)]/30' :
                                 currentStatus === 'MAKE_UP' ? 'bg-purple-50 text-purple-700 border-purple-300' :
-                                currentStatus === 'CANCELLED' ? 'bg-gray-100 text-gray-600 border-gray-300' :
+                                currentStatus === 'CANCELLED' ? 'bg-[var(--bg-subtle)] text-[var(--text-muted)] border-[var(--border-color)]' :
                                 'bg-amber-50 text-amber-800 border-amber-300'
                             }`}>
-                                {currentStatus === 'COMPLETED' ? <CheckCircle2 className="w-3 h-3 text-pink-600 shrink-0" /> :
+                                {currentStatus === 'COMPLETED' ? <CheckCircle2 className="w-3 h-3 text-[var(--accent)] shrink-0" /> :
                                  currentStatus === 'MAKE_UP' ? <RotateCcw className="w-3 h-3 text-purple-600 shrink-0" /> :
                                  currentStatus === 'CANCELLED' ? <XCircle className="w-3 h-3 text-gray-500 shrink-0" /> :
                                  <Clock className="w-3 h-3 text-amber-600 shrink-0" />}
@@ -144,7 +144,7 @@ export const ClassDetailModal = ({
                                 className={`py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                                     currentStatus === 'COMPLETED'
                                         ? 'bg-rose-500 text-white shadow-xs'
-                                        : 'bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
+                                        : 'detail-status-btn bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
                                 }`}
                             >
                                 <CheckCircle2 className="w-3.5 h-3.5" />
@@ -156,7 +156,7 @@ export const ClassDetailModal = ({
                                 className={`py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                                     currentStatus === 'PENDING'
                                         ? 'bg-amber-500 text-white shadow-xs'
-                                        : 'bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
+                                        : 'detail-status-btn bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
                                 }`}
                             >
                                 <Clock className="w-3.5 h-3.5" />
@@ -168,7 +168,7 @@ export const ClassDetailModal = ({
                                 className={`py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                                     currentStatus === 'MAKE_UP'
                                         ? 'bg-purple-500 text-white shadow-xs'
-                                        : 'bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
+                                        : 'detail-status-btn bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
                                 }`}
                             >
                                 <RotateCcw className="w-3.5 h-3.5" />
@@ -180,7 +180,7 @@ export const ClassDetailModal = ({
                                 className={`py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                                     currentStatus === 'CANCELLED'
                                         ? 'bg-gray-600 text-white shadow-xs'
-                                        : 'bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
+                                        : 'detail-status-btn bg-white text-gray-700 border border-pink-200 hover:bg-pink-100/50'
                                 }`}
                             >
                                 <XCircle className="w-3.5 h-3.5" />
@@ -191,43 +191,43 @@ export const ClassDetailModal = ({
 
                     {/* Key Specs Grid */}
                     <div className="grid grid-cols-1 xs:grid-cols-2 gap-2.5 sm:gap-3">
-                        <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
-                            <div className="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-pink-500 shrink-0">
+                        <div className="detail-info-card flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
+                            <div className="detail-info-icon w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-pink-500 shrink-0">
                                 <Clock className="w-4 h-4" />
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[11px] text-gray-400 font-medium">Time Slot</div>
-                                <div className="text-sm font-bold text-gray-800 truncate">{classItem.timeRange}</div>
+                                <div className="text-[11px] text-[var(--text-muted)] font-medium">Time Slot</div>
+                                <div className="text-sm font-bold text-[var(--text-main)] truncate">{classItem.timeRange}</div>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
-                            <div className="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-pink-500 shrink-0">
+                        <div className="detail-info-card flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
+                            <div className="detail-info-icon w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-pink-500 shrink-0">
                                 <MapPin className="w-4 h-4" />
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[11px] text-gray-400 font-medium">Location</div>
-                                <div className="text-sm font-bold text-gray-800 truncate">{classItem.location}</div>
+                                <div className="text-[11px] text-[var(--text-muted)] font-medium">Location</div>
+                                <div className="text-sm font-bold text-[var(--text-main)] truncate">{classItem.location}</div>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
-                            <div className="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center text-purple-500 shrink-0">
+                        <div className="detail-info-card flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
+                            <div className="detail-info-icon w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center text-purple-500 shrink-0">
                                 <BookOpen className="w-4 h-4" />
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[11px] text-gray-400 font-medium">Level</div>
-                                <div className="text-sm font-bold text-gray-800 truncate">{classItem.level}</div>
+                                <div className="text-[11px] text-[var(--text-muted)] font-medium">Level</div>
+                                <div className="text-sm font-bold text-[var(--text-main)] truncate">{classItem.level}</div>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
-                            <div className="w-8 h-8 rounded-xl bg-rose-100 flex items-center justify-center text-rose-500 shrink-0">
+                        <div className="detail-info-card flex items-center gap-3 p-3 rounded-2xl bg-gray-50 border border-pink-100">
+                            <div className="detail-info-icon w-8 h-8 rounded-xl bg-rose-100 flex items-center justify-center text-rose-500 shrink-0">
                                 <GraduationCap className="w-4 h-4" />
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[11px] text-gray-400 font-medium">Grade Level</div>
-                                <div className="text-sm font-bold text-gray-800 truncate">Grade {classItem.grade}</div>
+                                <div className="text-[11px] text-[var(--text-muted)] font-medium">Grade Level</div>
+                                <div className="text-sm font-bold text-[var(--text-main)] truncate">Grade {classItem.grade}</div>
                             </div>
                         </div>
                     </div>
@@ -235,8 +235,8 @@ export const ClassDetailModal = ({
                     {/* Teacher Notes / Classroom Note */}
                     <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                            <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                                <FileText className="w-3.5 h-3.5 text-pink-500" />
+                            <label className="text-xs font-bold text-[var(--text-main)] flex items-center gap-1.5">
+                                <FileText className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 Session Notes / Classroom
                             </label>
                             {savedNotice && (

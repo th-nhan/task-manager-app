@@ -26,22 +26,22 @@ export const GradeGroupView = ({ timetableItems = [], onSelectClass, onConvertTo
                             className="bg-[var(--bg-card)] rounded-2xl sm:rounded-3xl shadow-xs border border-[var(--border-color)] overflow-hidden flex flex-col justify-between min-w-0"
                         >
                             {/* Card Header */}
-                            <div className={`p-4 sm:p-5 bg-gradient-to-br ${gradeStyle.cardBg} border-b border-[var(--border-color)] space-y-2`}>
+                            <div className={`grade-card-${grade} p-4 sm:p-5 bg-gradient-to-br ${gradeStyle.cardBg} border-b border-[var(--border-color)] space-y-2`}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2.5 min-w-0">
                                         <div className={`w-9 h-9 rounded-2xl ${gradeStyle.pillColor} text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0`}>
                                             K{grade}
                                         </div>
-                                        <h3 className="font-bold text-sm sm:text-base text-gray-900 truncate">
+                                        <h3 className="font-bold text-sm sm:text-base text-[var(--text-main)] truncate">
                                             {gradeStyle.label}
                                         </h3>
                                     </div>
-                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${gradeStyle.badgeBg} ${gradeStyle.badgeText} shrink-0`}>
+                                    <span className={`grade-badge-${grade} text-xs font-bold px-2.5 py-1 rounded-full ${gradeStyle.badgeBg} ${gradeStyle.badgeText} shrink-0`}>
                                         {gradeItems.length} slots
                                     </span>
                                 </div>
 
-                                <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+                                <div className="flex items-center justify-between text-xs text-[var(--text-muted)] pt-1">
                                     <span>~{(gradeItems.length * 1.5).toFixed(1)} hrs/wk</span>
                                     <span>LT: {ltCount} • ML: {mlCount}</span>
                                 </div>

@@ -421,7 +421,12 @@ export const GRADE_CONFIG = {
         borderLeft: 'border-l-emerald-500',
         accentColor: '#10b981',
         pillColor: 'bg-emerald-500',
-        ringColor: 'ring-emerald-400'
+        ringColor: 'ring-emerald-400',
+        // Dark theme overrides
+        darkCardBg: 'bg-[rgba(6,78,59,0.5)]',
+        darkBadgeBg: 'bg-[rgba(16,185,129,0.2)]',
+        darkBadgeText: 'text-emerald-300',
+        darkLegendText: 'text-emerald-300'
     },
     11: {
         label: 'Grade 11',
@@ -432,18 +437,28 @@ export const GRADE_CONFIG = {
         borderLeft: 'border-l-indigo-500',
         accentColor: '#6366f1',
         pillColor: 'bg-indigo-500',
-        ringColor: 'ring-indigo-400'
+        ringColor: 'ring-indigo-400',
+        // Dark theme overrides
+        darkCardBg: 'bg-[rgba(49,46,129,0.5)]',
+        darkBadgeBg: 'bg-[rgba(99,102,241,0.2)]',
+        darkBadgeText: 'text-indigo-300',
+        darkLegendText: 'text-indigo-300'
     },
     12: {
         label: 'Grade 12',
-        badgeBg: 'bg-pink-100',
-        badgeText: 'text-pink-700',
-        badgeBorder: 'border-pink-200',
+        badgeBg: 'grade-badge-config-12',
+        badgeText: '',
+        badgeBorder: 'border-amber-300',
         cardBg: 'from-pink-50 to-pink-100',
         borderLeft: 'border-l-pink-500',
         accentColor: '#ec4899',
-        pillColor: 'bg-pink-500',
-        ringColor: 'ring-pink-400'
+        pillColor: 'grade-icon-12',
+        ringColor: 'ring-pink-400',
+        // Dark theme overrides
+        darkCardBg: 'bg-[rgba(136,19,55,0.5)]',
+        darkBadgeBg: 'bg-[rgba(217,119,6,0.28)]',
+        darkBadgeText: 'text-amber-200',
+        darkLegendText: 'text-pink-300'
     }
 };
 
